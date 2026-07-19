@@ -1,0 +1,39 @@
+{
+  "name": "pdf-ai",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.110.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.400.0",
+    "next": "14.2.5",
+    "pdf-parse": "^1.1.1",
+    "pdf-to-img": "^6.2.0",
+    "pdf2image": "^1.2.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sharp": "^0.35.3",
+    "tailwind-merge": "^2.6.1",
+    "tailwindcss-animate": "^1.0.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "@types/pdf-parse": "^1.1.4",
+    "@types/pdf2image": "^1.2.4",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.5.2",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "14.2.5",
+    "postcss": "^8.5.16",
+    "tailwindcss": "^3.4.6",
+    "typescript": "^5.5.3"
+  }
+}

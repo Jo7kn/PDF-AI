@@ -1,0 +1,162 @@
+'use server'
+
+import { createClient } from '@/lib/supabase/server'
+import { buildAuthRedirectUrl, getOAuthOptions } from '@/lib/auth/oauth'
+import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
+
+// Esportata (era privata) così documents.ts può riusarla invece di
+// duplicare la stessa logica di upsert.
+export async function ensureUserProfile(supabase: any, user: any) {
+  if (!user?.id || !user?.email) {
+    return
+  }
+
+  // IMPORTANTE: ignoreDuplicates fa sì che questo sia un INSERT-se-manca,
+  // non un UPDATE. Senza questa opzione, ogni signIn sovrascriveva
+  // total_pages_used e active_projects con 0, azzerando silenziosamente
+  // la quota reale dell'utente ad ogni login.
+  await supabase.from('users').upsert(
+    {
+      id: user.id,
+      email: user.email,
+      tier: 'free',
+      total_pages_used: 0,
+      active_projects: 0,
+    },
+    { onConflict: 'id', ignoreDuplicates: true }
+  )
+}
+
+export async function signUp(email: string, password: string, fullName: string) {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        full_name: fullName,
+      },
+    },
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  if (data.user) {
+    await ensureUserProfile(supabase, data.user)
+  }
+
+  return { success: true, user: data.user }
+}
+
+export async function signIn(email: string, password: string) {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  if (!data.user) {
+    return { error: 'Unable to sign in' }
+  }
+
+  await ensureUserProfile(supabase, data.user)
+
+  revalidatePath('/dashboard')
+  return { success: true, user: data.user }
+}
+
+export async function signInWithGoogle() {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: getOAuthOptions(process.env.NEXT_PUBLIC_APP_URL),
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  if (data.url) {
+    redirect(data.url)
+  }
+}
+
+export async function signOut() {
+  const supabase = await createClient()
+  await supabase.auth.signOut()
+  revalidatePath('/')
+  redirect('/login')
+}
+
+export async function resetPassword(email: string) {
+  const supabase = await createClient()
+
+  const redirectTo = buildAuthRedirectUrl(process.env.NEXT_PUBLIC_APP_URL, '/auth/update-password')
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo,
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  return { success: true }
+}
+
+export async function updatePassword(newPassword: string) {
+  const supabase = await createClient()
+
+  const { error } = await supabase.auth.updateUser({
+    password: newPassword,
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  redirect('/login')
+}
+
+export async function getCurrentUser() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  return user ?? null
+}
+
+/**
+ * Profilo "leggero" per la UI: email + tier reali, invece dei placeholder
+ * hardcoded ("Mario Rossi" / "Pro") che c'erano nell'header della
+ * dashboard. Usato anche per costruire i link di checkout Lemon Squeezy
+ * (serve sapere il piano attuale per non mostrare "Passa a Pro" a chi è
+ * già Pro).
+ */
+export async function getCurrentUserProfile() {
+  const user = await getCurrentUser()
+  if (!user) return null
+
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('users')
+    .select('tier, subscription_status, total_pages_used, active_projects')
+    .eq('id', user.id)
+    .single()
+
+  return {
+    id: user.id,
+    email: user.email || '',
+    tier: data?.tier || 'free',
+    subscriptionStatus: data?.subscription_status || null,
+    totalPagesUsed: data?.total_pages_used || 0,
+    activeProjects: data?.active_projects || 0,
+  }
+}
