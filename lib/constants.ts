@@ -36,6 +36,6 @@ export const LEMONSQUEEZY_VARIANT_TIER_MAP: Record<string, string> = {
 // URL di checkout hosted per piano (il link "Buy now" copiato dal
 // prodotto). Usati per costruire il bottone "Passa a Pro/Team".
 export const LEMONSQUEEZY_CHECKOUT_URLS: Record<string, string> = {
-  pro: 'https://neuropdf.it/checkout/buy/be89c8aa-588b-46f6-8d69-913ffbd7ab2c',
-  team: 'https://neuropdf.it/checkout/buy/fa0f3f5d-5721-4654-a544-57df706d7fa1',
+  pro: 'https://neuropdf.lemonsqueezy.com/checkout/buy/be89c8aa-588b-46f6-8d69-913ffbd7ab2c',
+  team: 'https://neuropdf.lemonsqueezy.com/checkout/buy/fa0f3f5d-5721-4654-a544-57df706d7fa1',
 }
