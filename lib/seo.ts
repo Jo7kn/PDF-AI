@@ -5,7 +5,7 @@
 // su Vercel) con il dominio reale non appena disponibile: finché resta sul
 // fallback, Google Search Console e i tag canonical punteranno al posto
 // sbagliato.
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://ai-toolbox.app').replace(/\/+$/, '')
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.neuropdf.it').replace(/\/+$/, '')
 
 export const SITE_NAME = 'AI Toolbox'
 
