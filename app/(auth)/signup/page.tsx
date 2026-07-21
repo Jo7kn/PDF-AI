@@ -159,7 +159,7 @@ export default function SignupPage() {
             />
             <label htmlFor="terms" className="text-sm text-slate-400">
               Accetto i{' '}
-              <Link href="/terms" className="font-medium text-cyan-300 transition hover:text-cyan-200">
+              <Link href="/terms" className="font-medium text-cyan-300 transition-colors duration-150 ease-out hover:text-cyan-200">
                 termini e condizioni
               </Link>
             </label>
@@ -167,7 +167,7 @@ export default function SignupPage() {
           <Button type="submit" className="w-full bg-gradient-to-r from-fuchsia-500 to-violet-500 hover:from-fuchsia-400 hover:to-violet-400" disabled={loading}>
             {loading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className="mr-2 h-4 w-4 animate-spin-fast" />
                 Caricamento...
               </>
             ) : (
@@ -202,7 +202,7 @@ export default function SignupPage() {
       <CardFooter className="flex justify-center border-t border-white/10 px-6 py-4">
         <p className="text-sm text-slate-400">
           Hai già un account?{' '}
-          <Link href="/login" className="font-semibold text-cyan-300 transition hover:text-cyan-200">
+          <Link href="/login" className="font-semibold text-cyan-300 transition-colors duration-150 ease-out hover:text-cyan-200">
             Accedi
           </Link>
         </p>

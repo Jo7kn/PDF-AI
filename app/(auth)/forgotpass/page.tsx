@@ -42,9 +42,9 @@ const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         <CardContent>
           {success ? (
             <div className="text-center py-6">
-              <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-green-700">Email inviata!</h3>
-              <p className="text-sm text-gray-600 mt-2">
+              <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-emerald-300">Email inviata!</h3>
+              <p className="text-sm text-slate-400 mt-2">
                 Controlla la tua casella di posta per le istruzioni.
               </p>
             </div>
@@ -63,14 +63,14 @@ const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
                 />
               </div>
               {error && (
-                <div className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
+                <div className="text-sm text-red-200 bg-red-500/10 border border-red-400/20 p-3 rounded-lg">
                   {error}
                 </div>
               )}
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin-fast" />
                     Invio...
                   </>
                 ) : (

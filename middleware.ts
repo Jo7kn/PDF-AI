@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
+import { isAllowed } from '@/lib/rate-limit'
 
 const PUBLIC_ROUTES = new Set([
   '/',
@@ -21,6 +22,19 @@ const GUEST_ONLY_ROUTES = new Set([
 ])
 
 const AUTHENTICATED_HOME = '/dashboard'
+
+// Rallenta il credential stuffing: sia il caricamento della pagina sia il
+// POST della server action di login/signup arrivano su questo stesso
+// pathname, quindi limitarlo qui copre entrambi.
+const RATE_LIMITED_ROUTES = new Set(['/login', '/signup'])
+const LOGIN_RATE_LIMIT = 10
+const LOGIN_RATE_WINDOW_MS = 5 * 60 * 1000
+
+function getClientIp(request: NextRequest): string {
+  const forwardedFor = request.headers.get('x-forwarded-for')
+  if (forwardedFor) return forwardedFor.split(',')[0].trim()
+  return request.headers.get('x-real-ip') || 'unknown'
+}
 
 function normalizePathname(pathname: string) {
   return pathname === '/' ? pathname : pathname.replace(/\/+$/, '')
@@ -56,6 +70,14 @@ function redirectWithSupabaseState(
 
 export async function middleware(request: NextRequest) {
   const pathname = normalizePathname(request.nextUrl.pathname)
+
+  if (RATE_LIMITED_ROUTES.has(pathname)) {
+    const ip = getClientIp(request)
+    if (!isAllowed(`login:${ip}`, LOGIN_RATE_LIMIT, LOGIN_RATE_WINDOW_MS)) {
+      return new NextResponse('Troppi tentativi. Riprova tra qualche minuto.', { status: 429 })
+    }
+  }
+
   let response = NextResponse.next({ request })
 
   const supabase = createServerClient(

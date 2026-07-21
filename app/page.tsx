@@ -1,38 +1,12 @@
 import Link from 'next/link'
 import { PRICING_TIERS } from '@/lib/pricing'
 import { FileText, Sparkles, Zap, Users, Mail, BarChart3, Calendar, Check, ArrowRight, ShieldCheck, BrainCircuit } from 'lucide-react'
+import { LandingHeader } from '@/components/landing-header'
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.16),_transparent_30%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
-      <header className="border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-violet-500 shadow-lg shadow-cyan-500/20">
-              <Sparkles className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <p className="text-lg font-semibold tracking-tight text-white">PDF AI</p>
-              <p className="text-xs text-slate-400">Trasforma documenti in conversazioni</p>
-            </div>
-          </Link>
-
-          <nav className="hidden items-center gap-6 md:flex">
-            <Link href="#features" className="text-sm font-medium text-slate-300 transition hover:text-white">
-              Funzionalità
-            </Link>
-            <Link href="#pricing" className="text-sm font-medium text-slate-300 transition hover:text-white">
-              Prezzi
-            </Link>
-            <Link href="/login" className="rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-slate-300 transition hover:border-cyan-400/30 hover:text-white">
-              Accedi
-            </Link>
-            <Link href="/signup" className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/20">
-              Registrati
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <LandingHeader />
 
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
         <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
@@ -52,11 +26,11 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col gap-4 sm:flex-row">
-              <Link href="/dashboard" className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-7 py-3 font-semibold text-white transition hover:opacity-90">
+              <Link href="/dashboard" className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-7 py-3 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90">
                 Inizia gratis
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="#pricing" className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-7 py-3 font-semibold text-slate-200 transition hover:bg-white/10">
+              <Link href="#pricing" className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-7 py-3 font-semibold text-slate-200 transition-colors duration-150 ease-out hover:bg-white/10">
                 Vedi i prezzi
               </Link>
             </div>
@@ -148,7 +122,7 @@ export default function Home() {
           <p className="mx-auto mb-8 max-w-2xl text-lg text-slate-300">
             Entra nella tua workspace e fai partire la tua prima analisi con l’AI.
           </p>
-          <Link href="/dashboard" className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-8 py-4 font-semibold text-white transition hover:opacity-90">
+          <Link href="/dashboard" className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-8 py-4 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90">
             Inizia la prova gratuita
             <ArrowRight className="h-4 w-4" />
           </Link>
@@ -160,7 +134,7 @@ export default function Home() {
 
 function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-8 shadow-lg shadow-black/10 backdrop-blur-xl transition hover:bg-white/10">
+    <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-8 shadow-lg shadow-black/10 backdrop-blur-xl transition-colors duration-150 ease-out hover:bg-white/10">
       <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-violet-500 text-white">
         {icon}
       </div>
@@ -172,7 +146,7 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode; titl
 
 function PricingCard({ tier, featured }: { tier: any; featured: boolean }) {
   return (
-    <div className={`relative rounded-3xl border p-8 shadow-lg shadow-black/10 backdrop-blur-xl transition hover:bg-white/10 ${featured ? 'border-cyan-400/40 bg-cyan-500/10' : 'border-white/10 bg-slate-900/70'}`}>
+    <div className={`relative rounded-3xl border p-8 shadow-lg shadow-black/10 backdrop-blur-xl transition-colors duration-150 ease-out hover:bg-white/10 ${featured ? 'border-cyan-400/40 bg-cyan-500/10' : 'border-white/10 bg-slate-900/70'}`}>
       {featured && (
         <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-4 py-1 text-sm font-semibold text-white">
           Più popolare
@@ -194,7 +168,7 @@ function PricingCard({ tier, featured }: { tier: any; featured: boolean }) {
         ))}
       </ul>
 
-      <Link href="/dashboard" className={`block w-full rounded-2xl py-3 text-center font-semibold transition ${featured ? 'bg-gradient-to-r from-cyan-500 to-violet-500 text-white hover:opacity-90' : 'border border-white/10 bg-white/5 text-white hover:bg-white/10'}`}>
+      <Link href="/dashboard" className={`block w-full rounded-2xl py-3 text-center font-semibold transition-colors duration-150 ease-out ${featured ? 'bg-gradient-to-r from-cyan-500 to-violet-500 text-white hover:opacity-90' : 'border border-white/10 bg-white/5 text-white hover:bg-white/10'}`}>
         Scegli piano
       </Link>
     </div>

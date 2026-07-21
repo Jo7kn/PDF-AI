@@ -20,7 +20,9 @@ export async function getTags() {
   return { success: true, tags: data }
 }
 
-async function getOrCreateTag(supabase: any, userId: string, name: string): Promise<string | null> {
+// Esportata cosi' saved-items.ts la riusa invece di duplicare la stessa
+// logica get-or-create per i tag sui saved item.
+export async function getOrCreateTag(supabase: any, userId: string, name: string): Promise<string | null> {
   const trimmed = name.trim().toLowerCase()
   if (!trimmed || trimmed.length > 40) return null
 

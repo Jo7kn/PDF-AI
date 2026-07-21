@@ -3,15 +3,18 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import {
-  ArrowLeft, Send, FileText, Calendar, Sparkles, Loader2, User, Bot,
-  AlertCircle, Clock, LogOut, RotateCcw, CalendarDays, Link2, Check,
+  ArrowLeft, Send, FileText, Calendar, Loader2, User, Bot,
+  AlertCircle, Clock, RotateCcw, CalendarDays, Link2, Check,
   Users, X, Trash2, Eye, Copy
 } from 'lucide-react'
+import { AppHeader } from '@/components/app-header'
+import { AppFooter } from '@/components/app-footer'
 import { getDocument } from '@/app/actions/documents'
 import { getMessages } from '@/app/actions/messages'
 import { chatWithDocument, processDocument } from '@/app/actions/processing'
-import { signOut } from '@/app/actions/auth'
 import { shareDocument, unshareDocument, getDocumentShares } from '@/app/actions/sharing'
+import { useLocale } from '@/lib/i18n/locale-context'
+import { LOCALE_DATE_TAG } from '@/lib/i18n/translations'
 
 const POLL_INTERVAL_MS = 4000
 
@@ -195,50 +198,28 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
-      <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex min-w-0 items-center gap-3">
-            <Link href="/dashboard" className="flex-shrink-0 text-slate-400 transition hover:text-white">
-              <ArrowLeft className="h-5 w-5" />
-            </Link>
-            <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-violet-500 shadow-lg shadow-cyan-500/20">
-              <Sparkles className="h-5 w-5 text-white" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-lg font-semibold text-white">PDF AI</p>
-              <p className="truncate text-xs text-slate-400">{doc?.name || 'Documento'}</p>
-            </div>
-          </div>
-
-          <div className="flex flex-shrink-0 items-center gap-3">
-            <div className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-2 sm:flex">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-cyan-400 to-violet-500 font-semibold text-white">
-                MR
-              </div>
-              <div className="hidden text-left md:block">
-                <p className="text-sm font-medium text-white">Mario Rossi</p>
-                <p className="text-xs text-slate-400">Free</p>
-              </div>
-            </div>
-            <form action={signOut}>
-              <button
-                type="submit"
-                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-slate-200 transition hover:border-red-400/30 hover:bg-red-500/10 hover:text-red-200"
-              >
-                <LogOut className="h-4 w-4" />
-                <span className="hidden sm:inline">Logout</span>
-              </button>
-            </form>
-          </div>
-        </div>
-      </header>
+      <AppHeader
+        icon={FileText}
+        title="PDF AI"
+        subtitle={doc?.name || 'Documento'}
+        gradient="from-cyan-400 to-violet-500"
+        active="documents"
+      />
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <Link
+          href="/dashboard/files"
+          className="mb-6 inline-flex items-center gap-2 text-sm text-slate-400 transition-colors duration-150 ease-out hover:text-white"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Torna ai documenti
+        </Link>
+
         <div className="grid gap-8 xl:grid-cols-[0.95fr_1.05fr]">
           <aside className="space-y-6">
             {loadingDoc ? (
               <div className="flex items-center justify-center rounded-3xl border border-white/10 bg-slate-900/80 p-10 shadow-xl shadow-black/20">
-                <Loader2 className="h-8 w-8 animate-spin text-cyan-300" />
+                <Loader2 className="h-8 w-8 animate-spin-fast text-cyan-300" />
               </div>
             ) : docError ? (
               <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
@@ -270,7 +251,7 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
                     <button
                       onClick={() => setShareOpen(true)}
                       title="Condividi documento"
-                      className="flex-shrink-0 rounded-xl border border-white/10 bg-white/5 p-2 text-slate-300 transition hover:bg-white/10 hover:text-white"
+                      className="flex-shrink-0 rounded-xl border border-white/10 bg-white/5 p-2 text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white"
                     >
                       <Users className="h-4 w-4" />
                     </button>
@@ -289,7 +270,7 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
 
                 {isProcessing && (
                   <div className="mb-4 flex items-center gap-2 rounded-xl border border-cyan-400/20 bg-cyan-400/10 p-3 text-sm text-cyan-200">
-                    <Loader2 className="h-4 w-4 flex-shrink-0 animate-spin" />
+                    <Loader2 className="h-4 w-4 flex-shrink-0 animate-spin-fast" />
                     <span>Documento in elaborazione, un momento...</span>
                   </div>
                 )}
@@ -303,10 +284,10 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
                     <button
                       onClick={handleRetry}
                       disabled={retrying}
-                      className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-slate-200 transition-colors duration-150 ease-out hover:bg-white/10 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
                     >
                       {retrying ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <Loader2 className="h-4 w-4 animate-spin-fast" />
                       ) : (
                         <RotateCcw className="h-4 w-4" />
                       )}
@@ -348,28 +329,28 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
                 <button
                   onClick={() => sendMessage('Fammi un riassunto dettagliato del documento, punto per punto.')}
                   disabled={isProcessing || loading}
-                  className="w-full rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 text-left text-sm text-slate-300 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 text-left text-sm text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
                 >
                   Riassumi il documento
                 </button>
                 <button
                   onClick={() => sendMessage('Elenca tutte le scadenze e le date importanti presenti nel documento.')}
                   disabled={isProcessing || loading}
-                  className="w-full rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 text-left text-sm text-slate-300 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 text-left text-sm text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
                 >
                   Estrai tutte le scadenze
                 </button>
                 <button
                   onClick={handleExportCalendar}
                   disabled={!doc?.deadlines_json?.length}
-                  className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 text-left text-sm text-slate-300 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 text-left text-sm text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
                 >
                   <span>Esporta nel calendario</span>
                   <CalendarDays className="h-4 w-4 flex-shrink-0" />
                 </button>
                 <button
                   onClick={handleCopyLink}
-                  className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 text-left text-sm text-slate-300 transition hover:bg-white/10 hover:text-white"
+                  className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 text-left text-sm text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white"
                 >
                   <span>{linkCopied ? 'Link copiato!' : 'Copia link documento'}</span>
                   {linkCopied ? <Check className="h-4 w-4 flex-shrink-0 text-cyan-300" /> : <Link2 className="h-4 w-4 flex-shrink-0" />}
@@ -386,7 +367,7 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
                 ))}
                 {loading && (
                   <div className="flex items-center gap-3 text-cyan-300">
-                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <Loader2 className="h-5 w-5 animate-spin-fast" />
                     <span className="text-sm">L'AI sta pensando...</span>
                   </div>
                 )}
@@ -406,15 +387,15 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Fai una domanda su questo documento..."
-                    className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 transition focus:border-cyan-400/50 focus:outline-none disabled:opacity-50"
+                    className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 transition-colors duration-150 ease-out focus:border-cyan-400/50 focus:outline-none disabled:opacity-50"
                     disabled={loading || isProcessing}
                   />
                   <button
                     type="submit"
                     disabled={loading || isProcessing || !input.trim()}
-                    className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 px-6 py-3 font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 px-6 py-3 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
                   >
-                    {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
+                    {loading ? <Loader2 className="h-5 w-5 animate-spin-fast" /> : <Send className="h-5 w-5" />}
                   </button>
                 </form>
               </div>
@@ -426,6 +407,8 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
       {shareOpen && doc && (
         <ShareModal documentId={doc.id} onClose={() => setShareOpen(false)} />
       )}
+
+      <AppFooter />
     </div>
   )
 }
@@ -488,7 +471,7 @@ function ShareModal({ documentId, onClose }: { documentId: string; onClose: () =
             <Users className="h-5 w-5 text-cyan-300" />
             Condividi documento
           </h3>
-          <button onClick={onClose} className="text-slate-400 transition hover:text-white">
+          <button onClick={onClose} className="text-slate-400 transition-colors duration-150 ease-out hover:text-white">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -500,14 +483,14 @@ function ShareModal({ documentId, onClose }: { documentId: string; onClose: () =
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="email@esempio.com"
-            className="flex-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-slate-500 transition focus:border-cyan-400/50 focus:outline-none"
+            className="flex-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-slate-500 transition-colors duration-150 ease-out focus:border-cyan-400/50 focus:outline-none"
           />
           <button
             type="submit"
             disabled={submitting || !email.trim()}
-            className="rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 px-4 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
           >
-            {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Invita'}
+            {submitting ? <Loader2 className="h-4 w-4 animate-spin-fast" /> : 'Invita'}
           </button>
         </form>
 
@@ -524,7 +507,7 @@ function ShareModal({ documentId, onClose }: { documentId: string; onClose: () =
 
         {loading ? (
           <div className="flex justify-center py-4">
-            <Loader2 className="h-5 w-5 animate-spin text-cyan-300" />
+            <Loader2 className="h-5 w-5 animate-spin-fast text-cyan-300" />
           </div>
         ) : shares.length === 0 ? (
           <p className="text-sm text-slate-500">Non hai ancora condiviso questo documento con nessuno.</p>
@@ -542,7 +525,7 @@ function ShareModal({ documentId, onClose }: { documentId: string; onClose: () =
                 </div>
                 <button
                   onClick={() => handleRemove(share.id)}
-                  className="flex-shrink-0 text-slate-500 transition hover:text-red-300"
+                  className="flex-shrink-0 text-slate-500 transition-colors duration-150 ease-out hover:text-red-300"
                   title="Rimuovi accesso"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -561,6 +544,7 @@ function ShareModal({ documentId, onClose }: { documentId: string; onClose: () =
 }
 
 function MessageBubble({ message }: { message: any }) {
+  const { locale } = useLocale()
   const isUser = message.role === 'user'
   const timestamp = message.created_at ? new Date(message.created_at) : null
   const [copied, setCopied] = useState(false)
@@ -596,7 +580,7 @@ function MessageBubble({ message }: { message: any }) {
         {!isUser && (
           <button
             onClick={handleCopy}
-            className="absolute -right-10 top-2 rounded-lg bg-white/5 p-1.5 text-slate-400 opacity-0 transition hover:bg-white/10 hover:text-white group-hover:opacity-100"
+            className="absolute -right-10 top-2 rounded-lg bg-white/5 p-1.5 text-slate-400 opacity-0 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white group-hover:opacity-100"
             title="Copia testo"
           >
             {copied ? <Check className="h-4 w-4 text-cyan-300" /> : <Copy className="h-4 w-4" />}
@@ -604,7 +588,7 @@ function MessageBubble({ message }: { message: any }) {
         )}
 
         {timestamp && (
-          <p className="mt-2 text-xs text-white/50">{timestamp.toLocaleTimeString()}</p>
+          <p className="mt-2 text-xs text-white/50">{timestamp.toLocaleTimeString(LOCALE_DATE_TAG[locale])}</p>
         )}
       </div>
     </div>

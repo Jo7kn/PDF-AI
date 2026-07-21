@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { buildAuthRedirectUrl, getOAuthOptions } from '@/lib/auth/oauth'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { DEFAULT_STARTING_CREDITS } from '@/lib/credits'
 
 // Esportata (era privata) così documents.ts può riusarla invece di
 // duplicare la stessa logica di upsert.
@@ -23,6 +24,7 @@ export async function ensureUserProfile(supabase: any, user: any) {
       tier: 'free',
       total_pages_used: 0,
       active_projects: 0,
+      credits: DEFAULT_STARTING_CREDITS,
     },
     { onConflict: 'id', ignoreDuplicates: true }
   )
@@ -147,7 +149,7 @@ export async function getCurrentUserProfile() {
   const supabase = await createClient()
   const { data } = await supabase
     .from('users')
-    .select('tier, subscription_status, total_pages_used, active_projects')
+    .select('tier, subscription_status, total_pages_used, active_projects, credits')
     .eq('id', user.id)
     .single()
 
@@ -158,5 +160,6 @@ export async function getCurrentUserProfile() {
     subscriptionStatus: data?.subscription_status || null,
     totalPagesUsed: data?.total_pages_used || 0,
     activeProjects: data?.active_projects || 0,
+    credits: data?.credits ?? 0,
   }
 }

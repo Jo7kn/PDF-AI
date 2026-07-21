@@ -1,14 +1,19 @@
-import Link from 'next/link'
-import { ChevronDown, FileText, HelpCircle, Sparkles, ShieldCheck } from 'lucide-react'
+'use client'
 
-const navItems = [
-  { href: '/dashboard', label: 'Dashboard' },
-  { href: '/#features', label: 'Funzionalità' },
-  { href: '/#pricing', label: 'Prezzi' },
-  { href: '/#support', label: 'Supporto' },
-]
+import Link from 'next/link'
+import { Sparkles } from 'lucide-react'
+import { useLocale } from '@/lib/i18n/locale-context'
+import { LanguageSwitcher } from '@/components/app-header'
 
 export function AuthHeader() {
+  const { t } = useLocale()
+
+  const navItems = [
+    { href: '/#features', label: t('nav.features') },
+    { href: '/#pricing', label: t('nav.pricing') },
+    { href: '/#support', label: t('nav.support') },
+  ]
+
   return (
     <header className="border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
@@ -18,7 +23,7 @@ export function AuthHeader() {
           </div>
           <div>
             <p className="text-lg font-semibold tracking-tight text-white">PDF AI</p>
-            <p className="text-xs text-slate-400">Trasforma documenti in conversazioni</p>
+            <p className="text-xs text-slate-400">{t('nav.tagline')}</p>
           </div>
         </Link>
 
@@ -27,7 +32,7 @@ export function AuthHeader() {
             <Link
               key={item.href}
               href={item.href}
-              className="text-sm font-medium text-slate-300 transition hover:text-white"
+              className="text-sm font-medium text-slate-300 transition-colors duration-150 ease-out hover:text-white"
             >
               {item.label}
             </Link>
@@ -35,29 +40,19 @@ export function AuthHeader() {
         </nav>
 
         <div className="flex items-center gap-3">
+          <LanguageSwitcher />
           <Link
             href="/login"
-            className="hidden rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-slate-300 transition hover:border-cyan-400/30 hover:text-white sm:inline-flex"
+            className="hidden rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-slate-300 transition-colors duration-150 ease-out hover:border-cyan-400/30 hover:text-white active:scale-[0.97] sm:inline-flex"
           >
-            Accedi
+            {t('nav.login')}
           </Link>
           <Link
             href="/signup"
-            className="hidden rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/20 sm:inline-flex"
+            className="hidden rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors duration-150 ease-out hover:bg-white/20 active:scale-[0.97] sm:inline-flex"
           >
-            Registrati
+            {t('nav.signup')}
           </Link>
-
-          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-cyan-400 to-violet-500 font-semibold text-white">
-              MR
-            </div>
-            <div className="hidden text-left sm:block">
-              <p className="text-sm font-medium text-white">Mario Rossi</p>
-              <p className="text-xs text-slate-400">Pro</p>
-            </div>
-            <ChevronDown className="h-4 w-4 text-slate-400" />
-          </div>
         </div>
       </div>
     </header>

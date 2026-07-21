@@ -1,0 +1,493 @@
+'use client'
+
+import { useState } from 'react'
+import {
+  Sparkles,
+  RefreshCw,
+  FileCode,
+  FileJson,
+  FileText,
+  Image as ImageIcon,
+  Upload,
+  Download,
+  Loader2,
+  AlertCircle,
+  ArrowRight,
+  Copy,
+  Check,
+} from 'lucide-react'
+import { AppHeader } from '@/components/app-header'
+import { AppFooter } from '@/components/app-footer'
+import { SaveButton } from '@/components/save-button'
+import { runTextConversion, convertPdfToText, convertImageFormat, type ImageOutputFormat } from '@/app/actions/file-converter'
+import { parseCsv, csvRowsToObjects, objectsToCsv } from '@/lib/csv'
+import type { TextFormat } from '@/lib/nvidia/converter'
+
+type ConverterMode = 'text' | 'csv-json' | 'pdf-text' | 'image'
+
+const MODES: Array<{ key: ConverterMode; label: string; icon: typeof FileCode }> = [
+  { key: 'text', label: 'Markdown / HTML', icon: FileCode },
+  { key: 'csv-json', label: 'CSV ⇄ JSON', icon: FileJson },
+  { key: 'pdf-text', label: 'PDF → Testo', icon: FileText },
+  { key: 'image', label: 'Immagini', icon: ImageIcon },
+]
+
+const TEXT_FORMATS: TextFormat[] = ['markdown', 'html', 'testo semplice']
+const IMAGE_FORMATS: ImageOutputFormat[] = ['png', 'jpeg', 'webp']
+
+export default function FileConverterPage() {
+  const [mode, setMode] = useState<ConverterMode>('text')
+
+  return (
+    <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
+      <AppHeader
+        icon={RefreshCw}
+        title="File Converter"
+        subtitle="Markdown, HTML, CSV, JSON, PDF, immagini"
+        gradient="from-lime-400 to-emerald-500"
+      />
+
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mb-6 flex flex-wrap gap-2">
+          {MODES.map((m) => (
+            <button
+              key={m.key}
+              onClick={() => setMode(m.key)}
+              className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-150 ease-out active:scale-[0.97] ${
+                mode === m.key
+                  ? 'border-lime-400/40 bg-lime-400/15 text-lime-200'
+                  : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'
+              }`}
+            >
+              <m.icon className="h-4 w-4" />
+              {m.label}
+            </button>
+          ))}
+        </div>
+
+        <p className="mb-6 text-sm text-slate-500">
+          Word, Excel e PowerPoint non sono ancora supportati (richiedono librerie aggiuntive non ancora installate).
+        </p>
+
+        {mode === 'text' && <TextConverter />}
+        {mode === 'csv-json' && <CsvJsonConverter />}
+        {mode === 'pdf-text' && <PdfToTextConverter />}
+        {mode === 'image' && <ImageConverter />}
+      </main>
+
+      <AppFooter />
+    </div>
+  )
+}
+
+function TextConverter() {
+  const [from, setFrom] = useState<TextFormat>('markdown')
+  const [to, setTo] = useState<TextFormat>('html')
+  const [input, setInput] = useState('')
+  const [output, setOutput] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
+
+  const handleConvert = async () => {
+    if (!input.trim() || loading) return
+    setLoading(true)
+    setError(null)
+    setOutput(null)
+    const result = await runTextConversion(input, from, to)
+    if ('error' in result) setError(result.error)
+    else setOutput(result.result || null)
+    setLoading(false)
+  }
+
+  const handleCopy = async () => {
+    if (!output) return
+    await navigator.clipboard.writeText(output)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-2">
+      <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+        <div className="mb-4 flex flex-wrap items-center gap-3">
+          <FormatSelect value={from} onChange={setFrom} />
+          <ArrowRight className="h-4 w-4 text-slate-500" />
+          <FormatSelect value={to} onChange={setTo} />
+        </div>
+        <textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Incolla qui il testo da convertire..."
+          rows={14}
+          className="w-full resize-none rounded-2xl border border-white/10 bg-slate-950/60 p-4 font-mono text-sm text-slate-100 placeholder-slate-600 focus:border-lime-400/50 focus:outline-none"
+        />
+        {error && (
+          <div className="mt-4 flex items-center gap-2 rounded-xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-200">
+            <AlertCircle className="h-4 w-4 flex-shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+        <button
+          onClick={handleConvert}
+          disabled={loading || !input.trim() || from === to}
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-lime-500 to-emerald-500 px-4 py-3 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+        >
+          {loading ? <Loader2 className="h-4 w-4 animate-spin-fast" /> : <RefreshCw className="h-4 w-4" />}
+          Converti
+        </button>
+      </section>
+
+      <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-white">Risultato</h2>
+          {output && (
+            <div className="flex items-center gap-2">
+              <SaveButton tool="file-converter" title={`Conversione ${from} → ${to}`} content={output} metadata={{ from, to }} />
+              <button onClick={handleCopy} className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white">
+                {copied ? <Check className="h-3.5 w-3.5 text-lime-300" /> : <Copy className="h-3.5 w-3.5" />}
+                {copied ? 'Copiato' : 'Copia'}
+              </button>
+            </div>
+          )}
+        </div>
+        {loading && (
+          <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-500">
+            <Loader2 className="h-8 w-8 animate-spin-fast" />
+          </div>
+        )}
+        {!loading && !output && (
+          <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-600">
+            <Sparkles className="h-10 w-10" />
+            <p className="text-sm">Il risultato apparirà qui</p>
+          </div>
+        )}
+        {!loading && output && (
+          <pre className="max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-slate-950/60 p-4 font-mono text-sm text-slate-100">{output}</pre>
+        )}
+      </section>
+    </div>
+  )
+}
+
+function FormatSelect({ value, onChange }: { value: TextFormat; onChange: (v: TextFormat) => void }) {
+  return (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value as TextFormat)}
+      className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm capitalize text-white focus:border-lime-400/50 focus:outline-none"
+    >
+      {TEXT_FORMATS.map((f) => (
+        <option key={f} value={f} className="bg-slate-900 capitalize">{f}</option>
+      ))}
+    </select>
+  )
+}
+
+function CsvJsonConverter() {
+  const [direction, setDirection] = useState<'csv-to-json' | 'json-to-csv'>('csv-to-json')
+  const [input, setInput] = useState('')
+  const [output, setOutput] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
+
+  const handleConvert = () => {
+    setError(null)
+    setOutput(null)
+    try {
+      if (direction === 'csv-to-json') {
+        const parsed = parseCsv(input)
+        const objects = csvRowsToObjects(parsed)
+        setOutput(JSON.stringify(objects, null, 2))
+      } else {
+        const objects = JSON.parse(input)
+        if (!Array.isArray(objects)) throw new Error('Il JSON deve essere un array di oggetti')
+        setOutput(objectsToCsv(objects))
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Conversione fallita')
+    }
+  }
+
+  const handleCopy = async () => {
+    if (!output) return
+    await navigator.clipboard.writeText(output)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-2">
+      <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+        <div className="mb-4 flex gap-2">
+          <button
+            onClick={() => { setDirection('csv-to-json'); setInput(''); setOutput(null); setError(null) }}
+            className={`rounded-full border px-4 py-2 text-sm transition-colors duration-150 ease-out ${direction === 'csv-to-json' ? 'border-lime-400/40 bg-lime-400/15 text-lime-200' : 'border-white/10 bg-white/5 text-slate-300'}`}
+          >
+            CSV → JSON
+          </button>
+          <button
+            onClick={() => { setDirection('json-to-csv'); setInput(''); setOutput(null); setError(null) }}
+            className={`rounded-full border px-4 py-2 text-sm transition-colors duration-150 ease-out ${direction === 'json-to-csv' ? 'border-lime-400/40 bg-lime-400/15 text-lime-200' : 'border-white/10 bg-white/5 text-slate-300'}`}
+          >
+            JSON → CSV
+          </button>
+        </div>
+        <textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder={direction === 'csv-to-json' ? 'nome,eta\nMario,30\nLuca,25' : '[{"nome":"Mario","eta":30}]'}
+          rows={14}
+          className="w-full resize-none rounded-2xl border border-white/10 bg-slate-950/60 p-4 font-mono text-sm text-slate-100 placeholder-slate-600 focus:border-lime-400/50 focus:outline-none"
+        />
+        {error && (
+          <div className="mt-4 flex items-center gap-2 rounded-xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-200">
+            <AlertCircle className="h-4 w-4 flex-shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+        <button
+          onClick={handleConvert}
+          disabled={!input.trim()}
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-lime-500 to-emerald-500 px-4 py-3 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+        >
+          <RefreshCw className="h-4 w-4" />
+          Converti (istantaneo)
+        </button>
+      </section>
+
+      <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-white">Risultato</h2>
+          {output && (
+            <div className="flex items-center gap-2">
+              <SaveButton tool="file-converter" title={direction === 'csv-to-json' ? 'CSV → JSON' : 'JSON → CSV'} content={output} metadata={{ direction }} />
+              <button onClick={handleCopy} className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white">
+                {copied ? <Check className="h-3.5 w-3.5 text-lime-300" /> : <Copy className="h-3.5 w-3.5" />}
+                {copied ? 'Copiato' : 'Copia'}
+              </button>
+            </div>
+          )}
+        </div>
+        {!output && (
+          <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-600">
+            <FileJson className="h-10 w-10" />
+            <p className="text-sm">Il risultato apparirà qui</p>
+          </div>
+        )}
+        {output && (
+          <pre className="max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-slate-950/60 p-4 font-mono text-sm text-slate-100">{output}</pre>
+        )}
+      </section>
+    </div>
+  )
+}
+
+function PdfToTextConverter() {
+  const [file, setFile] = useState<File | null>(null)
+  const [output, setOutput] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = e.target.files?.[0]
+    if (selected && selected.type === 'application/pdf') {
+      setFile(selected)
+      setError(null)
+      setOutput(null)
+    } else {
+      setError('Seleziona un file PDF')
+    }
+  }
+
+  const handleConvert = async () => {
+    if (!file || loading) return
+    setLoading(true)
+    setError(null)
+    setOutput(null)
+    const formData = new FormData()
+    formData.append('file', file)
+    const result = await convertPdfToText(formData)
+    if (result.error) setError(result.error)
+    else setOutput(result.text || null)
+    setLoading(false)
+  }
+
+  const handleCopy = async () => {
+    if (!output) return
+    await navigator.clipboard.writeText(output)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-2">
+      <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+        <div
+          className="cursor-pointer rounded-2xl border-2 border-dashed border-white/15 bg-white/5 p-8 text-center transition-colors duration-150 ease-out hover:border-lime-400/40"
+          onClick={() => document.getElementById('pdf-input')?.click()}
+        >
+          <Upload className="mx-auto mb-4 h-12 w-12 text-slate-400" />
+          <p className="mb-2 text-white">Carica un PDF</p>
+          <p className="text-sm text-slate-500">Estrae il testo (non funziona su PDF scansionati come immagine)</p>
+          <input id="pdf-input" type="file" accept=".pdf" className="hidden" onChange={handleFileSelect} />
+          {file && <p className="mt-3 text-sm text-lime-300">{file.name}</p>}
+        </div>
+        {error && (
+          <div className="mt-4 flex items-center gap-2 rounded-xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-200">
+            <AlertCircle className="h-4 w-4 flex-shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+        <button
+          onClick={handleConvert}
+          disabled={loading || !file}
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-lime-500 to-emerald-500 px-4 py-3 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+        >
+          {loading ? <Loader2 className="h-4 w-4 animate-spin-fast" /> : <FileText className="h-4 w-4" />}
+          Estrai testo
+        </button>
+      </section>
+
+      <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-white">Testo estratto</h2>
+          {output && (
+            <div className="flex items-center gap-2">
+              <SaveButton tool="file-converter" title={`PDF → Testo · ${file?.name || ''}`} content={output} metadata={{ from: 'pdf', to: 'text' }} />
+              <button onClick={handleCopy} className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white">
+                {copied ? <Check className="h-3.5 w-3.5 text-lime-300" /> : <Copy className="h-3.5 w-3.5" />}
+                {copied ? 'Copiato' : 'Copia'}
+              </button>
+            </div>
+          )}
+        </div>
+        {!output && !loading && (
+          <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-600">
+            <FileText className="h-10 w-10" />
+            <p className="text-sm">Il testo estratto apparirà qui</p>
+          </div>
+        )}
+        {loading && (
+          <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-500">
+            <Loader2 className="h-8 w-8 animate-spin-fast" />
+          </div>
+        )}
+        {output && (
+          <pre className="max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm text-slate-100">{output}</pre>
+        )}
+      </section>
+    </div>
+  )
+}
+
+function ImageConverter() {
+  const [file, setFile] = useState<File | null>(null)
+  const [format, setFormat] = useState<ImageOutputFormat>('png')
+  const [resultUrl, setResultUrl] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = e.target.files?.[0]
+    if (selected && selected.type.startsWith('image/')) {
+      setFile(selected)
+      setError(null)
+      setResultUrl(null)
+    } else {
+      setError('Seleziona un file immagine')
+    }
+  }
+
+  const handleConvert = async () => {
+    if (!file || loading) return
+    setLoading(true)
+    setError(null)
+    setResultUrl(null)
+    const formData = new FormData()
+    formData.append('file', file)
+    const result = await convertImageFormat(formData, format)
+    if (result.error) setError(result.error)
+    else setResultUrl(result.dataUrl || null)
+    setLoading(false)
+  }
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-2">
+      <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+        <div
+          className="cursor-pointer rounded-2xl border-2 border-dashed border-white/15 bg-white/5 p-8 text-center transition-colors duration-150 ease-out hover:border-lime-400/40"
+          onClick={() => document.getElementById('image-input')?.click()}
+        >
+          <Upload className="mx-auto mb-4 h-12 w-12 text-slate-400" />
+          <p className="mb-2 text-white">Carica un'immagine</p>
+          <p className="text-sm text-slate-500">PNG, JPEG, WebP e altri formati supportati in lettura</p>
+          <input id="image-input" type="file" accept="image/*" className="hidden" onChange={handleFileSelect} />
+          {file && <p className="mt-3 text-sm text-lime-300">{file.name}</p>}
+        </div>
+
+        <label className="mt-4 flex items-center gap-2 text-sm text-slate-400">
+          Converti in
+          <select
+            value={format}
+            onChange={(e) => setFormat(e.target.value as ImageOutputFormat)}
+            className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm uppercase text-white focus:border-lime-400/50 focus:outline-none"
+          >
+            {IMAGE_FORMATS.map((f) => (
+              <option key={f} value={f} className="bg-slate-900 uppercase">{f}</option>
+            ))}
+          </select>
+        </label>
+
+        {error && (
+          <div className="mt-4 flex items-center gap-2 rounded-xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-200">
+            <AlertCircle className="h-4 w-4 flex-shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        <button
+          onClick={handleConvert}
+          disabled={loading || !file}
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-lime-500 to-emerald-500 px-4 py-3 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+        >
+          {loading ? <Loader2 className="h-4 w-4 animate-spin-fast" /> : <RefreshCw className="h-4 w-4" />}
+          Converti
+        </button>
+      </section>
+
+      <section className="flex flex-col rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-white">Risultato</h2>
+          {resultUrl && (
+            <div className="flex items-center gap-2">
+              <SaveButton tool="file-converter" title={`Immagine convertita in ${format.toUpperCase()}`} content={resultUrl} contentType="image" metadata={{ format }} />
+              <a
+                href={resultUrl}
+                download={`converted.${format}`}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white"
+              >
+                <Download className="h-3.5 w-3.5" />
+                Scarica
+              </a>
+            </div>
+          )}
+        </div>
+        <div className="flex flex-1 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-slate-950/60">
+          {loading && <Loader2 className="h-8 w-8 animate-spin-fast text-slate-500" />}
+          {!loading && !resultUrl && (
+            <div className="flex flex-col items-center gap-3 p-8 text-slate-600">
+              <ImageIcon className="h-10 w-10" />
+              <p className="text-sm">L'immagine convertita apparirà qui</p>
+            </div>
+          )}
+          {!loading && resultUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={resultUrl} alt="Convertita" className="max-h-[32rem] w-full object-contain" />
+          )}
+        </div>
+      </section>
+    </div>
+  )
+}

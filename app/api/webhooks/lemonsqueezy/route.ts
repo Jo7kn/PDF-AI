@@ -3,6 +3,7 @@ import crypto from 'node:crypto'
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
 import { LEMONSQUEEZY_VARIANT_TIER_MAP } from '@/lib/constants'
+import { PLAN_CREDITS, setUserCredits } from '@/lib/credits'
 
 export async function POST(request: NextRequest) {
   const secret = process.env.LEMONSQUEEZY_WEBHOOK_SECRET
@@ -81,6 +82,8 @@ export async function POST(request: NextRequest) {
           break
         }
 
+        const periodEnd = attributes.renews_at || attributes.ends_at || null
+
         await supabase
           .from('users')
           .update({
@@ -88,11 +91,28 @@ export async function POST(request: NextRequest) {
             lemonsqueezy_customer_id: customerId,
             lemonsqueezy_subscription_id: String(subscriptionId),
             subscription_status: attributes.status,
-            current_period_end: attributes.renews_at || attributes.ends_at || null,
+            current_period_end: periodEnd,
             // Nuovo abbonamento o cambio piano: riparti con quota pulita
             total_pages_used: 0,
           })
           .eq('id', userId)
+
+        // Nuovo abbonamento o upgrade/downgrade piano: crediti al livello
+        // del nuovo piano (non sommati a quelli residui, per evitare che un
+        // downgrade->upgrade ripetuto accumuli crediti indefinitamente).
+        await setUserCredits(userId, PLAN_CREDITS[tier] ?? PLAN_CREDITS.free)
+
+        await supabase.from('subscriptions').upsert(
+          {
+            user_id: userId,
+            plan: tier,
+            status: attributes.status || 'active',
+            lemonsqueezy_subscription_id: String(subscriptionId),
+            current_period_end: periodEnd,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: 'user_id' }
+        )
         break
       }
 
@@ -107,10 +127,21 @@ export async function POST(request: NextRequest) {
           console.error('Lemon Squeezy webhook: utente non trovato per rinnovo', { customData, customerId })
           break
         }
+
+        const { data: renewingUser } = await supabase
+          .from('users')
+          .select('tier')
+          .eq('id', userId)
+          .single()
+
         await supabase
           .from('users')
           .update({ total_pages_used: 0 })
           .eq('id', userId)
+
+        // Rinnovo riuscito = nuovo ciclo di fatturazione: i crediti
+        // ripartono al livello del piano, stessa logica di total_pages_used.
+        await setUserCredits(userId, PLAN_CREDITS[renewingUser?.tier || 'free'] ?? PLAN_CREDITS.free)
         break
       }
 
@@ -122,19 +153,28 @@ export async function POST(request: NextRequest) {
           .from('users')
           .update({ subscription_status: attributes.status, tier: 'free' })
           .eq('id', userId)
+        await setUserCredits(userId, PLAN_CREDITS.free)
+        await supabase
+          .from('subscriptions')
+          .update({ plan: 'free', status: attributes.status, updated_at: new Date().toISOString() })
+          .eq('user_id', userId)
         break
       }
 
       case 'subscription_cancelled': {
         // L'utente ha cancellato ma ha ancora accesso fino a
         // current_period_end (Lemon Squeezy manderà subscription_expired
-        // a quel punto) — non fare downgrade subito
+        // a quel punto) — non fare downgrade subito, crediti invariati
         const userId = await resolveUserId()
         if (!userId) break
         await supabase
           .from('users')
           .update({ subscription_status: attributes.status })
           .eq('id', userId)
+        await supabase
+          .from('subscriptions')
+          .update({ status: attributes.status, updated_at: new Date().toISOString() })
+          .eq('user_id', userId)
         break
       }
 

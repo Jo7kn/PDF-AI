@@ -109,7 +109,7 @@ const handleGoogleLogin = async () => {
           <Button type="submit" className="w-full bg-gradient-to-r from-cyan-500 to-violet-500 hover:from-cyan-400 hover:to-violet-400" disabled={loading}>
             {loading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className="mr-2 h-4 w-4 animate-spin-fast" />
                 Caricamento...
               </>
             ) : (
@@ -144,7 +144,7 @@ const handleGoogleLogin = async () => {
       <CardFooter className="flex justify-center border-t border-white/10 px-6 py-4">
         <p className="text-sm text-slate-400">
           Non hai un account?{' '}
-          <Link href="/signup" className="font-semibold text-cyan-300 transition hover:text-cyan-200">
+          <Link href="/signup" className="font-semibold text-cyan-300 transition-colors duration-150 ease-out hover:text-cyan-200">
             Registrati
           </Link>
         </p>

@@ -1,0 +1,91 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import { History, Zap, Loader2 } from 'lucide-react'
+import { getUsageHistory, type UsageEvent } from '@/app/actions/usage'
+import { getToolBySlug } from '@/lib/tools'
+import { useLocale } from '@/lib/i18n/locale-context'
+import { LOCALE_DATE_TAG } from '@/lib/i18n/translations'
+
+export default function HistoryPage() {
+  const { locale } = useLocale()
+  const [events, setEvents] = useState<UsageEvent[] | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    getUsageHistory(100).then((r) => {
+      if ('error' in r) setError(r.error)
+      else setEvents(r.events)
+    })
+  }, [])
+
+  const totalCredits = events?.reduce((sum, e) => sum + e.credits_cost, 0) || 0
+
+  return (
+    <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <History className="h-5 w-5 text-cyan-300" />
+          <h1 className="text-xl font-semibold text-white">Cronologia utilizzo</h1>
+        </div>
+        {events && events.length > 0 && (
+          <div className="flex items-center gap-1.5 rounded-full border border-amber-400/20 bg-amber-400/10 px-3 py-1.5 text-sm text-amber-200">
+            <Zap className="h-3.5 w-3.5" />
+            {totalCredits} crediti usati (ultime {events.length})
+          </div>
+        )}
+      </div>
+
+      {error && <p className="text-sm text-red-300">{error}</p>}
+
+      {events === null && !error && (
+        <div className="flex justify-center py-12">
+          <Loader2 className="h-6 w-6 animate-spin-fast text-slate-500" />
+        </div>
+      )}
+
+      {events && events.length === 0 && (
+        <div className="py-12 text-center">
+          <History className="mx-auto mb-4 h-16 w-16 text-slate-600" />
+          <p className="text-slate-400">Nessuna attività ancora. Prova uno degli strumenti AI.</p>
+        </div>
+      )}
+
+      {events && events.length > 0 && (
+        <div className="space-y-2">
+          {events.map((event) => {
+            const tool = getToolBySlug(event.tool)
+            const Icon = tool?.icon
+            return (
+              <div
+                key={event.id}
+                className="flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/5 px-4 py-3"
+              >
+                <div className="flex min-w-0 items-center gap-3">
+                  {Icon && (
+                    <div className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${tool.gradient}`}>
+                      <Icon className="h-4 w-4 text-white" />
+                    </div>
+                  )}
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-white">{tool?.name || event.tool}</p>
+                    {event.action && <p className="truncate text-xs text-slate-500">{event.action}</p>}
+                  </div>
+                </div>
+                <div className="flex flex-shrink-0 items-center gap-3 text-sm">
+                  <span className="flex items-center gap-1 text-amber-300/80">
+                    <Zap className="h-3 w-3" />
+                    -{event.credits_cost}
+                  </span>
+                  <span className="text-slate-500">
+                    {new Date(event.created_at).toLocaleDateString(LOCALE_DATE_TAG[locale])} {new Date(event.created_at).toLocaleTimeString(LOCALE_DATE_TAG[locale], { hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </section>
+  )
+}

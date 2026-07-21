@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
+import { LocaleProvider } from "@/lib/i18n/locale-context"
+import { RouteProgress } from "@/components/route-progress"
 // @ts-ignore
 import "./globals.css"
 
@@ -22,7 +24,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
-        {children}
+        <LocaleProvider>
+          <RouteProgress />
+          {children}
+        </LocaleProvider>
       </body>
     </html>
   )
