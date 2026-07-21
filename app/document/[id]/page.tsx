@@ -5,7 +5,7 @@ import Link from 'next/link'
 import {
   ArrowLeft, Send, FileText, Calendar, Sparkles, Loader2, User, Bot,
   AlertCircle, Clock, LogOut, RotateCcw, CalendarDays, Link2, Check,
-  Users, X, Trash2, Eye,
+  Users, X, Trash2, Eye, Copy
 } from 'lucide-react'
 import { getDocument } from '@/app/actions/documents'
 import { getMessages } from '@/app/actions/messages'
@@ -20,9 +20,6 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  // Rinominato da "document" a "doc": lo state shadowava window.document,
-  // rompendo silenziosamente qualsiasi document.createElement/getElementById
-  // (serve per l'export .ics qui sotto).
   const [doc, setDoc] = useState<any>(null)
   const [loadingDoc, setLoadingDoc] = useState(true)
   const [docError, setDocError] = useState<string | null>(null)
@@ -103,11 +100,8 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
 
   const isProcessing = doc?.processing_status === 'pending' || doc?.processing_status === 'processing'
   const hasFailed = doc?.processing_status === 'failed'
-  const isOwner = doc?.isOwner !== false // default true finché non sappiamo, per non nascondere azioni all'owner durante il caricamento
+  const isOwner = doc?.isOwner !== false 
 
-  // Logica di invio estratta in una funzione riusabile, così sia il form
-  // sia le azioni rapide (Riassumi, Estrai scadenze) possono chiamarla
-  // con un prompt precompilato invece di essere bottoni finti.
   const sendMessage = async (content: string) => {
     if (!content.trim() || loading || isProcessing) return
 
@@ -167,7 +161,7 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
 
     doc.deadlines_json.forEach((d: any, i: number) => {
       const dateStr = String(d.date).replace(/-/g, '')
-      if (!/^\d{8}$/.test(dateStr)) return // salta date non valide/non parsabili
+      if (!/^\d{8}$/.test(dateStr)) return 
       lines.push(
         'BEGIN:VEVENT',
         `UID:${doc.id}-${i}@pdfai`,
@@ -201,7 +195,6 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
-      {/* Header, stesso stile della dashboard */}
       <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex min-w-0 items-center gap-3">
@@ -242,7 +235,6 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid gap-8 xl:grid-cols-[0.95fr_1.05fr]">
-          {/* Sidebar info documento */}
           <aside className="space-y-6">
             {loadingDoc ? (
               <div className="flex items-center justify-center rounded-3xl border border-white/10 bg-slate-900/80 p-10 shadow-xl shadow-black/20">
@@ -340,7 +332,6 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
                           {doc.deadlines_json.map((deadline: any, index: number) => (
                             <div key={index} className="rounded-xl border border-white/10 bg-white/5 p-3">
                               <p className="text-sm font-medium text-white">{deadline.description}</p>
-                              <p className="mt-1 text-xs text-cyan-300">{deadline.date}</p>
                             </div>
                           ))}
                         </div>
@@ -351,7 +342,6 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
               </div>
             )}
 
-            {/* Azioni rapide, ora funzionanti */}
             <div className="rounded-3xl border border-white/10 bg-white/10 p-6 backdrop-blur-xl">
               <h3 className="mb-4 text-lg font-semibold text-white">Azioni rapide</h3>
               <div className="space-y-2">
@@ -388,7 +378,6 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
             </div>
           </aside>
 
-          {/* Chat */}
           <section className="rounded-3xl border border-white/10 bg-slate-900/80 shadow-xl shadow-black/20">
             <div className="flex h-[calc(100vh-200px)] flex-col">
               <div className="flex-1 space-y-4 overflow-y-auto p-6">
@@ -574,6 +563,17 @@ function ShareModal({ documentId, onClose }: { documentId: string; onClose: () =
 function MessageBubble({ message }: { message: any }) {
   const isUser = message.role === 'user'
   const timestamp = message.created_at ? new Date(message.created_at) : null
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(message.content)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy text: ', err)
+    }
+  }
 
   return (
     <div className={`flex items-start gap-3 ${isUser ? 'flex-row-reverse' : ''}`}>
@@ -585,13 +585,24 @@ function MessageBubble({ message }: { message: any }) {
         {isUser ? <User className="h-4 w-4 text-white" /> : <Bot className="h-4 w-4 text-white" />}
       </div>
       <div
-        className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+        className={`group relative max-w-[80%] rounded-2xl px-4 py-3 ${
           isUser
             ? 'bg-gradient-to-r from-cyan-500 to-violet-500 text-white'
             : 'border border-white/10 bg-white/5 text-slate-200'
         }`}
       >
         <p className="text-sm">{message.content}</p>
+        
+        {!isUser && (
+          <button
+            onClick={handleCopy}
+            className="absolute -right-10 top-2 rounded-lg bg-white/5 p-1.5 text-slate-400 opacity-0 transition hover:bg-white/10 hover:text-white group-hover:opacity-100"
+            title="Copia testo"
+          >
+            {copied ? <Check className="h-4 w-4 text-cyan-300" /> : <Copy className="h-4 w-4" />}
+          </button>
+        )}
+
         {timestamp && (
           <p className="mt-2 text-xs text-white/50">{timestamp.toLocaleTimeString()}</p>
         )}
