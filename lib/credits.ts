@@ -41,7 +41,7 @@ export const CREDIT_COSTS: Record<ToolSlug, number> = {
   'chat-ai': 1,
 }
 
-// Crediti assegnati/rinnovati per piano (webhook LemonSqueezy). Allineati
+// Crediti assegnati/rinnovati per piano (webhook Stripe). Allineati
 // nello spirito ai limiti di lib/pricing.ts (PRICING_TIERS) ma su scala
 // crediti generica invece che "pagine PDF".
 export const PLAN_CREDITS: Record<string, number> = {

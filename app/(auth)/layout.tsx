@@ -1,4 +1,11 @@
+import type { Metadata } from 'next'
 import { AuthHeader } from '@/components/auth-header'
+
+// Pagine di login/registrazione: nessun valore come risultato di ricerca
+// (contenuto duplicato tra loro), ma i link interni restano seguibili.
+export const metadata: Metadata = {
+  robots: { index: false, follow: true },
+}
 
 export default function AuthLayout({
   children,

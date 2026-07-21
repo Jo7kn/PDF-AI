@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { PRICING_TIERS } from '@/lib/pricing'
+import { AI_TOOLS } from '@/lib/tools'
 import { FileText, Sparkles, Zap, Users, Mail, BarChart3, Calendar, Check, ArrowRight, ShieldCheck, BrainCircuit } from 'lucide-react'
 import { LandingHeader } from '@/components/landing-header'
 
@@ -100,6 +101,39 @@ export default function Home() {
             title="Chat con l’AI"
             description="Fai domande naturali sui tuoi documenti e ricevi risposte immediate e pertinenti."
           />
+        </div>
+      </section>
+
+      <section id="tools" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <div className="mb-10 text-center">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">AI Toolbox</p>
+          <h2 className="text-3xl font-semibold text-white sm:text-4xl">Tutti gli strumenti AI in un unico posto</h2>
+          <p className="mx-auto mt-3 max-w-2xl text-slate-300">
+            Oltre alla chat sui PDF, AI Toolbox include scrittura, codice, immagini, email, contratti, dati e traduzioni.
+          </p>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {AI_TOOLS.filter((tool) => tool.status === 'available').map((tool) => (
+            <Link
+              key={tool.slug}
+              href={tool.href}
+              className="group rounded-2xl border border-white/10 bg-slate-900/70 p-5 shadow-lg shadow-black/10 backdrop-blur-xl transition-colors duration-150 ease-out hover:bg-white/10"
+            >
+              <div className={`mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${tool.gradient} text-white`}>
+                <tool.icon className="h-5 w-5" />
+              </div>
+              <h3 className="mb-1 font-semibold text-white">{tool.name}</h3>
+              <p className="text-sm text-slate-400">{tool.tagline}</p>
+            </Link>
+          ))}
+        </div>
+
+        <div className="mt-8 text-center">
+          <Link href="/tools" className="inline-flex items-center justify-center gap-2 font-semibold text-cyan-300 hover:text-cyan-200">
+            Esplora tutti gli strumenti
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </section>
 

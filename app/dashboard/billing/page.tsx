@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { CreditCard, Zap, Check } from 'lucide-react'
 import { getCurrentUserProfile } from '@/app/actions/auth'
 import { PRICING_TIERS, getTierByName } from '@/lib/pricing'
-import { buildCheckoutUrl } from '@/lib/lemonsqueezy'
+import { buildCheckoutUrl } from '@/lib/stripe'
 import { Skeleton } from '@/components/skeleton'
 
 export default function BillingPage() {
@@ -111,7 +111,7 @@ function UpgradeButton({
     return (
       <button
         disabled
-        title="Configura LEMONSQUEEZY_CHECKOUT_URLS in lib/constants.ts"
+        title="Configura STRIPE_CHECKOUT_URLS in lib/constants.ts"
         className="block w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-center text-sm text-slate-500 opacity-50"
       >
         {label} (non configurato)

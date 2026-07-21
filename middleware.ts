@@ -11,9 +11,23 @@ const PUBLIC_ROUTES = new Set([
   '/terms',
   '/auth/callback',
   '/auth/update-password',
-  // Chiamato da Lemon Squeezy (nessuna sessione utente): l'autenticazione
-  // è la firma HMAC verificata dentro la route stessa, non i cookie.
-  '/api/webhooks/lemonsqueezy',
+  // Chiamato da Stripe (nessuna sessione utente): l'autenticazione è la
+  // firma verificata dentro la route stessa, non i cookie.
+  '/api/webhooks/stripe',
+  // Pagine marketing dei tool: devono restare visitabili senza login così
+  // Google può indicizzarle. L'uso reale (server action) resta comunque
+  // protetto da getCurrentUser() dentro ogni action in app/actions/*.
+  '/tools',
+  '/tools/ai-writer',
+  '/tools/code-ai',
+  '/tools/image-ai',
+  '/tools/data-ai',
+  '/tools/study-ai',
+  '/tools/translator-ai',
+  '/tools/email-ai',
+  '/tools/contract-ai',
+  '/tools/file-converter',
+  '/tools/chat-ai',
 ])
 
 // Queste pagine hanno senso solo per un visitatore non autenticato.

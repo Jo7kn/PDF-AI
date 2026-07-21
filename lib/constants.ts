@@ -20,21 +20,27 @@ export const MAX_FILE_SIZE_BYTES: Record<string, number> = {
 export const DEFAULT_MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_BYTES[DEFAULT_TIER]
 
 // ------------------------------------------------------------------
-// Lemon Squeezy: compila questi valori dopo aver creato i prodotti sul
-// tuo store (Settings -> Products per il Variant ID, Share -> "Buy now"
-// per l'URL di checkout).
+// Stripe: letti da env invece che hardcoded, perché test mode e live mode
+// sono due set di valori completamente separati (Payment Link e Price ID
+// diversi) — .env.local tiene i valori test, l'ambiente di produzione
+// (Vercel) tiene quelli live, zero modifiche al codice per passare dall'uno
+// all'altro.
 // ------------------------------------------------------------------
 
-// Variant ID (numero, come stringa) -> tier interno. Il webhook usa
-// questa mappa per sapere quale piano assegnare quando arriva un evento
-// subscription_created/updated.
-export const LEMONSQUEEZY_VARIANT_TIER_MAP: Record<string, string> = {
-  '1925549': 'pro',
-  '1925583': 'team',
+// Price ID ("price_...", da Dashboard -> Product catalog -> click prodotto
+// -> copia Price ID) -> tier interno. Il webhook lo usa per sapere quale
+// piano assegnare quando arriva un evento checkout.session.completed /
+// customer.subscription.updated. Solo server-side: niente NEXT_PUBLIC_.
+export const STRIPE_PRICE_TIER_MAP: Record<string, string> = {
+  ...(process.env.STRIPE_PRICE_ID_PRO ? { [process.env.STRIPE_PRICE_ID_PRO]: 'pro' } : {}),
+  ...(process.env.STRIPE_PRICE_ID_TEAM ? { [process.env.STRIPE_PRICE_ID_TEAM]: 'team' } : {}),
 }
-// URL di checkout hosted per piano (il link "Buy now" copiato dal
-// prodotto). Usati per costruire il bottone "Passa a Pro/Team".
-export const LEMONSQUEEZY_CHECKOUT_URLS: Record<string, string> = {
-  pro: 'https://neuropdf.lemonsqueezy.com/checkout/buy/be89c8aa-588b-46f6-8d69-913ffbd7ab2c',
-  team: 'https://neuropdf.lemonsqueezy.com/checkout/buy/fa0f3f5d-5721-4654-a544-57df706d7fa1',
+
+// Payment Link hosted per piano. Usati per costruire il bottone "Passa a
+// Pro/Team" (lib/stripe.ts ci appende client_reference_id/prefilled_email).
+// NEXT_PUBLIC_ perché letti da un client component — non sono segreti, un
+// Payment Link è pensato per essere condiviso/cliccato pubblicamente.
+export const STRIPE_CHECKOUT_URLS: Record<string, string> = {
+  pro: process.env.NEXT_PUBLIC_STRIPE_CHECKOUT_URL_PRO || '',
+  team: process.env.NEXT_PUBLIC_STRIPE_CHECKOUT_URL_TEAM || '',
 }

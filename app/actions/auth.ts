@@ -138,9 +138,8 @@ export async function getCurrentUser() {
 /**
  * Profilo "leggero" per la UI: email + tier reali, invece dei placeholder
  * hardcoded ("Mario Rossi" / "Pro") che c'erano nell'header della
- * dashboard. Usato anche per costruire i link di checkout Lemon Squeezy
- * (serve sapere il piano attuale per non mostrare "Passa a Pro" a chi è
- * già Pro).
+ * dashboard. Usato anche per costruire i link di checkout Stripe (serve
+ * sapere il piano attuale per non mostrare "Passa a Pro" a chi è già Pro).
  */
 export async function getCurrentUserProfile() {
   const user = await getCurrentUser()
