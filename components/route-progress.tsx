@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { Sparkles } from 'lucide-react'
 import { useLocale } from '@/lib/i18n/locale-context'
+import { useReducedMotion } from '@/lib/hooks/use-reduced-motion'
 
 export function RouteProgress() {
   const { t } = useLocale()
@@ -23,11 +24,16 @@ export function RouteProgress() {
   const intervalRef = useRef<number>()
   const hideTimeoutRef = useRef<number>()
   const prevPathname = useRef(pathname)
-  const reducedMotion = useRef(false)
 
+  // start()/complete() sono richiamate da un listener di click registrato
+  // una sola volta (effetto con deps [], vedi sotto): leggono da un ref,
+  // non dallo stato reattivo dell'hook, cosi' vedono sempre il valore
+  // aggiornato invece di restare agganciate a quello della prima render.
+  const reducedMotionHook = useReducedMotion()
+  const reducedMotion = useRef(false)
   useEffect(() => {
-    reducedMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  }, [])
+    reducedMotion.current = reducedMotionHook
+  }, [reducedMotionHook])
 
   // La pathname è già cambiata: la navigazione è arrivata, completa e nascondi.
   useEffect(() => {

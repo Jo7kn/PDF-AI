@@ -1,11 +1,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { History, Zap, Loader2 } from 'lucide-react'
+import { History, Zap } from 'lucide-react'
 import { getUsageHistory, type UsageEvent } from '@/app/actions/usage'
 import { getToolBySlug } from '@/lib/tools'
 import { useLocale } from '@/lib/i18n/locale-context'
 import { LOCALE_DATE_TAG } from '@/lib/i18n/translations'
+import { SkeletonRow } from '@/components/skeleton'
 
 export default function HistoryPage() {
   const { locale } = useLocale()
@@ -39,13 +40,15 @@ export default function HistoryPage() {
       {error && <p className="text-sm text-red-300">{error}</p>}
 
       {events === null && !error && (
-        <div className="flex justify-center py-12">
-          <Loader2 className="h-6 w-6 animate-spin-fast text-slate-500" />
+        <div className="space-y-2">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <SkeletonRow key={i} className="p-3" />
+          ))}
         </div>
       )}
 
       {events && events.length === 0 && (
-        <div className="py-12 text-center">
+        <div className="animate-fade-in-up py-12 text-center">
           <History className="mx-auto mb-4 h-16 w-16 text-slate-600" />
           <p className="text-slate-400">Nessuna attività ancora. Prova uno degli strumenti AI.</p>
         </div>
@@ -53,13 +56,14 @@ export default function HistoryPage() {
 
       {events && events.length > 0 && (
         <div className="space-y-2">
-          {events.map((event) => {
+          {events.map((event, i) => {
             const tool = getToolBySlug(event.tool)
             const Icon = tool?.icon
             return (
               <div
                 key={event.id}
-                className="flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/5 px-4 py-3"
+                className="animate-fade-in-up flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/5 px-4 py-3 transition-colors duration-150 ease-out hover:bg-white/[0.07]"
+                style={{ animationDelay: `${Math.min(i, 12) * 25}ms` }}
               >
                 <div className="flex min-w-0 items-center gap-3">
                   {Icon && (

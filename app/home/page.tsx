@@ -1,16 +1,23 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Sparkles, ArrowRight, Layers, Wallet, ShieldCheck, LayoutGrid } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
 import { ToolCard } from '@/components/tool-card'
 import { AI_TOOLS } from '@/lib/tools'
+import { getCurrentUserProfile } from '@/app/actions/auth'
 import { useLocale } from '@/lib/i18n/locale-context'
 
 export default function HomePage() {
   const { t } = useLocale()
   const availableTools = AI_TOOLS.filter((tool) => tool.status === 'available')
+  const [userTier, setUserTier] = useState<string | undefined>(undefined)
+
+  useEffect(() => {
+    getCurrentUserProfile().then((p) => setUserTier(p?.tier || 'free'))
+  }, [])
 
   return (
     <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
@@ -71,7 +78,7 @@ export default function HomePage() {
 
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {availableTools.map((tool) => (
-              <ToolCard key={tool.slug} tool={tool} />
+              <ToolCard key={tool.slug} tool={tool} userTier={userTier} />
             ))}
           </div>
         </section>

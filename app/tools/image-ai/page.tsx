@@ -11,6 +11,7 @@ import {
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
 import { SaveButton } from '@/components/save-button'
+import { TierGate } from '@/components/tier-gate'
 import { runImageAi } from '@/app/actions/image-ai'
 import type { ImageAspect } from '@/lib/nvidia/image'
 import { useLocale } from '@/lib/i18n/locale-context'
@@ -60,6 +61,7 @@ export default function ImageAiPage() {
       />
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
+        <TierGate gradient="from-orange-400 to-rose-500">
         <div className="grid gap-6 lg:grid-cols-2">
           <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
             <label className="mb-2 block text-sm font-medium text-slate-300">{t('imageAiPage.describeLabel')}</label>
@@ -169,6 +171,7 @@ export default function ImageAiPage() {
             </div>
           </section>
         </div>
+        </TierGate>
       </main>
 
       <AppFooter />

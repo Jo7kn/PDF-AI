@@ -1,23 +1,25 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
 import {
   Bot,
   User,
   Send,
-  Loader2,
   AlertCircle,
-  Copy,
-  Check,
   RotateCcw,
   Sparkles,
 } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
 import { SaveButton } from '@/components/save-button'
+import { TypingIndicator } from '@/components/animations/typing-indicator'
+import { CopyIconSwap } from '@/components/animations/copy-icon-swap'
 import { runChatAi } from '@/app/actions/chat-ai'
 import type { ChatMessage } from '@/lib/nvidia/chat'
 import { useLocale } from '@/lib/i18n/locale-context'
+
+const EASE_OUT_STRONG = [0.23, 1, 0.32, 1] as const
 
 export default function ChatAiPage() {
   const { t } = useLocale()
@@ -101,15 +103,19 @@ export default function ChatAiPage() {
             ))}
 
             {loading && (
-              <div className="flex items-start gap-3">
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25, ease: EASE_OUT_STRONG }}
+                className="flex items-start gap-3"
+              >
                 <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500">
                   <Bot className="h-4 w-4 text-white" />
                 </div>
                 <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-slate-400">
-                  <Loader2 className="h-4 w-4 animate-spin-fast" />
-                  <span className="text-sm">{t('chatAiPage.writing')}</span>
+                  <TypingIndicator />
                 </div>
-              </div>
+              </motion.div>
             )}
 
             <div ref={bottomRef} />
@@ -162,7 +168,12 @@ function MessageBubble({ message }: { message: ChatMessage }) {
   }
 
   return (
-    <div className={`flex items-start gap-3 ${isUser ? 'flex-row-reverse' : ''}`}>
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.28, ease: EASE_OUT_STRONG }}
+      className={`flex items-start gap-3 ${isUser ? 'flex-row-reverse' : ''}`}
+    >
       <div
         className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${
           isUser ? 'bg-gradient-to-br from-cyan-400 to-violet-500' : 'bg-gradient-to-br from-violet-500 to-fuchsia-500'
@@ -182,13 +193,13 @@ function MessageBubble({ message }: { message: ChatMessage }) {
         {!isUser && (
           <button
             onClick={handleCopy}
-            className="absolute -right-9 top-2 rounded-lg bg-white/5 p-1.5 text-slate-400 opacity-0 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white group-hover:opacity-100"
+            className="absolute -right-9 top-2 rounded-lg bg-white/5 p-1.5 text-slate-400 opacity-0 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-90 group-hover:opacity-100"
             title={t('chatAiPage.copyText')}
           >
-            {copied ? <Check className="h-3.5 w-3.5 text-cyan-300" /> : <Copy className="h-3.5 w-3.5" />}
+            <CopyIconSwap copied={copied} />
           </button>
         )}
       </div>
-    </div>
+    </motion.div>
   )
 }

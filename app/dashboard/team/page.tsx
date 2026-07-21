@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Users, UserPlus, Crown, Shield, Mail, Check, X, LogOut, Loader2, AlertCircle } from 'lucide-react'
+import { Skeleton, SkeletonRow } from '@/components/skeleton'
 import { getCurrentUserProfile } from '@/app/actions/auth'
 import {
   createWorkspace,
@@ -58,14 +59,22 @@ export default function TeamPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center py-16">
-        <Loader2 className="h-6 w-6 animate-spin-fast text-slate-500" />
+      <div className="space-y-6">
+        <div className="flex items-center gap-2">
+          <Users className="h-5 w-5 text-cyan-300" />
+          <h1 className="text-xl font-semibold text-white">Team</h1>
+        </div>
+        <div className="space-y-3 rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+          <Skeleton className="h-5 w-32" />
+          <SkeletonRow />
+          <SkeletonRow />
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
+    <div className="animate-fade-in-up space-y-6">
       <div className="flex items-center gap-2">
         <Users className="h-5 w-5 text-cyan-300" />
         <h1 className="text-xl font-semibold text-white">Team</h1>

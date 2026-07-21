@@ -35,6 +35,7 @@ export interface AiTool {
   gradient: string // classi Tailwind complete (icona/badge), non comporre stringhe dinamicamente
   status: ToolStatus
   href: string
+  requiresPaidTier?: boolean // true = richiede piano Pro o Team, vedi lib/credits.ts TIER_GATED_TOOLS
 }
 
 export const AI_TOOLS: AiTool[] = [
@@ -85,6 +86,7 @@ export const AI_TOOLS: AiTool[] = [
     gradient: 'from-orange-400 to-rose-500',
     status: 'available',
     href: '/tools/image-ai',
+    requiresPaidTier: true,
   },
   {
     slug: 'video-ai',
@@ -121,6 +123,7 @@ export const AI_TOOLS: AiTool[] = [
     gradient: 'from-sky-400 to-blue-500',
     status: 'available',
     href: '/tools/data-ai',
+    requiresPaidTier: true,
   },
   {
     slug: 'study-ai',
@@ -133,6 +136,7 @@ export const AI_TOOLS: AiTool[] = [
     gradient: 'from-amber-400 to-yellow-500',
     status: 'available',
     href: '/tools/study-ai',
+    requiresPaidTier: true,
   },
   {
     slug: 'translator-ai',
@@ -169,6 +173,7 @@ export const AI_TOOLS: AiTool[] = [
     gradient: 'from-slate-400 to-zinc-500',
     status: 'available',
     href: '/tools/contract-ai',
+    requiresPaidTier: true,
   },
   {
     slug: 'file-converter',

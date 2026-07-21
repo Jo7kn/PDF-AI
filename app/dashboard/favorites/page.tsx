@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { Star, Bookmark } from 'lucide-react'
 import { DocumentCard } from '@/components/document-card'
 import { SavedItemCard, type SavedItem } from '@/components/saved-item-card'
+import { SkeletonRow } from '@/components/skeleton'
 import { getDocuments, toggleFavorite, moveDocumentToFolder } from '@/app/actions/documents'
 import { getFolders } from '@/app/actions/folders'
 import { addTagToDocument, removeTagFromDocument } from '@/app/actions/tags'
@@ -78,52 +79,60 @@ export default function FavoritesPage() {
         <h1 className="text-xl font-semibold text-white">Preferiti</h1>
       </div>
 
-      {loading && <p className="text-sm text-slate-500">Caricamento...</p>}
+      {loading && (
+        <div className="space-y-4">
+          {[0, 1, 2].map((i) => (
+            <SkeletonRow key={i} />
+          ))}
+        </div>
+      )}
 
       {isEmpty && (
-        <div className="rounded-3xl border border-white/10 bg-slate-900/80 py-12 text-center shadow-xl shadow-black/20">
+        <div className="animate-fade-in-up rounded-3xl border border-white/10 bg-slate-900/80 py-12 text-center shadow-xl shadow-black/20">
           <Star className="mx-auto mb-4 h-16 w-16 text-slate-600" />
           <p className="text-slate-400">Nessun preferito ancora.</p>
         </div>
       )}
 
       {documents.length > 0 && (
-        <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+        <section className="animate-fade-in-up rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
           <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-400">Documenti PDF</h2>
           <div className="space-y-4">
-            {documents.map((doc) => (
-              <DocumentCard
-                key={doc.id}
-                document={doc}
-                folders={folders}
-                onToggleFavorite={handleToggleDocFavorite}
-                onMoveToFolder={handleMoveDocToFolder}
-                onAddTag={handleAddDocTag}
-                onRemoveTag={handleRemoveDocTag}
-              />
+            {documents.map((doc, i) => (
+              <div key={doc.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 30}ms` }}>
+                <DocumentCard
+                  document={doc}
+                  folders={folders}
+                  onToggleFavorite={handleToggleDocFavorite}
+                  onMoveToFolder={handleMoveDocToFolder}
+                  onAddTag={handleAddDocTag}
+                  onRemoveTag={handleRemoveDocTag}
+                />
+              </div>
             ))}
           </div>
         </section>
       )}
 
       {items.length > 0 && (
-        <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+        <section className="animate-fade-in-up rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
           <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-400">
             <Bookmark className="h-4 w-4" />
             Altri salvataggi
           </h2>
           <div className="space-y-4">
-            {items.map((item) => (
-              <SavedItemCard
-                key={item.id}
-                item={item}
-                folders={folders}
-                onToggleFavorite={handleToggleItemFavorite}
-                onMoveToFolder={handleMoveItemToFolder}
-                onAddTag={handleAddItemTag}
-                onRemoveTag={handleRemoveItemTag}
-                onDelete={handleDeleteItem}
-              />
+            {items.map((item, i) => (
+              <div key={item.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 30}ms` }}>
+                <SavedItemCard
+                  item={item}
+                  folders={folders}
+                  onToggleFavorite={handleToggleItemFavorite}
+                  onMoveToFolder={handleMoveItemToFolder}
+                  onAddTag={handleAddItemTag}
+                  onRemoveTag={handleRemoveItemTag}
+                  onDelete={handleDeleteItem}
+                />
+              </div>
             ))}
           </div>
         </section>

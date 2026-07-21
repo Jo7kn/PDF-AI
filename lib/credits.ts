@@ -50,6 +50,17 @@ export const PLAN_CREDITS: Record<string, number> = {
   team: 3000,
 }
 
+// Tool riservati ai piani a pagamento: gating di prodotto (per far leva
+// sull'upgrade), non solo di risorse — un utente Free non può aprirli anche
+// se ha crediti sufficienti. Gli altri tool restano liberi, limitati solo
+// dai crediti come sempre. Applicato sia lato UI (ToolCard/TierGate) sia
+// lato server in lib/ai-router.ts, che è il vero confine di sicurezza.
+export const TIER_GATED_TOOLS: Set<ToolSlug> = new Set(['image-ai', 'data-ai', 'contract-ai', 'study-ai'])
+
+export function hasPaidTier(tier: string | null | undefined): boolean {
+  return tier === 'pro' || tier === 'team'
+}
+
 export async function setUserCredits(userId: string, credits: number): Promise<void> {
   const supabase = createServiceClient()
   await supabase.from('users').update({ credits }).eq('id', userId)
@@ -65,6 +76,21 @@ export async function getUserCredits(userId: string): Promise<number> {
 
   if (error || !data) return 0
   return data.credits ?? 0
+}
+
+// Usato da lib/ai-router.ts per il gate dei TIER_GATED_TOOLS: prende il
+// piano via service client (stesso pattern di getUserCredits) perché il
+// router riceve solo lo userId, non la sessione cookie-based dell'utente.
+export async function getUserTier(userId: string): Promise<string> {
+  const supabase = createServiceClient()
+  const { data, error } = await supabase
+    .from('users')
+    .select('tier')
+    .eq('id', userId)
+    .single()
+
+  if (error || !data) return 'free'
+  return data.tier || 'free'
 }
 
 // Deduzione atomica via RPC lato Postgres invece di un read-then-write

@@ -6,7 +6,7 @@
 // registra l'utilizzo. Le funzioni in lib/nvidia/*.ts restano invariate —
 // il router le avvolge, non le sostituisce.
 
-import { CREDIT_COSTS, deductCredits, getUserCredits, logUsage, type ToolSlug } from '@/lib/credits'
+import { CREDIT_COSTS, TIER_GATED_TOOLS, deductCredits, getUserCredits, getUserTier, hasPaidTier, logUsage, type ToolSlug } from '@/lib/credits'
 import { isAllowed } from '@/lib/rate-limit'
 
 export interface RunAiToolParams<T> {
@@ -22,6 +22,8 @@ export type AiRouterResult<T> = { success: true; result: T } | { error: string }
 const INSUFFICIENT_CREDITS_ERROR =
   'Crediti insufficienti per completare questa richiesta. Passa a un piano superiore o attendi il rinnovo.'
 
+const TIER_GATE_ERROR = 'Questo strumento richiede il piano Pro o Team. Passa a un piano superiore per sbloccarlo.'
+
 // 15 chiamate AI/minuto per utente: copre un uso normale intenso (anche
 // generazioni multiple ravvicinate) ma blocca flood/loop client rotti.
 const AI_RATE_LIMIT = 15
@@ -30,6 +32,16 @@ const AI_RATE_WINDOW_MS = 60 * 1000
 export async function runAiTool<T>({ userId, tool, action, metadata, run }: RunAiToolParams<T>): Promise<AiRouterResult<T>> {
   if (!isAllowed(`ai:${userId}`, AI_RATE_LIMIT, AI_RATE_WINDOW_MS)) {
     return { error: 'Troppe richieste in poco tempo. Attendi un minuto e riprova.' }
+  }
+
+  // Gate di prodotto: alcuni tool richiedono Pro/Team indipendentemente dai
+  // crediti disponibili. Controllato prima dei crediti per non sprecare la
+  // query se l'utente non può comunque usare il tool.
+  if (TIER_GATED_TOOLS.has(tool)) {
+    const tier = await getUserTier(userId)
+    if (!hasPaidTier(tier)) {
+      return { error: TIER_GATE_ERROR }
+    }
   }
 
   const cost = CREDIT_COSTS[tool]

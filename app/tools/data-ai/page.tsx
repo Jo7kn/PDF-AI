@@ -18,6 +18,7 @@ import { runDataInsights } from '@/app/actions/data-ai'
 import { parseCsv, isNumericColumn, type ParsedCsv } from '@/lib/csv'
 import { useLocale } from '@/lib/i18n/locale-context'
 import { LOCALE_DATE_TAG } from '@/lib/i18n/translations'
+import { TierGate } from '@/components/tier-gate'
 
 export default function DataAiPage() {
   const { t, locale } = useLocale()
@@ -143,6 +144,7 @@ export default function DataAiPage() {
       />
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
+        <TierGate gradient="from-sky-400 to-blue-500">
         {!parsed && (
           <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
             <div
@@ -262,6 +264,7 @@ export default function DataAiPage() {
             </section>
           </>
         )}
+        </TierGate>
       </main>
 
       <AppFooter />

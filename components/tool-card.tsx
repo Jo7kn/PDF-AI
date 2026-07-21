@@ -5,23 +5,35 @@ import { ArrowRight, Lock } from 'lucide-react'
 import type { AiTool } from '@/lib/tools'
 import { useLocale, useTranslatedList } from '@/lib/i18n/locale-context'
 
-export function ToolCard({ tool }: { tool: AiTool }) {
+// userTier: undefined finché il profilo non è stato caricato — in quel
+// caso non mostriamo ancora lo stato "richiede Pro" per evitare un flash
+// del badge a un utente che in realtà è già Pro/Team.
+export function ToolCard({ tool, userTier }: { tool: AiTool; userTier?: string }) {
   const { t } = useLocale()
   const features = useTranslatedList(`toolsData.${tool.slug}.features`)
   const Icon = tool.icon
   const isAvailable = tool.status === 'available'
+  const isLocked = Boolean(
+    tool.requiresPaidTier && isAvailable && userTier !== undefined && userTier !== 'pro' && userTier !== 'team',
+  )
+  const isOpenable = isAvailable && !isLocked
 
   const card = (
     <div
-      className={`group flex h-full flex-col rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20 transition-colors duration-150 ease-out ${
-        isAvailable ? 'hover:border-cyan-400/30 hover:bg-slate-900 active:scale-[0.99]' : 'opacity-80'
+      className={`group flex h-full flex-col rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20 transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out-strong ${
+        isOpenable ? 'hover:-translate-y-1 hover:border-cyan-400/30 hover:bg-slate-900 hover:shadow-2xl hover:shadow-cyan-500/10 active:scale-[0.99]' : 'opacity-80'
       }`}
     >
       <div className="mb-4 flex items-start justify-between">
-        <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${tool.gradient}`}>
+        <div className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${tool.gradient} transition-transform duration-200 ease-out-strong group-hover:scale-105 group-hover:rotate-3`}>
           <Icon className="h-6 w-6 text-white" />
         </div>
-        {isAvailable ? (
+        {isLocked ? (
+          <span className="flex items-center gap-1 rounded-full bg-amber-400/15 px-2.5 py-1 text-xs font-medium text-amber-300">
+            <Lock className="h-3 w-3" />
+            {t('toolCard.locked')}
+          </span>
+        ) : isAvailable ? (
           <span className="rounded-full bg-emerald-500/15 px-2.5 py-1 text-xs font-medium text-emerald-300">
             {t('toolCard.available')}
           </span>
@@ -50,10 +62,12 @@ export function ToolCard({ tool }: { tool: AiTool }) {
 
       <div
         className={`mt-auto inline-flex items-center gap-2 text-sm font-medium ${
-          isAvailable ? 'text-cyan-300' : 'text-slate-500'
+          isLocked ? 'text-amber-300' : isAvailable ? 'text-cyan-300' : 'text-slate-500'
         }`}
       >
-        {isAvailable ? (
+        {isLocked ? (
+          t('toolCard.unlockCta')
+        ) : isAvailable ? (
           <>
             {t('toolCard.open')}
             <ArrowRight className="h-4 w-4 transition-transform duration-150 ease-out group-hover:translate-x-1" />
@@ -69,6 +83,9 @@ export function ToolCard({ tool }: { tool: AiTool }) {
     return <div className="h-full cursor-not-allowed">{card}</div>
   }
 
+  // Un tool bloccato dal tier resta cliccabile: apre comunque la pagina del
+  // tool, dove TierGate spiega cosa sblocca l'upgrade invece di un redirect
+  // secco e senza contesto verso la pagina di billing.
   return (
     <Link href={tool.href} className="h-full">
       {card}

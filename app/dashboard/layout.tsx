@@ -12,6 +12,7 @@ import { FileText } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
 import { DashboardSidebar } from '@/components/dashboard-sidebar'
+import { PageTransition } from '@/components/animations/page-transition'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -27,7 +28,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <div className="flex flex-1 flex-col md:flex-row">
         <DashboardSidebar />
         <main className="min-w-0 flex-1">
-          <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">{children}</div>
+          <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+            <PageTransition>{children}</PageTransition>
+          </div>
         </main>
       </div>
 

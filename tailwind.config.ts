@@ -88,12 +88,19 @@ const config = {
           from: { transform: "rotate(0deg)" },
           to: { transform: "rotate(360deg)" },
         },
+        // Sweep dello shimmer sugli skeleton: parte fuori a sinistra e
+        // attraversa l'elemento, mai un rettangolo statico e morto.
+        shimmer: {
+          from: { transform: "translateX(-100%)" },
+          to: { transform: "translateX(100%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in-up": "fade-in-up 260ms cubic-bezier(0.23, 1, 0.32, 1) both",
         "spin-fast": "spin-fast 0.7s linear infinite",
+        shimmer: "shimmer 1.8s ease-in-out infinite",
       },
     },
   },

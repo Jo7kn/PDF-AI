@@ -163,14 +163,35 @@ function PdfFilesView() {
     }
   }
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0]
+  const [isDragging, setIsDragging] = useState(false)
+
+  const processSelectedFile = (selectedFile: File | undefined) => {
     if (selectedFile && selectedFile.type === 'application/pdf') {
       setFile(selectedFile)
       setError(null)
     } else {
       setError(t('filesPage.uploadErrorSelectPdf'))
     }
+  }
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    processSelectedFile(e.target.files?.[0])
+  }
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setIsDragging(false)
+  }
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setIsDragging(false)
+    processSelectedFile(e.dataTransfer.files?.[0])
   }
 
   const handleUpload = async (e: React.FormEvent) => {
@@ -312,10 +333,15 @@ function PdfFilesView() {
 
             <form onSubmit={handleUpload} className="space-y-4">
               <div
-                className="cursor-pointer rounded-2xl border-2 border-dashed border-white/15 bg-white/5 p-8 text-center transition-colors duration-150 ease-out hover:border-cyan-400/40"
+                className={`cursor-pointer rounded-2xl border-2 border-dashed p-8 text-center transition-[transform,border-color,background-color] duration-200 ease-out-strong ${
+                  isDragging ? 'scale-[1.02] border-cyan-400/70 bg-cyan-400/10' : 'border-white/15 bg-white/5 hover:border-cyan-400/40'
+                }`}
                 onClick={() => document.getElementById('file-input')?.click()}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
               >
-                <Upload className="mx-auto mb-4 h-12 w-12 text-slate-400" />
+                <Upload className={`mx-auto mb-4 h-12 w-12 transition-transform duration-200 ease-out-strong ${isDragging ? 'scale-110 text-cyan-300' : 'text-slate-400'}`} />
                 <p className="mb-2 text-white">{t('filesPage.uploadDragText')}</p>
                 <p className="text-sm text-slate-500">{t('filesPage.uploadOrClick')}</p>
                 <input id="file-input" type="file" className="hidden" accept=".pdf" onChange={handleFileSelect} />

@@ -95,6 +95,13 @@ const it = {
     soon: 'Presto disponibile',
     open: 'Apri strumento',
     comingSoon: 'In arrivo',
+    locked: 'Richiede Pro',
+    unlockCta: 'Passa a Pro per sbloccare',
+  },
+  tierGate: {
+    title: 'Strumento riservato a Pro e Team',
+    description: 'Questo strumento è incluso nei piani Pro e Team. Esegui l\'upgrade per sbloccarlo insieme a crediti extra e funzioni avanzate.',
+    cta: 'Passa a Pro',
   },
   categories: {
     documents: 'Documenti',
@@ -467,6 +474,13 @@ const en: typeof it = {
     soon: 'Coming soon',
     open: 'Open tool',
     comingSoon: 'Coming soon',
+    locked: 'Requires Pro',
+    unlockCta: 'Upgrade to Pro to unlock',
+  },
+  tierGate: {
+    title: 'Tool reserved for Pro and Team',
+    description: 'This tool is included in the Pro and Team plans. Upgrade to unlock it along with extra credits and advanced features.',
+    cta: 'Upgrade to Pro',
   },
   categories: {
     documents: 'Documents',
@@ -839,6 +853,13 @@ const es: typeof it = {
     soon: 'Próximamente',
     open: 'Abrir herramienta',
     comingSoon: 'Próximamente',
+    locked: 'Requiere Pro',
+    unlockCta: 'Pasa a Pro para desbloquear',
+  },
+  tierGate: {
+    title: 'Herramienta reservada para Pro y Team',
+    description: 'Esta herramienta está incluida en los planes Pro y Team. Haz el upgrade para desbloquearla junto con créditos extra y funciones avanzadas.',
+    cta: 'Pasar a Pro',
   },
   categories: {
     documents: 'Documentos',
@@ -1211,6 +1232,13 @@ const de: typeof it = {
     soon: 'Demnächst verfügbar',
     open: 'Tool öffnen',
     comingSoon: 'Demnächst',
+    locked: 'Erfordert Pro',
+    unlockCta: 'Auf Pro upgraden zum Freischalten',
+  },
+  tierGate: {
+    title: 'Tool nur für Pro und Team',
+    description: 'Dieses Tool ist in den Plänen Pro und Team enthalten. Führe ein Upgrade durch, um es zusammen mit zusätzlichen Credits und erweiterten Funktionen freizuschalten.',
+    cta: 'Auf Pro upgraden',
   },
   categories: {
     documents: 'Dokumente',
@@ -1583,6 +1611,13 @@ const zh: typeof it = {
     soon: '即将推出',
     open: '打开工具',
     comingSoon: '即将推出',
+    locked: '需要 Pro',
+    unlockCta: '升级到 Pro 以解锁',
+  },
+  tierGate: {
+    title: '该工具仅限 Pro 和 Team 使用',
+    description: '此工具包含在 Pro 和 Team 套餐中。升级即可解锁它以及额外的额度和高级功能。',
+    cta: '升级到 Pro',
   },
   categories: {
     documents: '文档',
@@ -1955,6 +1990,13 @@ const fr: typeof it = {
     soon: 'Bientôt disponible',
     open: "Ouvrir l'outil",
     comingSoon: 'Bientôt',
+    locked: 'Nécessite Pro',
+    unlockCta: 'Passer à Pro pour débloquer',
+  },
+  tierGate: {
+    title: 'Outil réservé à Pro et Team',
+    description: 'Cet outil est inclus dans les forfaits Pro et Team. Passe à un forfait supérieur pour le débloquer, avec des crédits supplémentaires et des fonctionnalités avancées.',
+    cta: 'Passer à Pro',
   },
   categories: {
     documents: 'Documents',

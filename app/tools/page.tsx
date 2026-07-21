@@ -1,17 +1,23 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Sparkles, Search, X, LayoutGrid } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
 import { ToolCard } from '@/components/tool-card'
 import { AI_TOOLS, AI_TOOL_CATEGORIES } from '@/lib/tools'
+import { getCurrentUserProfile } from '@/app/actions/auth'
 import { useLocale, translate, translateList } from '@/lib/i18n/locale-context'
 
 export default function ToolsPage() {
   const { t, locale } = useLocale()
   const [query, setQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
+  const [userTier, setUserTier] = useState<string | undefined>(undefined)
+
+  useEffect(() => {
+    getCurrentUserProfile().then((p) => setUserTier(p?.tier || 'free'))
+  }, [])
 
   const filteredTools = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -106,7 +112,7 @@ export default function ToolsPage() {
         {filteredTools.length > 0 ? (
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {filteredTools.map((tool) => (
-              <ToolCard key={tool.slug} tool={tool} />
+              <ToolCard key={tool.slug} tool={tool} userTier={userTier} />
             ))}
           </div>
         ) : (

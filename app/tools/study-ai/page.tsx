@@ -18,6 +18,7 @@ import { SaveButton } from '@/components/save-button'
 import { runStudyFlashcards, runStudyQuiz, runStudyTutor, runStudyPlan } from '@/app/actions/study-ai'
 import type { Flashcard, QuizQuestion } from '@/lib/nvidia/study'
 import { useLocale } from '@/lib/i18n/locale-context'
+import { TierGate } from '@/components/tier-gate'
 
 type StudyMode = 'flashcards' | 'quiz' | 'tutor' | 'plan'
 
@@ -86,6 +87,7 @@ export default function StudyAiPage() {
       />
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
+        <TierGate gradient="from-amber-400 to-yellow-500">
         <div className="mb-6 flex flex-wrap gap-2">
           {MODES.map((m) => (
             <button
@@ -182,6 +184,7 @@ export default function StudyAiPage() {
             <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-100">{plan}</div>
           </section>
         )}
+        </TierGate>
       </main>
 
       <AppFooter />

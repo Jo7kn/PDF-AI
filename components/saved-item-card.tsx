@@ -53,14 +53,14 @@ export function SavedItemCard({
   }
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-4 transition-colors duration-150 ease-out hover:bg-white/10">
+    <div className="group rounded-2xl border border-white/10 bg-white/5 p-4 shadow-black/10 transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out-strong hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/10 hover:shadow-xl">
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div className="flex flex-1 items-start gap-4">
           {item.content_type === 'image' ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={item.content} alt={item.title} className="h-12 w-12 flex-shrink-0 rounded-2xl object-cover" />
+            <img src={item.content} alt={item.title} className="h-12 w-12 flex-shrink-0 rounded-2xl object-cover transition-transform duration-200 ease-out-strong group-hover:scale-105" />
           ) : (
-            <div className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${tool?.gradient || 'from-slate-500 to-slate-600'}`}>
+            <div className={`flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${tool?.gradient || 'from-slate-500 to-slate-600'} transition-transform duration-200 ease-out-strong group-hover:scale-105 group-hover:rotate-3`}>
               {Icon && <Icon className="h-6 w-6 text-white" />}
             </div>
           )}

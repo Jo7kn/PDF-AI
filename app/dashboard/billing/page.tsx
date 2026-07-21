@@ -5,6 +5,7 @@ import { CreditCard, Zap, Check } from 'lucide-react'
 import { getCurrentUserProfile } from '@/app/actions/auth'
 import { PRICING_TIERS, getTierByName } from '@/lib/pricing'
 import { buildCheckoutUrl } from '@/lib/lemonsqueezy'
+import { Skeleton } from '@/components/skeleton'
 
 export default function BillingPage() {
   const [profile, setProfile] = useState<{ id: string; email: string; tier: string; credits: number } | null>(null)
@@ -16,7 +17,7 @@ export default function BillingPage() {
   const currentTierName = profile ? getTierByName(profile.tier)?.name || profile.tier : null
 
   return (
-    <div className="space-y-6">
+    <div className="animate-fade-in-up space-y-6">
       <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
         <div className="mb-6 flex items-center gap-2">
           <CreditCard className="h-5 w-5 text-cyan-300" />
@@ -24,31 +25,40 @@ export default function BillingPage() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-5">
+          <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-5 transition-transform duration-200 ease-out-strong hover:-translate-y-0.5">
             <p className="text-sm text-slate-400">Piano attuale</p>
-            <p className="mt-1 text-2xl font-semibold text-cyan-300">{currentTierName || '...'}</p>
+            {profile ? (
+              <p className="mt-1 text-2xl font-semibold text-cyan-300">{currentTierName}</p>
+            ) : (
+              <Skeleton className="mt-1 h-8 w-20" />
+            )}
           </div>
-          <div className="rounded-2xl border border-amber-400/20 bg-amber-400/10 p-5">
+          <div className="rounded-2xl border border-amber-400/20 bg-amber-400/10 p-5 transition-transform duration-200 ease-out-strong hover:-translate-y-0.5">
             <p className="text-sm text-amber-200/80">Crediti disponibili</p>
-            <p className="mt-1 flex items-center gap-1.5 text-2xl font-semibold text-white">
-              <Zap className="h-5 w-5 fill-amber-300 text-amber-300" />
-              {profile ? profile.credits : '...'}
-            </p>
+            {profile ? (
+              <p className="mt-1 flex items-center gap-1.5 text-2xl font-semibold text-white">
+                <Zap className="h-5 w-5 fill-amber-300 text-amber-300" />
+                {profile.credits}
+              </p>
+            ) : (
+              <Skeleton className="mt-1 h-8 w-16" />
+            )}
           </div>
         </div>
       </section>
 
       <div className="grid gap-6 md:grid-cols-3">
-        {PRICING_TIERS.map((tier) => {
+        {PRICING_TIERS.map((tier, i) => {
           const isCurrent = currentTierName === tier.name
           const planKey = tier.name.toLowerCase() as 'free' | 'pro' | 'team'
 
           return (
             <div
               key={tier.name}
-              className={`rounded-3xl border p-6 shadow-xl shadow-black/20 ${
+              className={`animate-fade-in-up rounded-3xl border p-6 shadow-xl shadow-black/20 transition-transform duration-200 ease-out-strong hover:-translate-y-1 ${
                 isCurrent ? 'border-cyan-400/40 bg-cyan-500/10' : 'border-white/10 bg-slate-900/80'
               }`}
+              style={{ animationDelay: `${i * 60}ms` }}
             >
               <h3 className="mb-1 text-lg font-semibold text-white">{tier.name}</h3>
               <div className="mb-4">

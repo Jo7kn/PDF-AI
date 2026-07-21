@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
+import { MotionConfig } from "framer-motion"
 import { LocaleProvider } from "@/lib/i18n/locale-context"
 import { RouteProgress } from "@/components/route-progress"
 // @ts-ignore
@@ -24,10 +25,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
-        <LocaleProvider>
-          <RouteProgress />
-          {children}
-        </LocaleProvider>
+        {/* reducedMotion="user" applica prefers-reduced-motion a OGNI
+            componente Framer Motion dell'app, automaticamente e in un solo
+            punto — nessun componente deve gestirlo da solo. */}
+        <MotionConfig reducedMotion="user">
+          <LocaleProvider>
+            <RouteProgress />
+            {children}
+          </LocaleProvider>
+        </MotionConfig>
       </body>
     </html>
   )
