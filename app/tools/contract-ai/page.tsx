@@ -13,6 +13,7 @@ import { AppFooter } from '@/components/app-footer'
 import { SaveButton } from '@/components/save-button'
 import { runContractAnalysis, runContractClauses } from '@/app/actions/contract-ai'
 import type { ContractClause } from '@/lib/nvidia/contract'
+import { useLocale } from '@/lib/i18n/locale-context'
 
 type ContractMode = 'analyze' | 'clauses'
 
@@ -23,6 +24,7 @@ const RISK_STYLES: Record<ContractClause['risk'], string> = {
 }
 
 export default function ContractAiPage() {
+  const { t } = useLocale()
   const [mode, setMode] = useState<ContractMode>('analyze')
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -55,13 +57,13 @@ export default function ContractAiPage() {
       <AppHeader
         icon={FileSignature}
         title="Contract AI"
-        subtitle="Analisi contratti e clausole a rischio"
+        subtitle={t('contractAiPage.subtitle')}
         gradient="from-slate-400 to-zinc-500"
       />
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-4 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-3 text-sm text-amber-200">
-          Analisi automatica a scopo informativo, non sostituisce una consulenza legale.
+          {t('contractAiPage.disclaimer')}
         </div>
 
         <div className="mb-6 flex flex-wrap gap-2">
@@ -74,7 +76,7 @@ export default function ContractAiPage() {
             }`}
           >
             <ScrollText className="h-4 w-4" />
-            Analisi completa
+            {t('contractAiPage.tabAnalysis')}
           </button>
           <button
             onClick={() => { setMode('clauses'); setAnalysis(null); setClauses(null); setError(null) }}
@@ -85,7 +87,7 @@ export default function ContractAiPage() {
             }`}
           >
             <ShieldAlert className="h-4 w-4" />
-            Clausole a rischio
+            {t('contractAiPage.tabClauses')}
           </button>
         </div>
 
@@ -93,7 +95,7 @@ export default function ContractAiPage() {
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Incolla qui il testo del contratto da analizzare..."
+            placeholder={t('contractAiPage.inputPlaceholder')}
             rows={12}
             className="w-full resize-none rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm text-slate-100 placeholder-slate-600 focus:border-slate-300/50 focus:outline-none"
           />
@@ -113,12 +115,12 @@ export default function ContractAiPage() {
             {loading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin-fast" />
-                Analisi in corso...
+                {t('contractAiPage.analyzing')}
               </>
             ) : (
               <>
                 <FileSignature className="h-4 w-4" />
-                {mode === 'analyze' ? 'Analizza contratto' : 'Trova clausole a rischio'}
+                {mode === 'analyze' ? t('contractAiPage.analyzeButton') : t('contractAiPage.findClausesButton')}
               </>
             )}
           </button>
@@ -127,7 +129,7 @@ export default function ContractAiPage() {
         {analysis && (
           <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
             <div className="mb-3 flex justify-end">
-              <SaveButton tool="contract-ai" title="Contract AI · Analisi" content={analysis} metadata={{ action: 'analyze' }} />
+              <SaveButton tool="contract-ai" title={t('contractAiPage.analysisTitle')} content={analysis} metadata={{ action: 'analyze' }} />
             </div>
             <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-100">{analysis}</div>
           </section>
@@ -139,21 +141,21 @@ export default function ContractAiPage() {
               <div className="flex justify-end">
                 <SaveButton
                   tool="contract-ai"
-                  title="Contract AI · Clausole a rischio"
-                  content={clauses.map((c) => `${c.clause} (rischio ${c.risk})\n${c.explanation}`).join('\n\n')}
+                  title={t('contractAiPage.clausesTitle')}
+                  content={clauses.map((c) => `${c.clause} (${t('contractAiPage.riskLabel')} ${c.risk})\n${c.explanation}`).join('\n\n')}
                   metadata={{ action: 'clauses', count: clauses.length }}
                 />
               </div>
             )}
             {clauses.length === 0 && (
-              <p className="text-sm text-slate-400">Nessuna clausola particolarmente rischiosa individuata.</p>
+              <p className="text-sm text-slate-400">{t('contractAiPage.noClauses')}</p>
             )}
             {clauses.map((c, i) => (
               <div key={i} className="rounded-2xl border border-white/10 bg-slate-900/80 p-5 shadow-xl shadow-black/20">
                 <div className="mb-2 flex items-center justify-between gap-3">
                   <p className="font-medium text-white">{c.clause}</p>
                   <span className={`flex-shrink-0 rounded-full border px-2.5 py-1 text-xs capitalize ${RISK_STYLES[c.risk]}`}>
-                    rischio {c.risk}
+                    {t('contractAiPage.riskLabel')} {c.risk}
                   </span>
                 </div>
                 <p className="text-sm text-slate-400">{c.explanation}</p>

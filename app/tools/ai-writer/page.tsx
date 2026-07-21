@@ -19,28 +19,13 @@ import { AppFooter } from '@/components/app-footer'
 import { SaveButton } from '@/components/save-button'
 import { runAiWriter } from '@/app/actions/ai-writer'
 import type { WriterAction } from '@/lib/nvidia/writer'
+import { useLocale } from '@/lib/i18n/locale-context'
 
 const TONES = ['Formale', 'Informale', 'Persuasivo', 'Amichevole', 'Professionale']
 const LENGTHS = ['Breve', 'Medio', 'Lungo']
 
-const MODES: Array<{
-  key: WriterAction
-  label: string
-  icon: typeof PenTool
-  placeholder: string
-  needsText: boolean
-  showTone: boolean
-  showLength: boolean
-}> = [
-  { key: 'article', label: 'Articolo', icon: Newspaper, placeholder: 'Es. "I vantaggi del lavoro da remoto per le PMI"', needsText: false, showTone: true, showLength: true },
-  { key: 'email', label: 'Email', icon: Mail, placeholder: 'Es. "Chiedi un rinvio della scadenza del progetto al cliente"', needsText: false, showTone: true, showLength: false },
-  { key: 'blog', label: 'Blog', icon: PenTool, placeholder: 'Es. "5 errori da evitare quando si impara a programmare"', needsText: false, showTone: true, showLength: true },
-  { key: 'summary', label: 'Riassunto', icon: AlignLeft, placeholder: 'Incolla qui il testo da riassumere...', needsText: true, showTone: false, showLength: true },
-  { key: 'proofread', label: 'Correzione', icon: SpellCheck, placeholder: 'Incolla qui il testo da correggere...', needsText: true, showTone: false, showLength: false },
-  { key: 'rewrite', label: 'Riscrittura', icon: Repeat, placeholder: 'Incolla qui il testo da riscrivere...', needsText: true, showTone: true, showLength: false },
-]
-
 export default function AiWriterPage() {
+  const { t } = useLocale()
   const [mode, setMode] = useState<WriterAction>('article')
   const [input, setInput] = useState('')
   const [extraNote, setExtraNote] = useState('')
@@ -50,6 +35,23 @@ export default function AiWriterPage() {
   const [error, setError] = useState<string | null>(null)
   const [output, setOutput] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+
+  const MODES: Array<{
+    key: WriterAction
+    label: string
+    icon: typeof PenTool
+    placeholder: string
+    needsText: boolean
+    showTone: boolean
+    showLength: boolean
+  }> = [
+    { key: 'article', label: t('aiWriterPage.modeArticle'), icon: Newspaper, placeholder: t('aiWriterPage.placeholderArticle'), needsText: false, showTone: true, showLength: true },
+    { key: 'email', label: t('aiWriterPage.modeEmail'), icon: Mail, placeholder: t('aiWriterPage.placeholderEmail'), needsText: false, showTone: true, showLength: false },
+    { key: 'blog', label: t('aiWriterPage.modeBlog'), icon: PenTool, placeholder: t('aiWriterPage.placeholderBlog'), needsText: false, showTone: true, showLength: true },
+    { key: 'summary', label: t('aiWriterPage.modeSummary'), icon: AlignLeft, placeholder: t('aiWriterPage.placeholderSummary'), needsText: true, showTone: false, showLength: true },
+    { key: 'proofread', label: t('aiWriterPage.modeProofread'), icon: SpellCheck, placeholder: t('aiWriterPage.placeholderProofread'), needsText: true, showTone: false, showLength: false },
+    { key: 'rewrite', label: t('aiWriterPage.modeRewrite'), icon: Repeat, placeholder: t('aiWriterPage.placeholderRewrite'), needsText: true, showTone: true, showLength: false },
+  ]
 
   const activeMode = MODES.find((m) => m.key === mode)!
 
@@ -91,7 +93,7 @@ export default function AiWriterPage() {
       <AppHeader
         icon={PenTool}
         title="AI Writer"
-        subtitle="Scrittura, correzione e riscrittura"
+        subtitle={t('aiWriterPage.subtitle')}
         gradient="from-fuchsia-400 to-pink-500"
       />
 
@@ -118,10 +120,10 @@ export default function AiWriterPage() {
             {(activeMode.showTone || activeMode.showLength) && (
               <div className="mb-4 flex flex-wrap items-center gap-3">
                 {activeMode.showTone && (
-                  <SelectField label="Tono" value={tone} onChange={setTone} options={TONES} />
+                  <SelectField label={t('aiWriterPage.toneLabel')} value={tone} onChange={setTone} options={TONES} />
                 )}
                 {activeMode.showLength && (
-                  <SelectField label="Lunghezza" value={length} onChange={setLength} options={LENGTHS} />
+                  <SelectField label={t('aiWriterPage.lengthLabel')} value={length} onChange={setLength} options={LENGTHS} />
                 )}
               </div>
             )}
@@ -139,7 +141,7 @@ export default function AiWriterPage() {
                 type="text"
                 value={extraNote}
                 onChange={(e) => setExtraNote(e.target.value)}
-                placeholder="Facoltativo: istruzioni aggiuntive..."
+                placeholder={t('aiWriterPage.extraNotePlaceholder')}
                 className="mt-3 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-fuchsia-400/50 focus:outline-none"
               />
             )}
@@ -159,7 +161,7 @@ export default function AiWriterPage() {
               {loading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin-fast" />
-                  Elaborazione...
+                  {t('common.processing')}
                 </>
               ) : (
                 <>
@@ -172,7 +174,7 @@ export default function AiWriterPage() {
 
           <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-white">Risultato</h2>
+              <h2 className="text-lg font-semibold text-white">{t('common.result')}</h2>
               {output && (
                 <div className="flex items-center gap-2">
                   <SaveButton
@@ -186,7 +188,7 @@ export default function AiWriterPage() {
                     className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white"
                   >
                     {copied ? <Check className="h-3.5 w-3.5 text-fuchsia-300" /> : <Copy className="h-3.5 w-3.5" />}
-                    {copied ? 'Copiato' : 'Copia'}
+                    {copied ? t('common.copied') : t('common.copy')}
                   </button>
                 </div>
               )}
@@ -195,14 +197,14 @@ export default function AiWriterPage() {
             {loading && (
               <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-500">
                 <Loader2 className="h-8 w-8 animate-spin-fast" />
-                <p className="text-sm">Sto scrivendo...</p>
+                <p className="text-sm">{t('aiWriterPage.writing')}</p>
               </div>
             )}
 
             {!loading && !output && !error && (
               <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-600">
                 <Sparkles className="h-10 w-10" />
-                <p className="text-sm">Il testo generato apparirà qui</p>
+                <p className="text-sm">{t('aiWriterPage.resultTextPlaceholder')}</p>
               </div>
             )}
 

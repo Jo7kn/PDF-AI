@@ -17,8 +17,10 @@ import { AppFooter } from '@/components/app-footer'
 import { SaveButton } from '@/components/save-button'
 import { runChatAi } from '@/app/actions/chat-ai'
 import type { ChatMessage } from '@/lib/nvidia/chat'
+import { useLocale } from '@/lib/i18n/locale-context'
 
 export default function ChatAiPage() {
+  const { t } = useLocale()
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -59,18 +61,18 @@ export default function ChatAiPage() {
       <AppHeader
         icon={Bot}
         title="Chat AI"
-        subtitle="Assistente AI generico"
+        subtitle={t('chatAiPage.subtitle')}
         gradient="from-violet-400 to-fuchsia-500"
       />
 
       <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-4 flex items-center justify-between">
-          <p className="text-sm text-slate-400">Conversazione libera, senza documenti collegati.</p>
+          <p className="text-sm text-slate-400">{t('chatAiPage.freeConversation')}</p>
           {messages.length > 0 && (
             <div className="flex items-center gap-2">
               <SaveButton
                 tool="chat-ai"
-                title={messages.find((m) => m.role === 'user')?.content.slice(0, 60) || 'Conversazione'}
+                title={messages.find((m) => m.role === 'user')?.content.slice(0, 60) || t('chatAiPage.defaultTitle')}
                 content={messages.map((m) => `${m.role === 'user' ? 'Tu' : 'AI'}: ${m.content}`).join('\n\n')}
                 metadata={{ messageCount: messages.length }}
               />
@@ -79,7 +81,7 @@ export default function ChatAiPage() {
                 className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
-                Nuova conversazione
+                {t('chatAiPage.newConversation')}
               </button>
             </div>
           )}
@@ -90,7 +92,7 @@ export default function ChatAiPage() {
             {messages.length === 0 && (
               <div className="flex h-full flex-col items-center justify-center gap-3 py-16 text-center text-slate-600">
                 <Sparkles className="h-10 w-10" />
-                <p className="text-sm">Scrivi qualcosa per iniziare la conversazione</p>
+                <p className="text-sm">{t('chatAiPage.emptyState')}</p>
               </div>
             )}
 
@@ -105,7 +107,7 @@ export default function ChatAiPage() {
                 </div>
                 <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-slate-400">
                   <Loader2 className="h-4 w-4 animate-spin-fast" />
-                  <span className="text-sm">Sto scrivendo...</span>
+                  <span className="text-sm">{t('chatAiPage.writing')}</span>
                 </div>
               </div>
             )}
@@ -125,7 +127,7 @@ export default function ChatAiPage() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Scrivi un messaggio..."
+              placeholder={t('chatAiPage.inputPlaceholder')}
               className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-slate-500 focus:border-violet-400/50 focus:outline-none"
             />
             <button
@@ -145,6 +147,7 @@ export default function ChatAiPage() {
 }
 
 function MessageBubble({ message }: { message: ChatMessage }) {
+  const { t } = useLocale()
   const isUser = message.role === 'user'
   const [copied, setCopied] = useState(false)
 
@@ -180,7 +183,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
           <button
             onClick={handleCopy}
             className="absolute -right-9 top-2 rounded-lg bg-white/5 p-1.5 text-slate-400 opacity-0 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white group-hover:opacity-100"
-            title="Copia testo"
+            title={t('chatAiPage.copyText')}
           >
             {copied ? <Check className="h-3.5 w-3.5 text-cyan-300" /> : <Copy className="h-3.5 w-3.5" />}
           </button>

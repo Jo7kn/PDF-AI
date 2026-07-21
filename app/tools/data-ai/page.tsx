@@ -16,8 +16,11 @@ import { AppFooter } from '@/components/app-footer'
 import { SaveButton } from '@/components/save-button'
 import { runDataInsights } from '@/app/actions/data-ai'
 import { parseCsv, isNumericColumn, type ParsedCsv } from '@/lib/csv'
+import { useLocale } from '@/lib/i18n/locale-context'
+import { LOCALE_DATE_TAG } from '@/lib/i18n/translations'
 
 export default function DataAiPage() {
+  const { t, locale } = useLocale()
   const [csvText, setCsvText] = useState('')
   const [parsed, setParsed] = useState<ParsedCsv | null>(null)
   const [numericCol, setNumericCol] = useState<string>('')
@@ -54,7 +57,7 @@ export default function DataAiPage() {
       setNumericCol(firstNumeric || '')
       setGroupCol(firstCategorical || '')
     } catch {
-      setFileError('Impossibile leggere il CSV. Verifica il formato.')
+      setFileError(t('dataAiPage.csvErrorParse'))
       setParsed(null)
     }
   }
@@ -63,7 +66,7 @@ export default function DataAiPage() {
     const file = e.target.files?.[0]
     if (!file) return
     if (!file.name.toLowerCase().endsWith('.csv')) {
-      setFileError('Per ora è supportato solo il formato CSV (Excel .xlsx non ancora disponibile).')
+      setFileError(t('dataAiPage.csvErrorFormat'))
       return
     }
     const reader = new FileReader()
@@ -78,7 +81,7 @@ export default function DataAiPage() {
 
     if (groupIndex === -1) {
       return parsed.rows.slice(0, 12).map((row, i) => ({
-        label: `Riga ${i + 1}`,
+        label: `${t('dataAiPage.rowLabel')} ${i + 1}`,
         value: Number(row[numIndex]) || 0,
       }))
     }
@@ -135,7 +138,7 @@ export default function DataAiPage() {
       <AppHeader
         icon={Database}
         title="Data AI"
-        subtitle="Analisi CSV, dashboard e insight"
+        subtitle={t('dataAiPage.subtitle')}
         gradient="from-sky-400 to-blue-500"
       />
 
@@ -147,8 +150,8 @@ export default function DataAiPage() {
               onClick={() => document.getElementById('csv-input')?.click()}
             >
               <Upload className="mx-auto mb-4 h-12 w-12 text-slate-400" />
-              <p className="mb-2 text-white">Carica un file CSV</p>
-              <p className="text-sm text-slate-500">oppure incolla i dati qui sotto</p>
+              <p className="mb-2 text-white">{t('dataAiPage.uploadTitle')}</p>
+              <p className="text-sm text-slate-500">{t('dataAiPage.uploadSubtitle')}</p>
               <input id="csv-input" type="file" accept=".csv" className="hidden" onChange={handleFileUpload} />
             </div>
 
@@ -162,7 +165,7 @@ export default function DataAiPage() {
             <textarea
               value={csvText}
               onChange={(e) => handleParse(e.target.value)}
-              placeholder={'nome,categoria,valore\nProdotto A,Elettronica,120\nProdotto B,Casa,80'}
+              placeholder={t('dataAiPage.csvPlaceholder')}
               rows={8}
               className="mt-4 w-full resize-none rounded-2xl border border-white/10 bg-slate-950/60 p-4 font-mono text-sm text-slate-100 placeholder-slate-600 focus:border-sky-400/50 focus:outline-none"
             />
@@ -173,14 +176,14 @@ export default function DataAiPage() {
           <>
             <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
               <div className="flex gap-3">
-                <StatTile icon={Rows3} label="Righe" value={parsed.rows.length.toString()} />
-                <StatTile icon={Columns3} label="Colonne" value={parsed.headers.length.toString()} />
+                <StatTile icon={Rows3} label={t('dataAiPage.rows')} value={parsed.rows.length.toString()} />
+                <StatTile icon={Columns3} label={t('dataAiPage.columns')} value={parsed.headers.length.toString()} />
               </div>
               <button
                 onClick={() => { setParsed(null); setCsvText(''); setInsights(null) }}
                 className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10"
               >
-                Carica un altro file
+                {t('dataAiPage.loadAnother')}
               </button>
             </div>
 
@@ -188,10 +191,10 @@ export default function DataAiPage() {
               <div className="mb-4 flex flex-wrap items-center gap-3">
                 <div className="flex items-center gap-2 text-white">
                   <BarChart3 className="h-5 w-5 text-sky-300" />
-                  <h2 className="text-lg font-semibold">Grafico</h2>
+                  <h2 className="text-lg font-semibold">{t('dataAiPage.chartTitle')}</h2>
                 </div>
                 <label className="ml-auto flex items-center gap-2 text-sm text-slate-400">
-                  Valore
+                  {t('dataAiPage.valueLabel')}
                   <select
                     value={numericCol}
                     onChange={(e) => setNumericCol(e.target.value)}
@@ -203,13 +206,13 @@ export default function DataAiPage() {
                   </select>
                 </label>
                 <label className="flex items-center gap-2 text-sm text-slate-400">
-                  Raggruppa per
+                  {t('dataAiPage.groupByLabel')}
                   <select
                     value={groupCol}
                     onChange={(e) => setGroupCol(e.target.value)}
                     className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-sky-400/50 focus:outline-none"
                   >
-                    <option value="" className="bg-slate-900">Nessuno (per riga)</option>
+                    <option value="" className="bg-slate-900">{t('dataAiPage.noneByRow')}</option>
                     {categoricalColumns.map((c) => (
                       <option key={c} value={c} className="bg-slate-900">{c}</option>
                     ))}
@@ -218,22 +221,22 @@ export default function DataAiPage() {
               </div>
 
               {numericColumns.length === 0 ? (
-                <p className="text-sm text-slate-500">Nessuna colonna numerica rilevata nel CSV.</p>
+                <p className="text-sm text-slate-500">{t('dataAiPage.noNumericColumns')}</p>
               ) : (
-                <BarChart data={chartData} />
+                <BarChart data={chartData} locale={locale} />
               )}
             </section>
 
             <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-lg font-semibold text-white">Insight AI</h2>
+                <h2 className="text-lg font-semibold text-white">{t('dataAiPage.insightsTitle')}</h2>
                 <button
                   onClick={handleGenerateInsights}
                   disabled={loadingInsights}
                   className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-sky-500 to-blue-500 px-4 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
                 >
                   {loadingInsights ? <Loader2 className="h-4 w-4 animate-spin-fast" /> : <Sparkles className="h-4 w-4" />}
-                  Genera insight
+                  {t('dataAiPage.generateInsights')}
                 </button>
               </div>
 
@@ -245,13 +248,13 @@ export default function DataAiPage() {
               )}
 
               {!insights && !loadingInsights && (
-                <p className="text-sm text-slate-500">Genera un'analisi testuale del dataset con l'AI.</p>
+                <p className="text-sm text-slate-500">{t('dataAiPage.insightsEmpty')}</p>
               )}
 
               {insights && (
                 <>
                   <div className="mb-3 flex justify-end">
-                    <SaveButton tool="data-ai" title="Data AI · Insight" content={insights} />
+                    <SaveButton tool="data-ai" title={t('dataAiPage.insightsSavedTitle')} content={insights} />
                   </div>
                   <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-100">{insights}</div>
                 </>
@@ -281,11 +284,12 @@ function StatTile({ icon: Icon, label, value }: { icon: typeof Rows3; label: str
 // Bar chart a singola serie (una sola tonalità cyan, coerente col brand):
 // barre sottili, angoli arrotondati 4px in cima, gap 2px tra le barre,
 // gridline hairline, tooltip on-hover, valore diretto solo sulla barra max.
-function BarChart({ data }: { data: { label: string; value: number }[] }) {
+function BarChart({ data, locale }: { data: { label: string; value: number }[]; locale: keyof typeof LOCALE_DATE_TAG }) {
+  const { t } = useLocale()
   const [hovered, setHovered] = useState<number | null>(null)
 
   if (data.length === 0) {
-    return <p className="text-sm text-slate-500">Nessun dato da mostrare.</p>
+    return <p className="text-sm text-slate-500">{t('dataAiPage.noChartData')}</p>
   }
 
   const maxValue = Math.max(...data.map((d) => d.value), 1)
@@ -301,11 +305,11 @@ function BarChart({ data }: { data: { label: string; value: number }[] }) {
             <div key={d.label} className="flex flex-1 flex-col items-center justify-end">
               <div className="relative flex w-full flex-col items-center justify-end" style={{ height: chartHeight }}>
                 {i === maxIndex && (
-                  <span className="mb-1 text-xs font-medium text-slate-300">{d.value.toLocaleString('it-IT')}</span>
+                  <span className="mb-1 text-xs font-medium text-slate-300">{d.value.toLocaleString(LOCALE_DATE_TAG[locale])}</span>
                 )}
                 {hovered === i && i !== maxIndex && (
                   <span className="absolute -top-6 rounded-md bg-slate-800 px-2 py-1 text-xs text-white shadow-lg">
-                    {d.value.toLocaleString('it-IT')}
+                    {d.value.toLocaleString(LOCALE_DATE_TAG[locale])}
                   </span>
                 )}
                 <div

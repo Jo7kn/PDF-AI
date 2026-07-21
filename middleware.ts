@@ -11,6 +11,9 @@ const PUBLIC_ROUTES = new Set([
   '/terms',
   '/auth/callback',
   '/auth/update-password',
+  // Chiamato da Lemon Squeezy (nessuna sessione utente): l'autenticazione
+  // è la firma HMAC verificata dentro la route stessa, non i cookie.
+  '/api/webhooks/lemonsqueezy',
 ])
 
 // Queste pagine hanno senso solo per un visitatore non autenticato.

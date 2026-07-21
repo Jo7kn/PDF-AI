@@ -18,21 +18,15 @@ import { AppFooter } from '@/components/app-footer'
 import { SaveButton } from '@/components/save-button'
 import { runCodeAi } from '@/app/actions/code-ai'
 import type { CodeAction } from '@/lib/nvidia/code'
+import { useLocale } from '@/lib/i18n/locale-context'
 
 const LANGUAGES = [
   'JavaScript', 'TypeScript', 'Python', 'Java', 'C#', 'C++', 'C',
   'Go', 'Rust', 'PHP', 'Ruby', 'Swift', 'Kotlin', 'SQL', 'HTML/CSS',
 ]
 
-const MODES: Array<{ key: CodeAction; label: string; icon: typeof Code2; placeholder: string }> = [
-  { key: 'generate', label: 'Genera', icon: Code2, placeholder: 'Descrivi cosa vuoi generare, es. "una funzione che valida un\'email"' },
-  { key: 'debug', label: 'Debug', icon: Bug, placeholder: 'Incolla il codice con il bug...' },
-  { key: 'refactor', label: 'Refactor', icon: Wand2, placeholder: 'Incolla il codice da migliorare...' },
-  { key: 'explain', label: 'Spiega', icon: BookOpen, placeholder: 'Incolla il codice da spiegare...' },
-  { key: 'convert', label: 'Converti', icon: RefreshCw, placeholder: 'Incolla il codice da convertire...' },
-]
-
 export default function CodeAiPage() {
+  const { t } = useLocale()
   const [mode, setMode] = useState<CodeAction>('generate')
   const [language, setLanguage] = useState('JavaScript')
   const [targetLanguage, setTargetLanguage] = useState('Python')
@@ -42,6 +36,14 @@ export default function CodeAiPage() {
   const [error, setError] = useState<string | null>(null)
   const [output, setOutput] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+
+  const MODES: Array<{ key: CodeAction; label: string; icon: typeof Code2; placeholder: string }> = [
+    { key: 'generate', label: t('codeAiPage.modeGenerate'), icon: Code2, placeholder: t('codeAiPage.placeholderGenerate') },
+    { key: 'debug', label: t('codeAiPage.modeDebug'), icon: Bug, placeholder: t('codeAiPage.placeholderDebug') },
+    { key: 'refactor', label: t('codeAiPage.modeRefactor'), icon: Wand2, placeholder: t('codeAiPage.placeholderRefactor') },
+    { key: 'explain', label: t('codeAiPage.modeExplain'), icon: BookOpen, placeholder: t('codeAiPage.placeholderExplain') },
+    { key: 'convert', label: t('codeAiPage.modeConvert'), icon: RefreshCw, placeholder: t('codeAiPage.placeholderConvert') },
+  ]
 
   const activeMode = MODES.find((m) => m.key === mode)!
 
@@ -83,7 +85,7 @@ export default function CodeAiPage() {
       <AppHeader
         icon={Code2}
         title="Code AI"
-        subtitle="Generazione, debug e refactoring"
+        subtitle={t('codeAiPage.subtitle')}
         gradient="from-emerald-400 to-teal-500"
       />
 
@@ -110,12 +112,12 @@ export default function CodeAiPage() {
             <div className="mb-4 flex flex-wrap items-center gap-3">
               {mode === 'convert' ? (
                 <>
-                  <LanguageSelect label="Da" value={language} onChange={setLanguage} />
+                  <LanguageSelect label={t('codeAiPage.labelFrom')} value={language} onChange={setLanguage} />
                   <ArrowRight className="h-4 w-4 text-slate-500" />
-                  <LanguageSelect label="A" value={targetLanguage} onChange={setTargetLanguage} />
+                  <LanguageSelect label={t('codeAiPage.labelTo')} value={targetLanguage} onChange={setTargetLanguage} />
                 </>
               ) : (
-                <LanguageSelect label="Linguaggio" value={language} onChange={setLanguage} />
+                <LanguageSelect label={t('codeAiPage.labelLanguage')} value={language} onChange={setLanguage} />
               )}
             </div>
 
@@ -133,7 +135,7 @@ export default function CodeAiPage() {
                 type="text"
                 value={extraNote}
                 onChange={(e) => setExtraNote(e.target.value)}
-                placeholder={mode === 'debug' ? 'Facoltativo: descrivi l\'errore che ottieni...' : 'Facoltativo: istruzioni specifiche (es. "usa async/await")'}
+                placeholder={mode === 'debug' ? t('codeAiPage.extraNoteDebugPlaceholder') : t('codeAiPage.extraNoteRefactorPlaceholder')}
                 className="mt-3 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-emerald-400/50 focus:outline-none"
               />
             ) : null}
@@ -153,7 +155,7 @@ export default function CodeAiPage() {
               {loading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin-fast" />
-                  Elaborazione...
+                  {t('common.processing')}
                 </>
               ) : (
                 <>
@@ -166,7 +168,7 @@ export default function CodeAiPage() {
 
           <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-white">Risultato</h2>
+              <h2 className="text-lg font-semibold text-white">{t('common.result')}</h2>
               {output && (
                 <div className="flex items-center gap-2">
                   <SaveButton
@@ -180,7 +182,7 @@ export default function CodeAiPage() {
                     className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white"
                   >
                     {copied ? <Check className="h-3.5 w-3.5 text-emerald-300" /> : <Copy className="h-3.5 w-3.5" />}
-                    {copied ? 'Copiato' : 'Copia'}
+                    {copied ? t('common.copied') : t('common.copy')}
                   </button>
                 </div>
               )}
@@ -189,14 +191,14 @@ export default function CodeAiPage() {
             {loading && (
               <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-500">
                 <Loader2 className="h-8 w-8 animate-spin-fast" />
-                <p className="text-sm">Il modello sta lavorando...</p>
+                <p className="text-sm">{t('codeAiPage.modelWorking')}</p>
               </div>
             )}
 
             {!loading && !output && !error && (
               <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-600">
                 <Code2 className="h-10 w-10" />
-                <p className="text-sm">Il risultato apparirà qui</p>
+                <p className="text-sm">{t('common.resultPlaceholder')}</p>
               </div>
             )}
 

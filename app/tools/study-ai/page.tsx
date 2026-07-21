@@ -17,17 +17,12 @@ import { AppFooter } from '@/components/app-footer'
 import { SaveButton } from '@/components/save-button'
 import { runStudyFlashcards, runStudyQuiz, runStudyTutor, runStudyPlan } from '@/app/actions/study-ai'
 import type { Flashcard, QuizQuestion } from '@/lib/nvidia/study'
+import { useLocale } from '@/lib/i18n/locale-context'
 
 type StudyMode = 'flashcards' | 'quiz' | 'tutor' | 'plan'
 
-const MODES: Array<{ key: StudyMode; label: string; icon: typeof GraduationCap; placeholder: string }> = [
-  { key: 'flashcards', label: 'Flashcard', icon: ClipboardList, placeholder: 'Argomento o testo da cui generare le flashcard...' },
-  { key: 'quiz', label: 'Quiz', icon: CircleHelp, placeholder: 'Argomento o testo da cui generare il quiz...' },
-  { key: 'tutor', label: 'Tutor AI', icon: GraduationCap, placeholder: 'Fai una domanda o chiedi di spiegarti un concetto...' },
-  { key: 'plan', label: 'Piano di studio', icon: Target, placeholder: 'Es. "Preparare l\'esame di analisi 1 in 4 settimane, 1 ora al giorno"' },
-]
-
 export default function StudyAiPage() {
+  const { t } = useLocale()
   const [mode, setMode] = useState<StudyMode>('flashcards')
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -37,6 +32,13 @@ export default function StudyAiPage() {
   const [quiz, setQuiz] = useState<QuizQuestion[] | null>(null)
   const [answer, setAnswer] = useState<string | null>(null)
   const [plan, setPlan] = useState<string | null>(null)
+
+  const MODES: Array<{ key: StudyMode; label: string; icon: typeof GraduationCap; placeholder: string }> = [
+    { key: 'flashcards', label: t('studyAiPage.modeFlashcards'), icon: ClipboardList, placeholder: t('studyAiPage.placeholderFlashcards') },
+    { key: 'quiz', label: t('studyAiPage.modeQuiz'), icon: CircleHelp, placeholder: t('studyAiPage.placeholderQuiz') },
+    { key: 'tutor', label: t('studyAiPage.modeTutor'), icon: GraduationCap, placeholder: t('studyAiPage.placeholderTutor') },
+    { key: 'plan', label: t('studyAiPage.modePlan'), icon: Target, placeholder: t('studyAiPage.placeholderPlan') },
+  ]
 
   const activeMode = MODES.find((m) => m.key === mode)!
 
@@ -79,7 +81,7 @@ export default function StudyAiPage() {
       <AppHeader
         icon={GraduationCap}
         title="Study AI"
-        subtitle="Flashcard, quiz, tutor e piani di studio"
+        subtitle={t('studyAiPage.subtitle')}
         gradient="from-amber-400 to-yellow-500"
       />
 
@@ -125,7 +127,7 @@ export default function StudyAiPage() {
             {loading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin-fast" />
-                Elaborazione...
+                {t('common.processing')}
               </>
             ) : (
               <>
@@ -141,8 +143,8 @@ export default function StudyAiPage() {
             <div className="flex justify-end">
               <SaveButton
                 tool="study-ai"
-                title={`Study AI · Flashcard (${input.slice(0, 40)})`}
-                content={flashcards.map((c) => `D: ${c.question}\nR: ${c.answer}`).join('\n\n')}
+                title={`Study AI · ${t('studyAiPage.modeFlashcards')} (${input.slice(0, 40)})`}
+                content={flashcards.map((c) => `${t('studyAiPage.question')}: ${c.question}\n${t('studyAiPage.answer')}: ${c.answer}`).join('\n\n')}
                 metadata={{ action: 'flashcards', count: flashcards.length }}
               />
             </div>
@@ -154,9 +156,9 @@ export default function StudyAiPage() {
             <div className="flex justify-end">
               <SaveButton
                 tool="study-ai"
-                title={`Study AI · Quiz (${input.slice(0, 40)})`}
+                title={`Study AI · ${t('studyAiPage.modeQuiz')} (${input.slice(0, 40)})`}
                 content={quiz
-                  .map((q, i) => `${i + 1}. ${q.question}\n${q.options.map((o, j) => `   ${String.fromCharCode(65 + j)}. ${o}`).join('\n')}\nCorretta: ${q.options[q.correctIndex]}\n${q.explanation}`)
+                  .map((q, i) => `${i + 1}. ${q.question}\n${q.options.map((o, j) => `   ${String.fromCharCode(65 + j)}. ${o}`).join('\n')}\n${t('studyAiPage.correctAnswer')}: ${q.options[q.correctIndex]}\n${q.explanation}`)
                   .join('\n\n')}
                 metadata={{ action: 'quiz', count: quiz.length }}
               />
@@ -167,7 +169,7 @@ export default function StudyAiPage() {
         {answer && (
           <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
             <div className="mb-3 flex justify-end">
-              <SaveButton tool="study-ai" title={`Study AI · Tutor (${input.slice(0, 40)})`} content={answer} metadata={{ action: 'tutor' }} />
+              <SaveButton tool="study-ai" title={`Study AI · ${t('studyAiPage.modeTutor')} (${input.slice(0, 40)})`} content={answer} metadata={{ action: 'tutor' }} />
             </div>
             <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-100">{answer}</div>
           </section>
@@ -175,7 +177,7 @@ export default function StudyAiPage() {
         {plan && (
           <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
             <div className="mb-3 flex justify-end">
-              <SaveButton tool="study-ai" title={`Study AI · Piano (${input.slice(0, 40)})`} content={plan} metadata={{ action: 'plan' }} />
+              <SaveButton tool="study-ai" title={`Study AI · ${t('studyAiPage.modePlan')} (${input.slice(0, 40)})`} content={plan} metadata={{ action: 'plan' }} />
             </div>
             <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-100">{plan}</div>
           </section>
@@ -188,6 +190,7 @@ export default function StudyAiPage() {
 }
 
 function FlashcardsView({ cards }: { cards: Flashcard[] }) {
+  const { t } = useLocale()
   const [flipped, setFlipped] = useState<Set<number>>(new Set())
 
   const toggle = (i: number) => {
@@ -208,7 +211,7 @@ function FlashcardsView({ cards }: { cards: Flashcard[] }) {
           className="min-h-[9rem] rounded-2xl border border-white/10 bg-slate-900/80 p-5 text-left shadow-xl shadow-black/20 transition-colors duration-150 ease-out hover:border-amber-400/30"
         >
           <p className="mb-2 text-xs font-medium uppercase tracking-wide text-amber-300">
-            {flipped.has(i) ? 'Risposta' : 'Domanda'} · {i + 1}/{cards.length}
+            {flipped.has(i) ? t('studyAiPage.answer') : t('studyAiPage.question')} · {i + 1}/{cards.length}
           </p>
           <p className="text-sm text-slate-100">{flipped.has(i) ? card.answer : card.question}</p>
         </button>
@@ -218,6 +221,7 @@ function FlashcardsView({ cards }: { cards: Flashcard[] }) {
 }
 
 function QuizView({ questions }: { questions: QuizQuestion[] }) {
+  const { t } = useLocale()
   const [selected, setSelected] = useState<Record<number, number>>({})
 
   const select = (qIndex: number, optIndex: number) => {
@@ -232,7 +236,7 @@ function QuizView({ questions }: { questions: QuizQuestion[] }) {
     <div className="space-y-4">
       {answered === questions.length && questions.length > 0 && (
         <div className="rounded-2xl border border-amber-400/20 bg-amber-400/10 p-4 text-sm text-amber-200">
-          Punteggio: {correct}/{questions.length}
+          {t('studyAiPage.score')}: {correct}/{questions.length}
         </div>
       )}
       {questions.map((q, qi) => {

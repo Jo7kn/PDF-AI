@@ -22,28 +22,30 @@ import { SaveButton } from '@/components/save-button'
 import { runTextConversion, convertPdfToText, convertImageFormat, type ImageOutputFormat } from '@/app/actions/file-converter'
 import { parseCsv, csvRowsToObjects, objectsToCsv } from '@/lib/csv'
 import type { TextFormat } from '@/lib/nvidia/converter'
+import { useLocale } from '@/lib/i18n/locale-context'
 
 type ConverterMode = 'text' | 'csv-json' | 'pdf-text' | 'image'
-
-const MODES: Array<{ key: ConverterMode; label: string; icon: typeof FileCode }> = [
-  { key: 'text', label: 'Markdown / HTML', icon: FileCode },
-  { key: 'csv-json', label: 'CSV ⇄ JSON', icon: FileJson },
-  { key: 'pdf-text', label: 'PDF → Testo', icon: FileText },
-  { key: 'image', label: 'Immagini', icon: ImageIcon },
-]
 
 const TEXT_FORMATS: TextFormat[] = ['markdown', 'html', 'testo semplice']
 const IMAGE_FORMATS: ImageOutputFormat[] = ['png', 'jpeg', 'webp']
 
 export default function FileConverterPage() {
+  const { t } = useLocale()
   const [mode, setMode] = useState<ConverterMode>('text')
+
+  const MODES: Array<{ key: ConverterMode; label: string; icon: typeof FileCode }> = [
+    { key: 'text', label: t('fileConverterPage.modeText'), icon: FileCode },
+    { key: 'csv-json', label: t('fileConverterPage.modeCsvJson'), icon: FileJson },
+    { key: 'pdf-text', label: t('fileConverterPage.modePdfText'), icon: FileText },
+    { key: 'image', label: t('fileConverterPage.modeImage'), icon: ImageIcon },
+  ]
 
   return (
     <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
       <AppHeader
         icon={RefreshCw}
         title="File Converter"
-        subtitle="Markdown, HTML, CSV, JSON, PDF, immagini"
+        subtitle={t('fileConverterPage.subtitle')}
         gradient="from-lime-400 to-emerald-500"
       />
 
@@ -66,7 +68,7 @@ export default function FileConverterPage() {
         </div>
 
         <p className="mb-6 text-sm text-slate-500">
-          Word, Excel e PowerPoint non sono ancora supportati (richiedono librerie aggiuntive non ancora installate).
+          {t('fileConverterPage.unsupportedFormats')}
         </p>
 
         {mode === 'text' && <TextConverter />}
@@ -81,6 +83,7 @@ export default function FileConverterPage() {
 }
 
 function TextConverter() {
+  const { t } = useLocale()
   const [from, setFrom] = useState<TextFormat>('markdown')
   const [to, setTo] = useState<TextFormat>('html')
   const [input, setInput] = useState('')
@@ -118,7 +121,7 @@ function TextConverter() {
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Incolla qui il testo da convertire..."
+          placeholder={t('fileConverterPage.textInputPlaceholder')}
           rows={14}
           className="w-full resize-none rounded-2xl border border-white/10 bg-slate-950/60 p-4 font-mono text-sm text-slate-100 placeholder-slate-600 focus:border-lime-400/50 focus:outline-none"
         />
@@ -134,19 +137,19 @@ function TextConverter() {
           className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-lime-500 to-emerald-500 px-4 py-3 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
         >
           {loading ? <Loader2 className="h-4 w-4 animate-spin-fast" /> : <RefreshCw className="h-4 w-4" />}
-          Converti
+          {t('fileConverterPage.convertButton')}
         </button>
       </section>
 
       <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Risultato</h2>
+          <h2 className="text-lg font-semibold text-white">{t('common.result')}</h2>
           {output && (
             <div className="flex items-center gap-2">
               <SaveButton tool="file-converter" title={`Conversione ${from} → ${to}`} content={output} metadata={{ from, to }} />
               <button onClick={handleCopy} className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white">
                 {copied ? <Check className="h-3.5 w-3.5 text-lime-300" /> : <Copy className="h-3.5 w-3.5" />}
-                {copied ? 'Copiato' : 'Copia'}
+                {copied ? t('common.copied') : t('common.copy')}
               </button>
             </div>
           )}
@@ -159,7 +162,7 @@ function TextConverter() {
         {!loading && !output && (
           <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-600">
             <Sparkles className="h-10 w-10" />
-            <p className="text-sm">Il risultato apparirà qui</p>
+            <p className="text-sm">{t('common.resultPlaceholder')}</p>
           </div>
         )}
         {!loading && output && (
@@ -185,6 +188,7 @@ function FormatSelect({ value, onChange }: { value: TextFormat; onChange: (v: Te
 }
 
 function CsvJsonConverter() {
+  const { t } = useLocale()
   const [direction, setDirection] = useState<'csv-to-json' | 'json-to-csv'>('csv-to-json')
   const [input, setInput] = useState('')
   const [output, setOutput] = useState<string | null>(null)
@@ -201,11 +205,11 @@ function CsvJsonConverter() {
         setOutput(JSON.stringify(objects, null, 2))
       } else {
         const objects = JSON.parse(input)
-        if (!Array.isArray(objects)) throw new Error('Il JSON deve essere un array di oggetti')
+        if (!Array.isArray(objects)) throw new Error(t('fileConverterPage.jsonArrayError'))
         setOutput(objectsToCsv(objects))
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Conversione fallita')
+      setError(err instanceof Error ? err.message : t('fileConverterPage.conversionFailed'))
     }
   }
 
@@ -236,7 +240,7 @@ function CsvJsonConverter() {
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder={direction === 'csv-to-json' ? 'nome,eta\nMario,30\nLuca,25' : '[{"nome":"Mario","eta":30}]'}
+          placeholder={direction === 'csv-to-json' ? t('fileConverterPage.csvToJsonPlaceholder') : t('fileConverterPage.jsonToCsvPlaceholder')}
           rows={14}
           className="w-full resize-none rounded-2xl border border-white/10 bg-slate-950/60 p-4 font-mono text-sm text-slate-100 placeholder-slate-600 focus:border-lime-400/50 focus:outline-none"
         />
@@ -252,19 +256,19 @@ function CsvJsonConverter() {
           className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-lime-500 to-emerald-500 px-4 py-3 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
         >
           <RefreshCw className="h-4 w-4" />
-          Converti (istantaneo)
+          {t('fileConverterPage.instantConvertButton')}
         </button>
       </section>
 
       <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Risultato</h2>
+          <h2 className="text-lg font-semibold text-white">{t('common.result')}</h2>
           {output && (
             <div className="flex items-center gap-2">
               <SaveButton tool="file-converter" title={direction === 'csv-to-json' ? 'CSV → JSON' : 'JSON → CSV'} content={output} metadata={{ direction }} />
               <button onClick={handleCopy} className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white">
                 {copied ? <Check className="h-3.5 w-3.5 text-lime-300" /> : <Copy className="h-3.5 w-3.5" />}
-                {copied ? 'Copiato' : 'Copia'}
+                {copied ? t('common.copied') : t('common.copy')}
               </button>
             </div>
           )}
@@ -272,7 +276,7 @@ function CsvJsonConverter() {
         {!output && (
           <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-600">
             <FileJson className="h-10 w-10" />
-            <p className="text-sm">Il risultato apparirà qui</p>
+            <p className="text-sm">{t('common.resultPlaceholder')}</p>
           </div>
         )}
         {output && (
@@ -284,6 +288,7 @@ function CsvJsonConverter() {
 }
 
 function PdfToTextConverter() {
+  const { t } = useLocale()
   const [file, setFile] = useState<File | null>(null)
   const [output, setOutput] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -297,7 +302,7 @@ function PdfToTextConverter() {
       setError(null)
       setOutput(null)
     } else {
-      setError('Seleziona un file PDF')
+      setError(t('fileConverterPage.selectPdfError'))
     }
   }
 
@@ -329,8 +334,8 @@ function PdfToTextConverter() {
           onClick={() => document.getElementById('pdf-input')?.click()}
         >
           <Upload className="mx-auto mb-4 h-12 w-12 text-slate-400" />
-          <p className="mb-2 text-white">Carica un PDF</p>
-          <p className="text-sm text-slate-500">Estrae il testo (non funziona su PDF scansionati come immagine)</p>
+          <p className="mb-2 text-white">{t('fileConverterPage.uploadPdfTitle')}</p>
+          <p className="text-sm text-slate-500">{t('fileConverterPage.uploadPdfSubtitle')}</p>
           <input id="pdf-input" type="file" accept=".pdf" className="hidden" onChange={handleFileSelect} />
           {file && <p className="mt-3 text-sm text-lime-300">{file.name}</p>}
         </div>
@@ -346,19 +351,19 @@ function PdfToTextConverter() {
           className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-lime-500 to-emerald-500 px-4 py-3 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
         >
           {loading ? <Loader2 className="h-4 w-4 animate-spin-fast" /> : <FileText className="h-4 w-4" />}
-          Estrai testo
+          {t('fileConverterPage.extractButton')}
         </button>
       </section>
 
       <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Testo estratto</h2>
+          <h2 className="text-lg font-semibold text-white">{t('fileConverterPage.extractedTextTitle')}</h2>
           {output && (
             <div className="flex items-center gap-2">
               <SaveButton tool="file-converter" title={`PDF → Testo · ${file?.name || ''}`} content={output} metadata={{ from: 'pdf', to: 'text' }} />
               <button onClick={handleCopy} className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white">
                 {copied ? <Check className="h-3.5 w-3.5 text-lime-300" /> : <Copy className="h-3.5 w-3.5" />}
-                {copied ? 'Copiato' : 'Copia'}
+                {copied ? t('common.copied') : t('common.copy')}
               </button>
             </div>
           )}
@@ -366,7 +371,7 @@ function PdfToTextConverter() {
         {!output && !loading && (
           <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-600">
             <FileText className="h-10 w-10" />
-            <p className="text-sm">Il testo estratto apparirà qui</p>
+            <p className="text-sm">{t('fileConverterPage.extractedTextPlaceholder')}</p>
           </div>
         )}
         {loading && (
@@ -383,6 +388,7 @@ function PdfToTextConverter() {
 }
 
 function ImageConverter() {
+  const { t } = useLocale()
   const [file, setFile] = useState<File | null>(null)
   const [format, setFormat] = useState<ImageOutputFormat>('png')
   const [resultUrl, setResultUrl] = useState<string | null>(null)
@@ -396,7 +402,7 @@ function ImageConverter() {
       setError(null)
       setResultUrl(null)
     } else {
-      setError('Seleziona un file immagine')
+      setError(t('fileConverterPage.selectImageError'))
     }
   }
 
@@ -421,14 +427,14 @@ function ImageConverter() {
           onClick={() => document.getElementById('image-input')?.click()}
         >
           <Upload className="mx-auto mb-4 h-12 w-12 text-slate-400" />
-          <p className="mb-2 text-white">Carica un'immagine</p>
-          <p className="text-sm text-slate-500">PNG, JPEG, WebP e altri formati supportati in lettura</p>
+          <p className="mb-2 text-white">{t('fileConverterPage.uploadImageTitle')}</p>
+          <p className="text-sm text-slate-500">{t('fileConverterPage.uploadImageSubtitle')}</p>
           <input id="image-input" type="file" accept="image/*" className="hidden" onChange={handleFileSelect} />
           {file && <p className="mt-3 text-sm text-lime-300">{file.name}</p>}
         </div>
 
         <label className="mt-4 flex items-center gap-2 text-sm text-slate-400">
-          Converti in
+          {t('fileConverterPage.convertToLabel')}
           <select
             value={format}
             onChange={(e) => setFormat(e.target.value as ImageOutputFormat)}
@@ -453,13 +459,13 @@ function ImageConverter() {
           className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-lime-500 to-emerald-500 px-4 py-3 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
         >
           {loading ? <Loader2 className="h-4 w-4 animate-spin-fast" /> : <RefreshCw className="h-4 w-4" />}
-          Converti
+          {t('fileConverterPage.convertButton')}
         </button>
       </section>
 
       <section className="flex flex-col rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-white">Risultato</h2>
+          <h2 className="text-lg font-semibold text-white">{t('common.result')}</h2>
           {resultUrl && (
             <div className="flex items-center gap-2">
               <SaveButton tool="file-converter" title={`Immagine convertita in ${format.toUpperCase()}`} content={resultUrl} contentType="image" metadata={{ format }} />
@@ -469,7 +475,7 @@ function ImageConverter() {
                 className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white"
               >
                 <Download className="h-3.5 w-3.5" />
-                Scarica
+                {t('common.download')}
               </a>
             </div>
           )}
@@ -479,7 +485,7 @@ function ImageConverter() {
           {!loading && !resultUrl && (
             <div className="flex flex-col items-center gap-3 p-8 text-slate-600">
               <ImageIcon className="h-10 w-10" />
-              <p className="text-sm">L'immagine convertita apparirà qui</p>
+              <p className="text-sm">{t('fileConverterPage.convertedImagePlaceholder')}</p>
             </div>
           )}
           {!loading && resultUrl && (

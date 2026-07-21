@@ -14,6 +14,7 @@ import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
 import { SaveButton } from '@/components/save-button'
 import { runTranslatorAi } from '@/app/actions/translator-ai'
+import { useLocale } from '@/lib/i18n/locale-context'
 
 const LANGUAGES = [
   'Italiano', 'Inglese', 'Spagnolo', 'Francese', 'Tedesco', 'Portoghese',
@@ -23,6 +24,7 @@ const LANGUAGES = [
 const AUTO_DETECT = 'Rileva automaticamente'
 
 export default function TranslatorAiPage() {
+  const { t } = useLocale()
   const [sourceLanguage, setSourceLanguage] = useState(AUTO_DETECT)
   const [targetLanguage, setTargetLanguage] = useState('Inglese')
   const [input, setInput] = useState('')
@@ -77,7 +79,7 @@ export default function TranslatorAiPage() {
       <AppHeader
         icon={Languages}
         title="Translator AI"
-        subtitle="Traduzione testi, formato preservato"
+        subtitle={t('translatorAiPage.subtitle')}
         gradient="from-teal-400 to-cyan-500"
       />
 
@@ -87,7 +89,7 @@ export default function TranslatorAiPage() {
           <button
             onClick={handleSwap}
             disabled={sourceLanguage === AUTO_DETECT}
-            title="Inverti lingue"
+            title={t('translatorAiPage.swapTitle')}
             className="rounded-full border border-white/10 bg-white/5 p-2.5 text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
           >
             <ArrowLeftRight className="h-4 w-4" />
@@ -100,7 +102,7 @@ export default function TranslatorAiPage() {
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Scrivi o incolla qui il testo da tradurre..."
+              placeholder={t('translatorAiPage.inputPlaceholder')}
               rows={14}
               className="w-full resize-none rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm text-slate-100 placeholder-slate-600 focus:border-teal-400/50 focus:outline-none"
             />
@@ -120,12 +122,12 @@ export default function TranslatorAiPage() {
               {loading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin-fast" />
-                  Traduzione...
+                  {t('translatorAiPage.translating')}
                 </>
               ) : (
                 <>
                   <Languages className="h-4 w-4" />
-                  Traduci
+                  {t('translatorAiPage.translateButton')}
                 </>
               )}
             </button>
@@ -133,7 +135,7 @@ export default function TranslatorAiPage() {
 
           <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-white">Traduzione</h2>
+              <h2 className="text-lg font-semibold text-white">{t('translatorAiPage.translationHeading')}</h2>
               {output && (
                 <div className="flex items-center gap-2">
                   <SaveButton
@@ -147,7 +149,7 @@ export default function TranslatorAiPage() {
                     className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white"
                   >
                     {copied ? <Check className="h-3.5 w-3.5 text-teal-300" /> : <Copy className="h-3.5 w-3.5" />}
-                    {copied ? 'Copiato' : 'Copia'}
+                    {copied ? t('common.copied') : t('common.copy')}
                   </button>
                 </div>
               )}
@@ -156,14 +158,14 @@ export default function TranslatorAiPage() {
             {loading && (
               <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-500">
                 <Loader2 className="h-8 w-8 animate-spin-fast" />
-                <p className="text-sm">Sto traducendo...</p>
+                <p className="text-sm">{t('translatorAiPage.translatingResult')}</p>
               </div>
             )}
 
             {!loading && !output && !error && (
               <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-600">
                 <Sparkles className="h-10 w-10" />
-                <p className="text-sm">La traduzione apparirà qui</p>
+                <p className="text-sm">{t('translatorAiPage.translationPlaceholder')}</p>
               </div>
             )}
 

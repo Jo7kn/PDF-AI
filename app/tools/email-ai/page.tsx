@@ -16,16 +16,12 @@ import { AppFooter } from '@/components/app-footer'
 import { SaveButton } from '@/components/save-button'
 import { runEmailAi } from '@/app/actions/email-ai'
 import type { EmailAction } from '@/lib/nvidia/email'
+import { useLocale } from '@/lib/i18n/locale-context'
 
 const TONES = ['Professionale', 'Formale', 'Amichevole', 'Diretto', 'Diplomatico']
 
-const MODES: Array<{ key: EmailAction; label: string; icon: typeof Mail; placeholder: string; needsOriginal: boolean }> = [
-  { key: 'compose', label: 'Scrivi', icon: Mail, placeholder: 'Es. "Chiedi un rinvio della scadenza del progetto di due settimane"', needsOriginal: false },
-  { key: 'reply', label: 'Rispondi', icon: Reply, placeholder: 'Incolla qui l\'email ricevuta a cui rispondere...', needsOriginal: true },
-  { key: 'improve', label: 'Migliora', icon: Wand2, placeholder: 'Incolla qui l\'email da migliorare...', needsOriginal: true },
-]
-
 export default function EmailAiPage() {
+  const { t } = useLocale()
   const [mode, setMode] = useState<EmailAction>('compose')
   const [input, setInput] = useState('')
   const [extraNote, setExtraNote] = useState('')
@@ -34,6 +30,12 @@ export default function EmailAiPage() {
   const [error, setError] = useState<string | null>(null)
   const [output, setOutput] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+
+  const MODES: Array<{ key: EmailAction; label: string; icon: typeof Mail; placeholder: string; needsOriginal: boolean }> = [
+    { key: 'compose', label: t('emailAiPage.modeCompose'), icon: Mail, placeholder: t('emailAiPage.placeholderCompose'), needsOriginal: false },
+    { key: 'reply', label: t('emailAiPage.modeReply'), icon: Reply, placeholder: t('emailAiPage.placeholderReply'), needsOriginal: true },
+    { key: 'improve', label: t('emailAiPage.modeImprove'), icon: Wand2, placeholder: t('emailAiPage.placeholderImprove'), needsOriginal: true },
+  ]
 
   const activeMode = MODES.find((m) => m.key === mode)!
 
@@ -74,7 +76,7 @@ export default function EmailAiPage() {
       <AppHeader
         icon={Mail}
         title="Email AI"
-        subtitle="Scrivi, rispondi, migliora"
+        subtitle={t('emailAiPage.subtitle')}
         gradient="from-blue-400 to-cyan-500"
       />
 
@@ -100,7 +102,7 @@ export default function EmailAiPage() {
           <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
             <div className="mb-4">
               <label className="flex items-center gap-2 text-sm text-slate-400">
-                Tono
+                {t('emailAiPage.toneLabel')}
                 <select
                   value={tone}
                   onChange={(e) => setTone(e.target.value)}
@@ -126,7 +128,7 @@ export default function EmailAiPage() {
                 type="text"
                 value={extraNote}
                 onChange={(e) => setExtraNote(e.target.value)}
-                placeholder="Facoltativo: istruzioni aggiuntive..."
+                placeholder={t('emailAiPage.extraNotePlaceholder')}
                 className="mt-3 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-blue-400/50 focus:outline-none"
               />
             )}
@@ -146,7 +148,7 @@ export default function EmailAiPage() {
               {loading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin-fast" />
-                  Elaborazione...
+                  {t('common.processing')}
                 </>
               ) : (
                 <>
@@ -159,7 +161,7 @@ export default function EmailAiPage() {
 
           <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-white">Risultato</h2>
+              <h2 className="text-lg font-semibold text-white">{t('common.result')}</h2>
               {output && (
                 <div className="flex items-center gap-2">
                   <SaveButton
@@ -173,7 +175,7 @@ export default function EmailAiPage() {
                     className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white"
                   >
                     {copied ? <Check className="h-3.5 w-3.5 text-blue-300" /> : <Copy className="h-3.5 w-3.5" />}
-                    {copied ? 'Copiato' : 'Copia'}
+                    {copied ? t('common.copied') : t('common.copy')}
                   </button>
                 </div>
               )}
@@ -182,14 +184,14 @@ export default function EmailAiPage() {
             {loading && (
               <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-500">
                 <Loader2 className="h-8 w-8 animate-spin-fast" />
-                <p className="text-sm">Sto scrivendo...</p>
+                <p className="text-sm">{t('emailAiPage.writing')}</p>
               </div>
             )}
 
             {!loading && !output && !error && (
               <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-600">
                 <Sparkles className="h-10 w-10" />
-                <p className="text-sm">L'email generata apparirà qui</p>
+                <p className="text-sm">{t('emailAiPage.emailPlaceholder')}</p>
               </div>
             )}
 

@@ -13,20 +13,22 @@ import { AppFooter } from '@/components/app-footer'
 import { SaveButton } from '@/components/save-button'
 import { runImageAi } from '@/app/actions/image-ai'
 import type { ImageAspect } from '@/lib/nvidia/image'
-
-const ASPECTS: Array<{ key: ImageAspect; label: string; ratio: string }> = [
-  { key: 'square', label: 'Quadrata', ratio: '1:1' },
-  { key: 'landscape', label: 'Orizzontale', ratio: '16:9' },
-  { key: 'portrait', label: 'Verticale', ratio: '9:16' },
-]
+import { useLocale } from '@/lib/i18n/locale-context'
 
 export default function ImageAiPage() {
+  const { t } = useLocale()
   const [prompt, setPrompt] = useState('')
   const [negativePrompt, setNegativePrompt] = useState('')
   const [aspect, setAspect] = useState<ImageAspect>('square')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [imageUrl, setImageUrl] = useState<string | null>(null)
+
+  const ASPECTS: Array<{ key: ImageAspect; label: string; ratio: string }> = [
+    { key: 'square', label: t('imageAiPage.aspectSquare'), ratio: '1:1' },
+    { key: 'landscape', label: t('imageAiPage.aspectLandscape'), ratio: '16:9' },
+    { key: 'portrait', label: t('imageAiPage.aspectPortrait'), ratio: '9:16' },
+  ]
 
   const handleGenerate = async () => {
     if (!prompt.trim() || loading) return
@@ -53,32 +55,32 @@ export default function ImageAiPage() {
       <AppHeader
         icon={ImageIcon}
         title="Image AI"
-        subtitle="Generazione immagini"
+        subtitle={t('imageAiPage.subtitle')}
         gradient="from-orange-400 to-rose-500"
       />
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid gap-6 lg:grid-cols-2">
           <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
-            <label className="mb-2 block text-sm font-medium text-slate-300">Descrivi l'immagine</label>
+            <label className="mb-2 block text-sm font-medium text-slate-300">{t('imageAiPage.describeLabel')}</label>
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder='Es. "Un gatto astronauta che fluttua nello spazio, stile illustrazione digitale"'
+              placeholder={t('imageAiPage.promptPlaceholder')}
               rows={6}
               className="w-full resize-none rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm text-slate-100 placeholder-slate-600 focus:border-orange-400/50 focus:outline-none"
             />
 
-            <label className="mb-2 mt-4 block text-sm font-medium text-slate-300">Da evitare (facoltativo)</label>
+            <label className="mb-2 mt-4 block text-sm font-medium text-slate-300">{t('imageAiPage.avoidLabel')}</label>
             <input
               type="text"
               value={negativePrompt}
               onChange={(e) => setNegativePrompt(e.target.value)}
-              placeholder='Es. "sfocato, testo, watermark"'
+              placeholder={t('imageAiPage.negativePromptPlaceholder')}
               className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-orange-400/50 focus:outline-none"
             />
 
-            <p className="mb-2 mt-4 text-sm font-medium text-slate-300">Formato</p>
+            <p className="mb-2 mt-4 text-sm font-medium text-slate-300">{t('imageAiPage.formatLabel')}</p>
             <div className="flex flex-wrap gap-2">
               {ASPECTS.map((a) => (
                 <button
@@ -110,12 +112,12 @@ export default function ImageAiPage() {
               {loading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin-fast" />
-                  Generazione in corso... (può richiedere fino a un minuto)
+                  {t('imageAiPage.generating')}
                 </>
               ) : (
                 <>
                   <Wand2 className="h-4 w-4" />
-                  Genera immagine
+                  {t('imageAiPage.generateButton')}
                 </>
               )}
             </button>
@@ -123,7 +125,7 @@ export default function ImageAiPage() {
 
           <section className="flex flex-col rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-white">Risultato</h2>
+              <h2 className="text-lg font-semibold text-white">{t('common.result')}</h2>
               {imageUrl && (
                 <div className="flex items-center gap-2">
                   <SaveButton
@@ -139,7 +141,7 @@ export default function ImageAiPage() {
                     className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white"
                   >
                     <Download className="h-3.5 w-3.5" />
-                    Scarica
+                    {t('common.download')}
                   </a>
                 </div>
               )}
@@ -149,14 +151,14 @@ export default function ImageAiPage() {
               {loading && (
                 <div className="flex flex-col items-center gap-3 p-8 text-slate-500">
                   <Loader2 className="h-8 w-8 animate-spin-fast" />
-                  <p className="text-sm">Sto disegnando la tua immagine...</p>
+                  <p className="text-sm">{t('imageAiPage.drawing')}</p>
                 </div>
               )}
 
               {!loading && !imageUrl && (
                 <div className="flex flex-col items-center gap-3 p-8 text-slate-600">
                   <ImageIcon className="h-10 w-10" />
-                  <p className="text-sm">L'immagine generata apparirà qui</p>
+                  <p className="text-sm">{t('imageAiPage.imagePlaceholder')}</p>
                 </div>
               )}
 

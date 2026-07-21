@@ -20,15 +20,18 @@ import {
   Users,
   type LucideIcon,
 } from 'lucide-react'
+import { useLocale } from '@/lib/i18n/locale-context'
 
-const ITEMS: Array<{ href: string; label: string; icon: LucideIcon; exact?: boolean }> = [
-  { href: '/dashboard', label: 'Home', icon: LayoutDashboard, exact: true },
-  { href: '/dashboard/files', label: 'File', icon: FolderOpen },
-  { href: '/dashboard/favorites', label: 'Preferiti', icon: Star },
-  { href: '/dashboard/history', label: 'Cronologia', icon: History },
-  { href: '/dashboard/team', label: 'Team', icon: Users },
-  { href: '/dashboard/billing', label: 'Abbonamento', icon: CreditCard },
-  { href: '/dashboard/settings', label: 'Impostazioni', icon: Settings },
+type ItemKey = 'home' | 'files' | 'favorites' | 'history' | 'team' | 'billing' | 'settings'
+
+const ITEMS: Array<{ href: string; key: ItemKey; icon: LucideIcon; exact?: boolean }> = [
+  { href: '/dashboard', key: 'home', icon: LayoutDashboard, exact: true },
+  { href: '/dashboard/files', key: 'files', icon: FolderOpen },
+  { href: '/dashboard/favorites', key: 'favorites', icon: Star },
+  { href: '/dashboard/history', key: 'history', icon: History },
+  { href: '/dashboard/team', key: 'team', icon: Users },
+  { href: '/dashboard/billing', key: 'billing', icon: CreditCard },
+  { href: '/dashboard/settings', key: 'settings', icon: Settings },
 ]
 
 function useActiveMap() {
@@ -38,6 +41,7 @@ function useActiveMap() {
 
 export function DashboardSidebar() {
   const isActive = useActiveMap()
+  const { t } = useLocale()
 
   return (
     <>
@@ -55,7 +59,7 @@ export function DashboardSidebar() {
               }`}
             >
               <item.icon className="h-4 w-4 flex-shrink-0" />
-              {item.label}
+              {t(`sidebar.${item.key}`)}
             </Link>
           ))}
         </nav>
@@ -65,7 +69,7 @@ export function DashboardSidebar() {
           className="mt-3 flex flex-shrink-0 items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm font-medium text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.98]"
         >
           <LayoutGrid className="h-4 w-4 flex-shrink-0" />
-          Tutti gli strumenti
+          {t('sidebar.allTools')}
         </Link>
       </aside>
 
@@ -82,7 +86,7 @@ export function DashboardSidebar() {
             }`}
           >
             <item.icon className="h-3.5 w-3.5" />
-            {item.label}
+            {t(`sidebar.${item.key}`)}
           </Link>
         ))}
         <Link
@@ -90,7 +94,7 @@ export function DashboardSidebar() {
           className="flex flex-shrink-0 items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-medium text-slate-400 transition-colors duration-150 ease-out hover:text-white active:scale-[0.97]"
         >
           <LayoutGrid className="h-3.5 w-3.5" />
-          Strumenti
+          {t('sidebar.tools')}
         </Link>
       </nav>
     </>
