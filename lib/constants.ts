@@ -32,7 +32,6 @@ export const LEMONSQUEEZY_VARIANT_TIER_MAP: Record<string, string> = {
   '1925549': 'pro',
   '1925583': 'team',
 }
-
 // URL di checkout hosted per piano (il link "Buy now" copiato dal
 // prodotto). Usati per costruire il bottone "Passa a Pro/Team".
 export const LEMONSQUEEZY_CHECKOUT_URLS: Record<string, string> = {
