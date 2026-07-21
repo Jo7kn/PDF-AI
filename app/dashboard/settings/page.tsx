@@ -6,6 +6,7 @@ import { getCurrentUserProfile } from '@/app/actions/auth'
 import { useLocale } from '@/lib/i18n/locale-context'
 import { LOCALES, LOCALE_LABELS } from '@/lib/i18n/translations'
 import { ChangePasswordForm } from '@/components/change-password-form'
+import { DiscordLinkCard } from '@/components/discord-link-card'
 import { Skeleton } from '@/components/skeleton'
 
 export default function SettingsPage() {
@@ -66,6 +67,8 @@ export default function SettingsPage() {
       <div className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
         <ChangePasswordForm />
       </div>
+
+      <DiscordLinkCard />
     </div>
   )
 }
