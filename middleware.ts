@@ -1,8 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
-import { updateSession } from '@/lib/supabase/middleware'
 import { createServerClient } from '@supabase/ssr'
 
-const PUBLIC_PATHS = [
+const PUBLIC_ROUTES = new Set([
   '/',
   '/login',
   '/signup',
@@ -11,20 +10,54 @@ const PUBLIC_PATHS = [
   '/terms',
   '/auth/callback',
   '/auth/update-password',
-]
+])
 
-function isPublicPath(pathname: string) {
-  return (
-    PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`)) ||
-    pathname.startsWith('/_next/') ||
-    pathname.startsWith('/static/') ||
-    pathname.startsWith('/favicon.ico') ||
-    pathname.includes('.')
-  )
+// Queste pagine hanno senso solo per un visitatore non autenticato.
+const GUEST_ONLY_ROUTES = new Set([
+  '/login',
+  '/signup',
+  '/forgotpass',
+  '/reset-password',
+])
+
+const AUTHENTICATED_HOME = '/dashboard'
+
+function normalizePathname(pathname: string) {
+  return pathname === '/' ? pathname : pathname.replace(/\/+$/, '')
+}
+
+function copySupabaseState(from: NextResponse, to: NextResponse) {
+  from.cookies.getAll().forEach((cookie) => to.cookies.set(cookie))
+
+  // @supabase/ssr può aggiungere intestazioni anti-cache durante il refresh.
+  for (const header of ['cache-control', 'expires', 'pragma']) {
+    const value = from.headers.get(header)
+    if (value) to.headers.set(header, value)
+  }
+}
+
+function redirectWithSupabaseState(
+  request: NextRequest,
+  pathname: string,
+  supabaseResponse: NextResponse,
+  next?: string,
+) {
+  const url = request.nextUrl.clone()
+  url.pathname = pathname
+  url.search = ''
+
+  if (next) url.searchParams.set('next', next)
+
+  const redirectResponse = NextResponse.redirect(url)
+  copySupabaseState(supabaseResponse, redirectResponse)
+
+  return redirectResponse
 }
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl
+  const pathname = normalizePathname(request.nextUrl.pathname)
+  let response = NextResponse.next({ request })
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -33,32 +66,66 @@ export async function middleware(request: NextRequest) {
         getAll() {
           return request.cookies.getAll()
         },
-        setAll() {
-          return
+        setAll(cookiesToSet: Array<{ name: string; value: string; options?: Record<string, unknown> }>, headers?: Headers) {
+          // Rende disponibili i cookie rinnovati agli handler/server component
+          // eseguiti nella stessa richiesta.
+          cookiesToSet.forEach(({ name, value }) => {
+            request.cookies.set(name, value)
+          })
+
+          response = NextResponse.next({ request })
+
+          // Invia i cookie rinnovati anche al browser.
+          cookiesToSet.forEach(({ name, value, options }) => {
+            response.cookies.set(name, value, options)
+          })
+
+          headers?.forEach((value, key) => response.headers.set(key, value))
         },
       },
-    }
+    },
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  // Non sostituire con getSession(): i dati della sessione letti dai cookie
+  // non sono una prova di identità lato server. getClaims() valida il JWT.
+  const { data, error } = await supabase.auth.getClaims()
 
-  if (!user && !isPublicPath(pathname)) {
-    return NextResponse.redirect(new URL('/login', request.url))
+  const isAuthenticated = !error && Boolean(data?.claims?.sub)
+  const isPublicRoute = PUBLIC_ROUTES.has(pathname)
+  const isApiRoute = pathname.startsWith('/api/')
+
+  if (!isAuthenticated && !isPublicRoute) {
+    // Le API dovrebbero restituire uno stato HTTP, non un redirect HTML.
+    if (isApiRoute) {
+      const unauthorizedResponse = NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 },
+      )
+      copySupabaseState(response, unauthorizedResponse)
+      return unauthorizedResponse
+    }
+
+    const requestedPath = `${request.nextUrl.pathname}${request.nextUrl.search}`
+    return redirectWithSupabaseState(
+      request,
+      '/login',
+      response,
+      requestedPath,
+    )
   }
 
-  if (user && ['/login', '/signup', '/forgotpass', '/reset-password'].includes(pathname)) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+  if (isAuthenticated && (pathname === '/' || GUEST_ONLY_ROUTES.has(pathname))) {
+    return redirectWithSupabaseState(request, AUTHENTICATED_HOME, response)
   }
 
-  if (user && pathname === '/') {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
-  }
-
-  return updateSession(request)
+  return response
 }
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif|ico|css|js|map|woff2?|ttf|eot)$).*)',
   ],
 }
+
+// Se usi un endpoint per la conferma email diverso da /auth/callback
+// (per esempio /auth/confirm), aggiungilo esplicitamente a PUBLIC_ROUTES.

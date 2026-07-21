@@ -20,13 +20,22 @@ import {
   X,
   ExternalLink,
   Users,
+  Folder,
+  FolderPlus,
+  Star,
+  Tag as TagIcon,
+  ArrowUpDown,
+  Trash2,
 } from 'lucide-react'
 import { createDocument } from '@/app/actions/documents'
 import { signOut, getCurrentUserProfile } from '@/app/actions/auth'
 import { askAcrossDocuments } from '@/app/actions/search'
 import { getSharedWithMeDocuments } from '@/app/actions/sharing'
+import { createFolder, getFolders, deleteFolder } from '@/app/actions/folders'
+import { addTagToDocument, removeTagFromDocument } from '@/app/actions/tags'
 import { buildCheckoutUrl } from '@/lib/lemonsqueezy'
 import { getTierByName } from '@/lib/pricing'
+import type { GetDocumentsFilters } from '@/app/actions/documents'
 
 export default function DashboardPage() {
   const [uploading, setUploading] = useState(false)
@@ -38,11 +47,31 @@ export default function DashboardPage() {
   const [searchOpen, setSearchOpen] = useState(false)
   const [profile, setProfile] = useState<{ id: string; email: string; tier: string } | null>(null)
 
+  // Organizzazione documenti: cartelle, preferiti, ricerca/ordinamento
+  const [folders, setFolders] = useState<any[]>([])
+  const [activeFolderId, setActiveFolderId] = useState<string | null | undefined>(undefined) // undefined = tutte
+  const [favoritesOnly, setFavoritesOnly] = useState(false)
+  const [nameFilter, setNameFilter] = useState('')
+  const [sortBy, setSortBy] = useState<GetDocumentsFilters['sortBy']>('created_at')
+  const [sortDir, setSortDir] = useState<GetDocumentsFilters['sortDir']>('desc')
+  const [newFolderName, setNewFolderName] = useState('')
+  const [creatingFolder, setCreatingFolder] = useState(false)
+
   useEffect(() => {
-    loadDocuments()
+    loadFolders()
     loadSharedDocuments()
     getCurrentUserProfile().then(setProfile)
   }, [])
+
+  // Ricarica i documenti ogni volta che cambia un filtro/ordinamento
+  useEffect(() => {
+    loadDocuments()
+  }, [activeFolderId, favoritesOnly, nameFilter, sortBy, sortDir])
+
+  const loadFolders = async () => {
+    const result = await getFolders()
+    if (result.success) setFolders(result.folders || [])
+  }
 
   const loadSharedDocuments = async () => {
     const result = await getSharedWithMeDocuments()
@@ -54,7 +83,13 @@ export default function DashboardPage() {
   const loadDocuments = async () => {
     try {
       const { getDocuments } = await import('@/app/actions/documents')
-      const result = await getDocuments()
+      const result = await getDocuments(undefined, {
+        folderId: activeFolderId,
+        favoritesOnly,
+        search: nameFilter || undefined,
+        sortBy,
+        sortDir,
+      })
       if (result.success && result.documents) {
         setDocuments(result.documents)
       } else {
@@ -62,6 +97,31 @@ export default function DashboardPage() {
       }
     } catch (err) {
       setError('Failed to load documents')
+    }
+  }
+
+  const handleCreateFolder = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!newFolderName.trim() || creatingFolder) return
+    setCreatingFolder(true)
+    const result = await createFolder(newFolderName)
+    if (result.success) {
+      setNewFolderName('')
+      await loadFolders()
+    } else {
+      setError(result.error || 'Impossibile creare la cartella')
+    }
+    setCreatingFolder(false)
+  }
+
+  const handleDeleteFolder = async (folderId: string) => {
+    const result = await deleteFolder(folderId)
+    if (result.success) {
+      if (activeFolderId === folderId) setActiveFolderId(undefined)
+      await loadFolders()
+      await loadDocuments()
+    } else {
+      setError(result.error || 'Impossibile eliminare la cartella')
     }
   }
 
@@ -119,6 +179,38 @@ export default function DashboardPage() {
       setError(err instanceof Error ? err.message : 'Upload failed')
       setUploading(false)
       setUploadProgress(0)
+    }
+  }
+
+  const handleToggleFavorite = async (documentId: string) => {
+    const { toggleFavorite } = await import('@/app/actions/documents')
+    const result = await toggleFavorite(documentId)
+    if (result.success) {
+      setDocuments(prev => prev.map(d => d.id === documentId ? { ...d, is_favorite: result.isFavorite } : d))
+    }
+  }
+
+  const handleMoveToFolder = async (documentId: string, folderId: string | null) => {
+    const { moveDocumentToFolder } = await import('@/app/actions/documents')
+    const result = await moveDocumentToFolder(documentId, folderId)
+    if (result.success) {
+      await loadDocuments()
+    }
+  }
+
+  const handleAddTag = async (documentId: string, tagName: string) => {
+    const result = await addTagToDocument(documentId, tagName)
+    if (result.success) {
+      await loadDocuments()
+    } else {
+      setError(result.error || 'Impossibile aggiungere il tag')
+    }
+  }
+
+  const handleRemoveTag = async (documentId: string, tagId: string) => {
+    const result = await removeTagFromDocument(documentId, tagId)
+    if (result.success) {
+      await loadDocuments()
     }
   }
 
@@ -289,6 +381,84 @@ export default function DashboardPage() {
               </form>
             </div>
 
+            <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+              <div className="mb-4 flex items-center gap-2">
+                <Folder className="h-5 w-5 text-cyan-300" />
+                <h3 className="text-lg font-semibold text-white">Cartelle</h3>
+              </div>
+
+              <div className="space-y-1 mb-4">
+                <button
+                  onClick={() => { setActiveFolderId(undefined); setFavoritesOnly(false) }}
+                  className={`w-full flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-left transition ${
+                    activeFolderId === undefined && !favoritesOnly ? 'bg-cyan-500/15 text-cyan-200' : 'text-slate-300 hover:bg-white/5'
+                  }`}
+                >
+                  <FileText className="h-4 w-4 flex-shrink-0" />
+                  Tutti i documenti
+                </button>
+                <button
+                  onClick={() => { setFavoritesOnly(true); setActiveFolderId(undefined) }}
+                  className={`w-full flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-left transition ${
+                    favoritesOnly ? 'bg-cyan-500/15 text-cyan-200' : 'text-slate-300 hover:bg-white/5'
+                  }`}
+                >
+                  <Star className="h-4 w-4 flex-shrink-0" />
+                  Preferiti
+                </button>
+                <button
+                  onClick={() => { setActiveFolderId(null); setFavoritesOnly(false) }}
+                  className={`w-full flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-left transition ${
+                    activeFolderId === null ? 'bg-cyan-500/15 text-cyan-200' : 'text-slate-300 hover:bg-white/5'
+                  }`}
+                >
+                  <Folder className="h-4 w-4 flex-shrink-0" />
+                  Senza cartella
+                </button>
+
+                {folders.map((folder) => (
+                  <div
+                    key={folder.id}
+                    className={`group flex items-center gap-2 rounded-xl px-3 py-2 text-sm transition ${
+                      activeFolderId === folder.id ? 'bg-cyan-500/15 text-cyan-200' : 'text-slate-300 hover:bg-white/5'
+                    }`}
+                  >
+                    <button
+                      onClick={() => { setActiveFolderId(folder.id); setFavoritesOnly(false) }}
+                      className="flex flex-1 items-center gap-2 text-left min-w-0"
+                    >
+                      <Folder className="h-4 w-4 flex-shrink-0" />
+                      <span className="truncate">{folder.name}</span>
+                    </button>
+                    <button
+                      onClick={() => handleDeleteFolder(folder.id)}
+                      className="flex-shrink-0 text-slate-500 opacity-0 transition hover:text-red-300 group-hover:opacity-100"
+                      title="Elimina cartella"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <form onSubmit={handleCreateFolder} className="flex gap-2">
+                <input
+                  type="text"
+                  value={newFolderName}
+                  onChange={(e) => setNewFolderName(e.target.value)}
+                  placeholder="Nuova cartella..."
+                  className="flex-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-cyan-400/50 focus:outline-none"
+                />
+                <button
+                  type="submit"
+                  disabled={creatingFolder || !newFolderName.trim()}
+                  className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-slate-300 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <FolderPlus className="h-4 w-4" />
+                </button>
+              </form>
+            </div>
+
             <div className="rounded-3xl border border-white/10 bg-white/10 p-6 backdrop-blur-xl">
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-white">Consigli rapidi</h3>
@@ -322,16 +492,57 @@ export default function DashboardPage() {
             <div className="mb-6 flex items-center justify-between">
               <div>
                 <h2 className="text-xl font-semibold text-white">I tuoi documenti</h2>
-                <p className="text-sm text-slate-400">Tieni tutto in ordine e accedi subito ai PDF caricati.</p>
+                <p className="text-sm text-slate-400">
+                  {favoritesOnly ? 'Preferiti' : activeFolderId === null ? 'Senza cartella' : activeFolderId ? folders.find(f => f.id === activeFolderId)?.name : 'Tutti i documenti'}
+                </p>
               </div>
               <Link href="/dashboard" className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-300 transition hover:bg-white/10">
                 Nuovo upload
               </Link>
             </div>
 
+            <div className="mb-4 flex flex-col gap-2 sm:flex-row">
+              <div className="relative flex-1">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                <input
+                  type="text"
+                  value={nameFilter}
+                  onChange={(e) => setNameFilter(e.target.value)}
+                  placeholder="Cerca per nome documento..."
+                  className="w-full rounded-xl border border-white/10 bg-white/5 py-2 pl-9 pr-3 text-sm text-white placeholder-slate-500 focus:border-cyan-400/50 focus:outline-none"
+                />
+              </div>
+              <div className="flex gap-2">
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as GetDocumentsFilters['sortBy'])}
+                  className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-cyan-400/50 focus:outline-none"
+                >
+                  <option value="created_at" className="bg-slate-900">Data</option>
+                  <option value="name" className="bg-slate-900">Nome</option>
+                  <option value="total_pages" className="bg-slate-900">Pagine</option>
+                </select>
+                <button
+                  onClick={() => setSortDir(prev => prev === 'asc' ? 'desc' : 'asc')}
+                  className="flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-slate-300 transition hover:bg-white/10 hover:text-white"
+                  title={sortDir === 'asc' ? 'Crescente' : 'Decrescente'}
+                >
+                  <ArrowUpDown className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
             <div className="space-y-4">
               {documents.map((doc) => (
-                <DocumentCard key={doc.id} document={doc} />
+                <DocumentCard
+                  key={doc.id}
+                  document={doc}
+                  folders={folders}
+                  onToggleFavorite={handleToggleFavorite}
+                  onMoveToFolder={handleMoveToFolder}
+                  onAddTag={handleAddTag}
+                  onRemoveTag={handleRemoveTag}
+                />
               ))}
             </div>
 
@@ -495,13 +706,37 @@ function GlobalSearchModal({ onClose }: { onClose: () => void }) {
   )
 }
 
-function DocumentCard({ document, sharedByEmail }: { document: any; sharedByEmail?: string }) {
-  // Ora basato su processing_status invece del vecchio controllo
-  // !parsed_text && total_pages === 0, che non rifletteva mai lo stato
-  // "failed" e poteva restare bloccato su "in elaborazione" per sempre
-  // se il job falliva prima di scrivere parsed_text.
+function DocumentCard({
+  document,
+  sharedByEmail,
+  folders = [],
+  onToggleFavorite,
+  onMoveToFolder,
+  onAddTag,
+  onRemoveTag,
+}: {
+  document: any
+  sharedByEmail?: string
+  folders?: any[]
+  onToggleFavorite?: (documentId: string) => void
+  onMoveToFolder?: (documentId: string, folderId: string | null) => void
+  onAddTag?: (documentId: string, tagName: string) => void
+  onRemoveTag?: (documentId: string, tagId: string) => void
+}) {
+  const [tagInput, setTagInput] = useState('')
+  // I documenti condivisi non hanno organizzazione propria (cartella/tag/
+  // preferito appartengono a chi possiede il documento, non a chi lo riceve)
+  const canOrganize = !sharedByEmail && onToggleFavorite
+
   const isProcessing = document.processing_status === 'pending' || document.processing_status === 'processing'
   const hasFailed = document.processing_status === 'failed'
+
+  const handleTagSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!tagInput.trim() || !onAddTag) return
+    onAddTag(document.id, tagInput)
+    setTagInput('')
+  }
 
   return (
     <div className="rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:bg-white/10">
@@ -513,6 +748,15 @@ function DocumentCard({ document, sharedByEmail }: { document: any; sharedByEmai
 
           <div className="min-w-0 flex-1">
             <div className="mb-1 flex items-center gap-2">
+              {canOrganize && (
+                <button
+                  onClick={() => onToggleFavorite!(document.id)}
+                  title={document.is_favorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti'}
+                  className="flex-shrink-0"
+                >
+                  <Star className={`h-4 w-4 transition ${document.is_favorite ? 'fill-amber-400 text-amber-400' : 'text-slate-500 hover:text-amber-400'}`} />
+                </button>
+              )}
               <h3 className="truncate font-semibold text-white">{document.name}</h3>
               {sharedByEmail && (
                 <div className="flex items-center gap-1 rounded-full bg-violet-500/15 px-2 py-1 text-xs text-violet-300">
@@ -541,7 +785,7 @@ function DocumentCard({ document, sharedByEmail }: { document: any; sharedByEmai
             <p className="mb-2 line-clamp-2 text-sm text-slate-400">
               {document.summary || (hasFailed ? (document.error_message || 'Elaborazione fallita') : 'In attesa di elaborazione...')}
             </p>
-            <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500">
+            <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 mb-2">
               <span className="flex items-center gap-1">
                 <FileText className="h-3 w-3" />
                 {document.total_pages || 0} pagine
@@ -551,6 +795,44 @@ function DocumentCard({ document, sharedByEmail }: { document: any; sharedByEmai
                 {new Date(document.created_at).toLocaleDateString()}
               </span>
             </div>
+
+            {canOrganize && (
+              <div className="space-y-2">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {(document.tags || []).map((tag: any) => (
+                    <button
+                      key={tag.id}
+                      onClick={() => onRemoveTag?.(document.id, tag.id)}
+                      title="Rimuovi tag"
+                      className="flex items-center gap-1 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-2 py-0.5 text-xs text-cyan-200 transition hover:bg-red-500/10 hover:text-red-300"
+                    >
+                      <TagIcon className="h-3 w-3" />
+                      {tag.name}
+                    </button>
+                  ))}
+                  <form onSubmit={handleTagSubmit} className="inline-flex">
+                    <input
+                      type="text"
+                      value={tagInput}
+                      onChange={(e) => setTagInput(e.target.value)}
+                      placeholder="+ tag"
+                      className="w-16 rounded-full border border-white/10 bg-transparent px-2 py-0.5 text-xs text-slate-300 placeholder-slate-600 focus:w-24 focus:border-cyan-400/50 focus:outline-none transition-all"
+                    />
+                  </form>
+                </div>
+
+                <select
+                  value={document.folder_id || ''}
+                  onChange={(e) => onMoveToFolder?.(document.id, e.target.value || null)}
+                  className="rounded-lg border border-white/10 bg-slate-950/40 px-2 py-1 text-xs text-slate-300 focus:border-cyan-400/50 focus:outline-none"
+                >
+                  <option value="" className="bg-slate-900">Nessuna cartella</option>
+                  {folders.map((folder) => (
+                    <option key={folder.id} value={folder.id} className="bg-slate-900">{folder.name}</option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
         </div>
 

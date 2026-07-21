@@ -186,23 +186,137 @@ export async function updateDocument(documentId: string, updates: Partial<Docume
   }
 }
 
-export async function getDocuments(userId?: string) {
+export interface GetDocumentsFilters {
+  // undefined = tutte le cartelle, null = solo documenti senza cartella,
+  // stringa = quella cartella specifica
+  folderId?: string | null
+  tagId?: string
+  favoritesOnly?: boolean
+  search?: string
+  sortBy?: 'created_at' | 'name' | 'total_pages'
+  sortDir?: 'asc' | 'desc'
+}
+
+export async function getDocuments(userId?: string, filters: GetDocumentsFilters = {}) {
   const supabase = await createClient()
   const currentUser = userId ? { id: userId } : await getCurrentUser()
   if (!currentUser?.id) return { error: 'Unauthorized' }
 
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('documents')
       .select('*')
       .eq('user_id', currentUser.id)
-      .order('created_at', { ascending: false })
 
+    if (filters.folderId === null) {
+      query = query.is('folder_id', null)
+    } else if (filters.folderId) {
+      query = query.eq('folder_id', filters.folderId)
+    }
+
+    if (filters.favoritesOnly) {
+      query = query.eq('is_favorite', true)
+    }
+
+    if (filters.search) {
+      query = query.ilike('name', `%${filters.search}%`)
+    }
+
+    const sortBy = filters.sortBy || 'created_at'
+    const sortDir = filters.sortDir || 'desc'
+    query = query.order(sortBy, { ascending: sortDir === 'asc' })
+
+    const { data, error } = await query
     if (error) return { error: error.message }
-    return { success: true, documents: data }
+
+    let documents = data || []
+
+    // Tag per documento: due query separate invece di un join annidato
+    // (stesso motivo delle condivisioni — evitare sorprese di relationship
+    // cache di PostgREST), unite in JS.
+    const docIds = documents.map(d => d.id)
+    let tagsByDocId: Record<string, { id: string; name: string }[]> = {}
+
+    if (docIds.length > 0) {
+      const { data: docTags } = await supabase
+        .from('document_tags')
+        .select('document_id, tag_id')
+        .in('document_id', docIds)
+
+      if (docTags && docTags.length > 0) {
+        const tagIds = [...new Set(docTags.map((dt: any) => dt.tag_id))]
+        const { data: tagRows } = await supabase
+          .from('tags')
+          .select('id, name')
+          .in('id', tagIds)
+
+        const tagById = Object.fromEntries((tagRows || []).map((t: any) => [t.id, t]))
+        tagsByDocId = docTags.reduce((acc: any, dt: any) => {
+          acc[dt.document_id] = acc[dt.document_id] || []
+          if (tagById[dt.tag_id]) acc[dt.document_id].push(tagById[dt.tag_id])
+          return acc
+        }, {})
+
+        if (filters.tagId) {
+          const matchingDocIds = new Set(
+            docTags.filter((dt: any) => dt.tag_id === filters.tagId).map((dt: any) => dt.document_id)
+          )
+          documents = documents.filter(d => matchingDocIds.has(d.id))
+        }
+      } else if (filters.tagId) {
+        // Nessun document_tags esistente affatto: con un filtro tag attivo,
+        // il risultato è vuoto per definizione
+        documents = []
+      }
+    }
+
+    const documentsWithTags = documents.map(d => ({ ...d, tags: tagsByDocId[d.id] || [] }))
+
+    return { success: true, documents: documentsWithTags }
   } catch (error) {
     return { error: 'Failed to fetch documents' }
   }
+}
+
+export async function toggleFavorite(documentId: string) {
+  const currentUser = await getCurrentUser()
+  if (!currentUser?.id) return { error: 'Unauthorized' }
+
+  const supabase = await createClient()
+  const { data: document, error: fetchError } = await supabase
+    .from('documents')
+    .select('is_favorite')
+    .eq('id', documentId)
+    .eq('user_id', currentUser.id)
+    .single()
+
+  if (fetchError || !document) return { error: 'Document not found' }
+
+  const { error } = await supabase
+    .from('documents')
+    .update({ is_favorite: !document.is_favorite })
+    .eq('id', documentId)
+    .eq('user_id', currentUser.id)
+
+  if (error) return { error: error.message }
+  revalidatePath('/dashboard')
+  return { success: true, isFavorite: !document.is_favorite }
+}
+
+export async function moveDocumentToFolder(documentId: string, folderId: string | null) {
+  const currentUser = await getCurrentUser()
+  if (!currentUser?.id) return { error: 'Unauthorized' }
+
+  const supabase = await createClient()
+  const { error } = await supabase
+    .from('documents')
+    .update({ folder_id: folderId })
+    .eq('id', documentId)
+    .eq('user_id', currentUser.id)
+
+  if (error) return { error: error.message }
+  revalidatePath('/dashboard')
+  return { success: true }
 }
 
 export async function getDocument(documentId: string) {
