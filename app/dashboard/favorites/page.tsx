@@ -33,7 +33,7 @@ export default function FavoritesPage() {
   const loadAll = async () => {
     setLoading(true)
     const [docsResult, itemsResult] = await Promise.all([
-      getDocuments(undefined, { favoritesOnly: true }),
+      getDocuments({ favoritesOnly: true }),
       getSavedItems({ favoritesOnly: true }),
     ])
     setDocuments(docsResult.success ? docsResult.documents || [] : [])

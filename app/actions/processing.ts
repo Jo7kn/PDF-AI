@@ -4,7 +4,7 @@
 import { createServiceClient } from '@/lib/supabase/service'
 import { parseDocumentWithNim, extractDeadlinesFromDocument, generateChatCompletion, generateEmbedding, runWithConcurrency } from '@/lib/nvidia/nim'
 import { chunkDocumentText } from '@/lib/chunking'
-import { createMessage } from './messages'
+import { insertMessage } from '@/lib/messages-internal'
 import { getCurrentUser } from './auth'
 import { resolveDocumentAccess } from '@/lib/document-access'
 
@@ -36,6 +36,21 @@ async function setStatus(
 // fallirebbero silenziosamente con "Unauthorized".
 export async function processDocument(documentId: string, fileUrl: string) {
   const supabase = createServiceClient()
+
+  // No user session available here (see comment above — this runs in a background
+  // after() callback), so ownership can't be checked via getCurrentUser(). Instead,
+  // confirm fileUrl actually belongs to this documentId before doing any work: without
+  // this, a caller who knows a documentId could point it at an arbitrary storage path
+  // and overwrite that document's parsed_text/summary with unrelated content.
+  const { data: ownerCheckRow, error: ownerCheckError } = await supabase
+    .from('documents')
+    .select('file_url')
+    .eq('id', documentId)
+    .single()
+
+  if (ownerCheckError || !ownerCheckRow || ownerCheckRow.file_url !== fileUrl) {
+    return { error: 'Document not found or file URL mismatch' }
+  }
 
   try {
     console.log(`📄 Processing document ${documentId}...`)
@@ -176,14 +191,14 @@ export async function chatWithDocument(documentId: string, userMessage: string) 
       documentText = refreshed?.document.parsed_text || null
     }
 
-    await createMessage(documentId, 'user', userMessage)
+    await insertMessage(documentId, 'user', userMessage)
 
     const aiResponse = await generateChatCompletion(
       [{ role: 'user', content: userMessage }],
       documentText || undefined
     )
 
-    await createMessage(documentId, 'assistant', aiResponse)
+    await insertMessage(documentId, 'assistant', aiResponse)
 
     return { success: true, response: aiResponse }
   } catch (error) {

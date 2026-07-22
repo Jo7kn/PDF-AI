@@ -2,9 +2,13 @@ import os
 
 from openai import OpenAI
 
+api_key = os.getenv("NVIDIA_API_KEY")
+if not api_key:
+  raise RuntimeError("NVIDIA_API_KEY environment variable is required")
+
 client = OpenAI(
   base_url = "https://integrate.api.nvidia.com/v1",
-  api_key = os.getenv("NVIDIA_API_KEY", "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")
+  api_key = api_key
 )
 
 

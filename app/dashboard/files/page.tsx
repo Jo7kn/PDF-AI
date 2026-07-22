@@ -121,7 +121,7 @@ function PdfFilesView() {
   const loadDocuments = async () => {
     try {
       const { getDocuments } = await import('@/app/actions/documents')
-      const result = await getDocuments(undefined, {
+      const result = await getDocuments({
         folderId: activeFolderId,
         favoritesOnly,
         search: nameFilter || undefined,

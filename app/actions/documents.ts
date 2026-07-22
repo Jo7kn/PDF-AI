@@ -197,9 +197,9 @@ export interface GetDocumentsFilters {
   sortDir?: 'asc' | 'desc'
 }
 
-export async function getDocuments(userId?: string, filters: GetDocumentsFilters = {}) {
+export async function getDocuments(filters: GetDocumentsFilters = {}) {
   const supabase = await createClient()
-  const currentUser = userId ? { id: userId } : await getCurrentUser()
+  const currentUser = await getCurrentUser()
   if (!currentUser?.id) return { error: 'Unauthorized' }
 
   try {

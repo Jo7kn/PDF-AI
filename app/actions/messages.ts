@@ -6,7 +6,12 @@ import { revalidatePath } from 'next/cache'
 import { getCurrentUser } from './auth'
 import { resolveDocumentAccess } from '@/lib/document-access'
 
-export async function createMessage(documentId: string, role: 'user' | 'assistant', content: string) {
+// Public entry point: role is always 'user', never a caller-supplied value — a shared
+// collaborator with 'chat' permission could otherwise pass role: 'assistant' here and
+// inject a fabricated AI reply into the document owner's chat thread. Internal code that
+// legitimately needs to write an 'assistant' message uses lib/messages-internal.ts
+// directly instead (see app/actions/processing.ts), which isn't a public Server Action.
+export async function sendUserMessage(documentId: string, content: string) {
   const user = await getCurrentUser()
   if (!user) return { error: 'Unauthorized' }
 
@@ -20,7 +25,7 @@ export async function createMessage(documentId: string, role: 'user' | 'assistan
     const serviceClient = createServiceClient()
     const { data, error } = await serviceClient
       .from('messages')
-      .insert({ document_id: documentId, role, content })
+      .insert({ document_id: documentId, role: 'user', content })
       .select()
       .single()
 
