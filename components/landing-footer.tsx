@@ -12,6 +12,7 @@ import Link from 'next/link'
 import { Sparkles, Mail } from 'lucide-react'
 import { useLocale } from '@/lib/i18n/locale-context'
 import { CONTACT_EMAIL } from '@/lib/seo'
+import { SocialLinks } from '@/components/social-links'
 
 export function LandingFooter() {
   const { t } = useLocale()
@@ -42,6 +43,8 @@ export function LandingFooter() {
             {CONTACT_EMAIL}
           </a>
         </nav>
+
+        <SocialLinks />
       </div>
     </footer>
   )

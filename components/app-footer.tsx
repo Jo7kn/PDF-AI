@@ -7,6 +7,7 @@
 import Link from 'next/link'
 import { Sparkles, Heart } from 'lucide-react'
 import { useLocale } from '@/lib/i18n/locale-context'
+import { SocialLinks } from '@/components/social-links'
 
 export function AppFooter() {
   const { t } = useLocale()
@@ -36,6 +37,8 @@ export function AppFooter() {
           {t('footer.madeBy')} <Heart className="h-3.5 w-3.5 fill-rose-400 text-rose-400" /> {t('footer.by')}
           <span className="font-medium text-slate-300">jxhn</span>
         </p>
+
+        <SocialLinks />
       </div>
     </footer>
   )
