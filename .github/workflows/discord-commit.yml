@@ -13,20 +13,28 @@ jobs:
       - name: Send Discord Webhook
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+          AUTHOR: ${{ github.event.head_commit.author.name }}
+          COMMIT_URL: ${{ github.event.head_commit.url }}
+          REPO: ${{ github.repository }}
         run: |
-          COMMIT_MSG="${{ github.event.head_commit.message }}"
-          AUTHOR="${{ github.event.head_commit.author.name }}"
-          URL="${{ github.event.head_commit.url }}"
-          REPO="${{ github.repository }}"
+          set -euo pipefail
 
-          curl -H "Content-Type: application/json" \
-          -X POST \
-          -d "{
-            \"embeds\": [{
-              \"title\": \"🚀 Nuovo Commit\",
-              \"description\": \"**Repository:** $REPO\n**Autore:** $AUTHOR\n\n**Messaggio:**\n$COMMIT_MSG\",
-              \"url\": \"$URL\",
-              \"color\": 5763719
-            }]
-          }" \
-          $DISCORD_WEBHOOK
+          PAYLOAD=$(jq -n \
+            --arg repo "$REPO" \
+            --arg author "$AUTHOR" \
+            --arg msg "$COMMIT_MSG" \
+            --arg url "$COMMIT_URL" \
+            '{
+              embeds: [{
+                title: "🚀 Nuovo Commit",
+                description: "**Repository:** \($repo)\n**Autore:** \($author)\n\n**Messaggio:**\n\($msg)",
+                url: $url,
+                color: 5763719
+              }]
+            }')
+
+          curl -sSf -H "Content-Type: application/json" \
+            -X POST \
+            -d "$PAYLOAD" \
+            "$DISCORD_WEBHOOK"
