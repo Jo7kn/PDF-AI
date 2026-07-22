@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { AI_TOOLS } from '@/lib/tools'
 import { FileText, Sparkles, Calendar, ArrowRight, ShieldCheck, BrainCircuit } from 'lucide-react'
 import { LandingHeader } from '@/components/landing-header'
+import { LandingFooter } from '@/components/landing-footer'
 import { PricingSection } from '@/components/pricing-section'
 import { SITE_URL, SITE_NAME } from '@/lib/seo'
 
@@ -185,6 +186,8 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      <LandingFooter />
     </main>
     </>
   )

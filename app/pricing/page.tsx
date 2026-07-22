@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { LandingHeader } from '@/components/landing-header'
+import { LandingFooter } from '@/components/landing-footer'
 import { PricingSection } from '@/components/pricing-section'
 
 const faqs = [
@@ -63,6 +64,8 @@ export default function PricingPage() {
           </Link>
         </div>
       </section>
+
+      <LandingFooter />
     </main>
   )
 }

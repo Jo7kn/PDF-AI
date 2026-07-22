@@ -3,7 +3,7 @@ import { Inter } from "next/font/google"
 import { MotionConfig } from "framer-motion"
 import { LocaleProvider } from "@/lib/i18n/locale-context"
 import { RouteProgress } from "@/components/route-progress"
-import { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION } from "@/lib/seo"
+import { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION, CONTACT_EMAIL } from "@/lib/seo"
 // @ts-ignore
 import "./globals.css"
 
@@ -90,6 +90,13 @@ export default function RootLayout({
                   "@id": `${SITE_URL}/#organization`,
                   name: SITE_NAME,
                   url: SITE_URL,
+                  email: CONTACT_EMAIL,
+                  contactPoint: {
+                    "@type": "ContactPoint",
+                    email: CONTACT_EMAIL,
+                    contactType: "customer support",
+                    availableLanguage: ["Italian", "English"],
+                  },
                 },
                 {
                   "@type": "WebSite",

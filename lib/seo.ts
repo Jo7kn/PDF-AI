@@ -9,5 +9,7 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.neurop
 
 export const SITE_NAME = 'AI Toolbox'
 
+export const CONTACT_EMAIL = 'info@neuropdf.it'
+
 export const DEFAULT_DESCRIPTION =
   'Suite di strumenti AI in italiano: chatta con i tuoi PDF, scrivi articoli ed email, genera codice e immagini, analizza contratti e dati, traduci documenti. Inizia gratis.'

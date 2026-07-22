@@ -1,14 +1,19 @@
 'use client'
 
-// components/app-footer.tsx
+// components/landing-footer.tsx
 //
-// Footer condiviso da tutte le pagine autenticate della piattaforma.
+// Footer per le pagine marketing pubbliche (home, /pricing): a differenza
+// di AppFooter non linka rotte autenticate (/home, /dashboard/files), che
+// per un visitatore anonimo rimbalzerebbero al login. Copre il gap
+// segnalato nell'audit SEO/GEO: la home pubblica non aveva nessun footer,
+// quindi nessun segnale di contatto/fiducia.
 
 import Link from 'next/link'
-import { Sparkles, Heart } from 'lucide-react'
+import { Sparkles, Mail } from 'lucide-react'
 import { useLocale } from '@/lib/i18n/locale-context'
+import { CONTACT_EMAIL } from '@/lib/seo'
 
-export function AppFooter() {
+export function LandingFooter() {
   const { t } = useLocale()
   const year = new Date().getFullYear()
 
@@ -25,17 +30,18 @@ export function AppFooter() {
           </div>
         </div>
 
-        <nav className="flex items-center gap-5 text-sm text-slate-400">
-          <Link href="/home" className="transition-colors duration-150 ease-out hover:text-white">{t('nav.home')}</Link>
+        <nav className="flex flex-wrap items-center justify-center gap-5 text-sm text-slate-400">
           <Link href="/tools" className="transition-colors duration-150 ease-out hover:text-white">{t('nav.tools')}</Link>
-          <Link href="/dashboard/files" className="transition-colors duration-150 ease-out hover:text-white">{t('nav.documents')}</Link>
+          <Link href="/pricing" className="transition-colors duration-150 ease-out hover:text-white">{t('nav.pricing')}</Link>
           <Link href="/about" className="transition-colors duration-150 ease-out hover:text-white">{t('nav.about')}</Link>
+          <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            className="inline-flex items-center gap-1.5 transition-colors duration-150 ease-out hover:text-white"
+          >
+            <Mail className="h-3.5 w-3.5" />
+            {CONTACT_EMAIL}
+          </a>
         </nav>
-
-        <p className="flex items-center gap-1.5 text-sm text-slate-500">
-          {t('footer.madeBy')} <Heart className="h-3.5 w-3.5 fill-rose-400 text-rose-400" /> {t('footer.by')}
-          <span className="font-medium text-slate-300">jxhn</span>
-        </p>
       </div>
     </footer>
   )

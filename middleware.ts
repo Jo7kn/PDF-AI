@@ -9,6 +9,8 @@ const PUBLIC_ROUTES = new Set([
   '/forgotpass',
   '/reset-password',
   '/terms',
+  '/pricing',
+  '/about',
   '/auth/callback',
   '/auth/update-password',
   // Chiamato da Stripe (nessuna sessione utente): l'autenticazione è la
