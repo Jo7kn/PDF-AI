@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
-import { SITE_URL } from '@/lib/seo'
+import { SITE_URL, SITE_NAME } from '@/lib/seo'
 import { ComingSoon } from '@/components/coming-soon'
 import { isFeatureEnabled } from '@/lib/feature-flags'
+import { buildFaqSchema } from '@/lib/faq-data'
 
 export const metadata: Metadata = {
   title: { absolute: 'AI Writer: Scrivi Articoli e Blog con l’AI | AI Toolbox' },
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
     title: 'AI Writer: Scrivi Articoli e Blog con l’AI | AI Toolbox',
     description: 'Genera, correggi e riscrivi articoli, email e blog in pochi secondi con AI Writer. Prova gratis i tuoi primi contenuti AI.',
     url: '/tools/ai-writer',
+    images: [{ url: '/opengraph-image.png', width: 1200, height: 630, alt: SITE_NAME }],
   },
 }
 
@@ -50,8 +52,13 @@ export default async function AiWriterLayout({ children }: { children: React.Rea
           }),
         }}
       />
+      <script
+        type="application/ld+json"
+        // JSON-LD statico: nessun input utente, safe da iniettare così.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema('ai-writer')) }}
+      />
       {!enabled ? (
-        <ComingSoon title="AI Writer" description="Stiamo ultimando AI Writer. Torna presto per iniziare a usarlo." />
+        <ComingSoon variant="tool" tool="ai-writer" />
       ) : (
         children
       )}

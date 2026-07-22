@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
-import { SITE_URL } from '@/lib/seo'
+import { SITE_URL, SITE_NAME } from '@/lib/seo'
 import { ComingSoon } from '@/components/coming-soon'
 import { isFeatureEnabled } from '@/lib/feature-flags'
+import { buildFaqSchema } from '@/lib/faq-data'
 
 export const metadata: Metadata = {
   title: { absolute: 'Image AI: Genera e Modifica Immagini | AI Toolbox' },
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
     title: 'Image AI: Genera e Modifica Immagini | AI Toolbox',
     description: 'Crea, modifica e migliora immagini con l’intelligenza artificiale. Disponibile dal piano Pro. Scopri Image AI di AI Toolbox.',
     url: '/tools/image-ai',
+    images: [{ url: '/opengraph-image.png', width: 1200, height: 630, alt: SITE_NAME }],
   },
 }
 
@@ -49,8 +51,13 @@ export default async function ImageAiLayout({ children }: { children: React.Reac
           }),
         }}
       />
+      <script
+        type="application/ld+json"
+        // JSON-LD statico: nessun input utente, safe da iniettare così.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema('image-ai')) }}
+      />
       {!enabled ? (
-        <ComingSoon title="Image AI" description="Stiamo ultimando Image AI. Torna presto per iniziare a usarlo." />
+        <ComingSoon variant="tool" tool="image-ai" />
       ) : (
         children
       )}

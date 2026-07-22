@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
-import { SITE_URL } from '@/lib/seo'
+import { SITE_URL, SITE_NAME } from '@/lib/seo'
 import { ComingSoon } from '@/components/coming-soon'
 import { isFeatureEnabled } from '@/lib/feature-flags'
+import { buildFaqSchema } from '@/lib/faq-data'
 
 export const metadata: Metadata = {
   title: { absolute: 'File Converter: Converti File con l’AI | AI Toolbox' },
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
     title: 'File Converter: Converti File con l’AI | AI Toolbox',
     description: 'Converti PDF, immagini, CSV e Markdown in pochi click con l’intelligenza artificiale. Gratis per iniziare. Prova ora.',
     url: '/tools/file-converter',
+    images: [{ url: '/opengraph-image.png', width: 1200, height: 630, alt: SITE_NAME }],
   },
 }
 
@@ -49,8 +51,13 @@ export default async function FileConverterLayout({ children }: { children: Reac
           }),
         }}
       />
+      <script
+        type="application/ld+json"
+        // JSON-LD statico: nessun input utente, safe da iniettare così.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema('file-converter')) }}
+      />
       {!enabled ? (
-        <ComingSoon title="File Converter" description="Stiamo ultimando File Converter. Torna presto per iniziare a usarlo." />
+        <ComingSoon variant="tool" tool="file-converter" />
       ) : (
         children
       )}

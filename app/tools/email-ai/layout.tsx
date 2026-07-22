@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
-import { SITE_URL } from '@/lib/seo'
+import { SITE_URL, SITE_NAME } from '@/lib/seo'
 import { ComingSoon } from '@/components/coming-soon'
 import { isFeatureEnabled } from '@/lib/feature-flags'
+import { buildFaqSchema } from '@/lib/faq-data'
 
 export const metadata: Metadata = {
   title: { absolute: 'Email AI: Scrivi Email in Pochi Secondi | AI Toolbox' },
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
     title: 'Email AI: Scrivi Email in Pochi Secondi | AI Toolbox',
     description: 'Genera email professionali, risposte automatiche e migliora i tuoi testi con l’AI. Gratis per iniziare. Prova Email AI.',
     url: '/tools/email-ai',
+    images: [{ url: '/opengraph-image.png', width: 1200, height: 630, alt: SITE_NAME }],
   },
 }
 
@@ -49,8 +51,13 @@ export default async function EmailAiLayout({ children }: { children: React.Reac
           }),
         }}
       />
+      <script
+        type="application/ld+json"
+        // JSON-LD statico: nessun input utente, safe da iniettare così.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema('email-ai')) }}
+      />
       {!enabled ? (
-        <ComingSoon title="Email AI" description="Stiamo ultimando Email AI. Torna presto per iniziare a usarlo." />
+        <ComingSoon variant="tool" tool="email-ai" />
       ) : (
         children
       )}

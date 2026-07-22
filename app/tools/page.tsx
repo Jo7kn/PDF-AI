@@ -7,6 +7,7 @@ import { AppFooter } from '@/components/app-footer'
 import { ToolCard } from '@/components/tool-card'
 import { AI_TOOLS, AI_TOOL_CATEGORIES } from '@/lib/tools'
 import { getCurrentUserProfile } from '@/app/actions/auth'
+import { getPublicFeatureFlags } from '@/app/actions/feature-flags'
 import { useLocale, translate, translateList } from '@/lib/i18n/locale-context'
 
 export default function ToolsPage() {
@@ -14,9 +15,13 @@ export default function ToolsPage() {
   const [query, setQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
   const [userTier, setUserTier] = useState<string | undefined>(undefined)
+  const [flags, setFlags] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
     getCurrentUserProfile().then((p) => setUserTier(p?.tier || 'free'))
+    getPublicFeatureFlags().then((list) => {
+      setFlags(Object.fromEntries(list.map((f) => [f.slug, f.enabled])))
+    })
   }, [])
 
   const filteredTools = useMemo(() => {
@@ -34,7 +39,7 @@ export default function ToolsPage() {
     })
   }, [query, activeCategory, locale])
 
-  const availableCount = AI_TOOLS.filter((tool) => tool.status === 'available').length
+  const availableCount = AI_TOOLS.filter((tool) => tool.status === 'available' && flags[tool.slug]).length
 
   return (
     <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
@@ -112,7 +117,7 @@ export default function ToolsPage() {
         {filteredTools.length > 0 ? (
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {filteredTools.map((tool) => (
-              <ToolCard key={tool.slug} tool={tool} userTier={userTier} />
+              <ToolCard key={tool.slug} tool={tool} userTier={userTier} flagEnabled={flags[tool.slug]} />
             ))}
           </div>
         ) : (

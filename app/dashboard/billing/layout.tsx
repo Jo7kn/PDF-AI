@@ -17,13 +17,7 @@ export default async function BillingLayout({ children }: { children: React.Reac
   const paymentsEnabled = await isFeatureEnabled('payments')
 
   if (!paymentsEnabled) {
-    return (
-      <ComingSoon
-        icon={CreditCard}
-        title="Abbonamenti e pagamenti"
-        description="Stiamo ultimando il sistema di pagamento. Torna presto per attivare il tuo piano."
-      />
-    )
+    return <ComingSoon variant="billing" icon={CreditCard} />
   }
 
   return children

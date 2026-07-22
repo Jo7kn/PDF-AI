@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
-import { SITE_URL } from '@/lib/seo'
+import { SITE_URL, SITE_NAME } from '@/lib/seo'
 import { ComingSoon } from '@/components/coming-soon'
 import { isFeatureEnabled } from '@/lib/feature-flags'
+import { buildFaqSchema } from '@/lib/faq-data'
 
 export const metadata: Metadata = {
   title: { absolute: 'Chat AI: Assistente Conversazionale Gratis | AI Toolbox' },
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
     title: 'Chat AI: Assistente Conversazionale Gratis | AI Toolbox',
     description: 'Chatta liberamente con un assistente AI, senza documenti richiesti. Sempre gratis. Inizia una conversazione con Chat AI.',
     url: '/tools/chat-ai',
+    images: [{ url: '/opengraph-image.png', width: 1200, height: 630, alt: SITE_NAME }],
   },
 }
 
@@ -49,8 +51,13 @@ export default async function ChatAiLayout({ children }: { children: React.React
           }),
         }}
       />
+      <script
+        type="application/ld+json"
+        // JSON-LD statico: nessun input utente, safe da iniettare così.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema('chat-ai')) }}
+      />
       {!enabled ? (
-        <ComingSoon title="Chat AI" description="Stiamo ultimando Chat AI. Torna presto per iniziare a usarlo." />
+        <ComingSoon variant="tool" tool="chat-ai" />
       ) : (
         children
       )}

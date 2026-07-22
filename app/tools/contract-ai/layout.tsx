@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
-import { SITE_URL } from '@/lib/seo'
+import { SITE_URL, SITE_NAME } from '@/lib/seo'
 import { ComingSoon } from '@/components/coming-soon'
 import { isFeatureEnabled } from '@/lib/feature-flags'
+import { buildFaqSchema } from '@/lib/faq-data'
 
 export const metadata: Metadata = {
   title: { absolute: 'Contract AI: Analizza Contratti con l’AI | AI Toolbox' },
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
     title: 'Contract AI: Analizza Contratti con l’AI | AI Toolbox',
     description: 'Individua clausole a rischio e ottieni riassunti di contratti con l’AI. Disponibile dal piano Pro. Scopri Contract AI.',
     url: '/tools/contract-ai',
+    images: [{ url: '/opengraph-image.png', width: 1200, height: 630, alt: SITE_NAME }],
   },
 }
 
@@ -49,8 +51,13 @@ export default async function ContractAiLayout({ children }: { children: React.R
           }),
         }}
       />
+      <script
+        type="application/ld+json"
+        // JSON-LD statico: nessun input utente, safe da iniettare così.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema('contract-ai')) }}
+      />
       {!enabled ? (
-        <ComingSoon title="Contract AI" description="Stiamo ultimando Contract AI. Torna presto per iniziare a usarlo." />
+        <ComingSoon variant="tool" tool="contract-ai" />
       ) : (
         children
       )}

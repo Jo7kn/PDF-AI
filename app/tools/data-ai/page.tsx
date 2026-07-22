@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
+import { FaqSection } from '@/components/faq-section'
 import { SaveButton } from '@/components/save-button'
 import { runDataInsights } from '@/app/actions/data-ai'
 import { parseCsv, isNumericColumn, type ParsedCsv } from '@/lib/csv'
@@ -266,6 +267,7 @@ export default function DataAiPage() {
           </>
         )}
         </TierGate>
+        <FaqSection slug="data-ai" />
       </main>
 
       <AppFooter />

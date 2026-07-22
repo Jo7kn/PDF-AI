@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
+import { FaqSection } from '@/components/faq-section'
 import { SaveButton } from '@/components/save-button'
 import { runAiWriter } from '@/app/actions/ai-writer'
 import type { WriterAction } from '@/lib/nvidia/writer'
@@ -216,6 +217,7 @@ export default function AiWriterPage() {
             )}
           </section>
         </div>
+        <FaqSection slug="ai-writer" />
       </main>
 
       <AppFooter />

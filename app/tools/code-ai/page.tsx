@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
+import { FaqSection } from '@/components/faq-section'
 import { SaveButton } from '@/components/save-button'
 import { runCodeAi } from '@/app/actions/code-ai'
 import type { CodeAction } from '@/lib/nvidia/code'
@@ -210,6 +211,7 @@ export default function CodeAiPage() {
             )}
           </section>
         </div>
+        <FaqSection slug="code-ai" />
       </main>
 
       <AppFooter />

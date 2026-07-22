@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
+import { FaqSection } from '@/components/faq-section'
 import { SaveButton } from '@/components/save-button'
 import { TierGate } from '@/components/tier-gate'
 import { runImageAi } from '@/app/actions/image-ai'
@@ -173,6 +174,7 @@ export default function ImageAiPage() {
           </section>
         </div>
         </TierGate>
+        <FaqSection slug="image-ai" />
       </main>
 
       <AppFooter />

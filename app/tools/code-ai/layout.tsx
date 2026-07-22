@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
-import { SITE_URL } from '@/lib/seo'
+import { SITE_URL, SITE_NAME } from '@/lib/seo'
 import { ComingSoon } from '@/components/coming-soon'
 import { isFeatureEnabled } from '@/lib/feature-flags'
+import { buildFaqSchema } from '@/lib/faq-data'
 
 export const metadata: Metadata = {
   title: { absolute: 'Code AI: Genera e Correggi Codice con l’AI | AI Toolbox' },
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
     title: 'Code AI: Genera e Correggi Codice con l’AI | AI Toolbox',
     description: 'Scrivi, debugga e converti codice in decine di linguaggi con Code AI. Spiegazioni chiare, refactoring rapido. Prova gratis.',
     url: '/tools/code-ai',
+    images: [{ url: '/opengraph-image.png', width: 1200, height: 630, alt: SITE_NAME }],
   },
 }
 
@@ -49,8 +51,13 @@ export default async function CodeAiLayout({ children }: { children: React.React
           }),
         }}
       />
+      <script
+        type="application/ld+json"
+        // JSON-LD statico: nessun input utente, safe da iniettare così.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema('code-ai')) }}
+      />
       {!enabled ? (
-        <ComingSoon title="Code AI" description="Stiamo ultimando Code AI. Torna presto per iniziare a usarlo." />
+        <ComingSoon variant="tool" tool="code-ai" />
       ) : (
         children
       )}

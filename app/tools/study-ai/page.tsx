@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
+import { FaqSection } from '@/components/faq-section'
 import { SaveButton } from '@/components/save-button'
 import { runStudyFlashcards, runStudyQuiz, runStudyTutor, runStudyPlan } from '@/app/actions/study-ai'
 import type { Flashcard, QuizQuestion } from '@/lib/nvidia/study'
@@ -186,6 +187,7 @@ export default function StudyAiPage() {
           </section>
         )}
         </TierGate>
+        <FaqSection slug="study-ai" />
       </main>
 
       <AppFooter />

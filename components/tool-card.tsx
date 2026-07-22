@@ -8,11 +8,18 @@ import { useLocale, useTranslatedList } from '@/lib/i18n/locale-context'
 // userTier: undefined finché il profilo non è stato caricato — in quel
 // caso non mostriamo ancora lo stato "richiede Pro" per evitare un flash
 // del badge a un utente che in realtà è già Pro/Team.
-export function ToolCard({ tool, userTier }: { tool: AiTool; userTier?: string }) {
+//
+// flagEnabled: stato reale del feature flag (vedi lib/feature-flags.ts),
+// non lo stato statico tool.status. Durante il pre-lancio tool.status può
+// dire 'available' mentre il flag è ancora spento — senza questo la card
+// direbbe "Disponibile" per uno strumento che poi mostra Coming Soon al
+// click. undefined finché i flag non sono stati caricati: trattato come
+// non disponibile (default prudente, coerente con lib/feature-flags.ts).
+export function ToolCard({ tool, userTier, flagEnabled }: { tool: AiTool; userTier?: string; flagEnabled?: boolean }) {
   const { t } = useLocale()
   const features = useTranslatedList(`toolsData.${tool.slug}.features`)
   const Icon = tool.icon
-  const isAvailable = tool.status === 'available'
+  const isAvailable = tool.status === 'available' && Boolean(flagEnabled)
   const isLocked = Boolean(
     tool.requiresPaidTier && isAvailable && userTier !== undefined && userTier !== 'pro' && userTier !== 'team',
   )

@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
+import { FaqSection } from '@/components/faq-section'
 import { SaveButton } from '@/components/save-button'
 import { TypingIndicator } from '@/components/animations/typing-indicator'
 import { CopyIconSwap } from '@/components/animations/copy-icon-swap'
@@ -146,6 +147,7 @@ export default function ChatAiPage() {
             </button>
           </form>
         </div>
+        <FaqSection slug="chat-ai" />
       </main>
 
       <AppFooter />

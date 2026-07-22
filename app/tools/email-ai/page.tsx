@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
+import { FaqSection } from '@/components/faq-section'
 import { SaveButton } from '@/components/save-button'
 import { runEmailAi } from '@/app/actions/email-ai'
 import type { EmailAction } from '@/lib/nvidia/email'
@@ -203,6 +204,7 @@ export default function EmailAiPage() {
             )}
           </section>
         </div>
+        <FaqSection slug="email-ai" />
       </main>
 
       <AppFooter />

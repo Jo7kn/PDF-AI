@@ -8,16 +8,25 @@ import { AppFooter } from '@/components/app-footer'
 import { ToolCard } from '@/components/tool-card'
 import { AI_TOOLS } from '@/lib/tools'
 import { getCurrentUserProfile } from '@/app/actions/auth'
+import { getPublicFeatureFlags } from '@/app/actions/feature-flags'
 import { useLocale } from '@/lib/i18n/locale-context'
 
 export default function HomePage() {
   const { t } = useLocale()
-  const availableTools = AI_TOOLS.filter((tool) => tool.status === 'available')
   const [userTier, setUserTier] = useState<string | undefined>(undefined)
+  const [flags, setFlags] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
     getCurrentUserProfile().then((p) => setUserTier(p?.tier || 'free'))
+    getPublicFeatureFlags().then((list) => {
+      setFlags(Object.fromEntries(list.map((f) => [f.slug, f.enabled])))
+    })
   }, [])
+
+  // "Pronti all'uso" mostra solo gli strumenti realmente accesi ora, non
+  // tutti quelli con status statico 'available' — coerente con il badge
+  // sulla card (vedi components/tool-card.tsx).
+  const availableTools = AI_TOOLS.filter((tool) => tool.status === 'available' && flags[tool.slug])
 
   return (
     <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">

@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
-import { SITE_URL } from '@/lib/seo'
+import { SITE_URL, SITE_NAME } from '@/lib/seo'
 import { ComingSoon } from '@/components/coming-soon'
 import { isFeatureEnabled } from '@/lib/feature-flags'
+import { buildFaqSchema } from '@/lib/faq-data'
 
 export const metadata: Metadata = {
   title: { absolute: 'Study AI: Flashcard e Quiz con l’AI | AI Toolbox' },
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
     title: 'Study AI: Flashcard e Quiz con l’AI | AI Toolbox',
     description: 'Studia più in fretta con flashcard, quiz e un tutor AI su misura. Disponibile dal piano Pro. Scopri Study AI di AI Toolbox.',
     url: '/tools/study-ai',
+    images: [{ url: '/opengraph-image.png', width: 1200, height: 630, alt: SITE_NAME }],
   },
 }
 
@@ -49,8 +51,13 @@ export default async function StudyAiLayout({ children }: { children: React.Reac
           }),
         }}
       />
+      <script
+        type="application/ld+json"
+        // JSON-LD statico: nessun input utente, safe da iniettare così.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema('study-ai')) }}
+      />
       {!enabled ? (
-        <ComingSoon title="Study AI" description="Stiamo ultimando Study AI. Torna presto per iniziare a usarlo." />
+        <ComingSoon variant="tool" tool="study-ai" />
       ) : (
         children
       )}

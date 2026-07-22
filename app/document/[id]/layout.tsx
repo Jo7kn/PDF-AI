@@ -10,13 +10,7 @@ export default async function DocumentLayout({ children }: { children: React.Rea
   const pdfAiEnabled = await isFeatureEnabled('pdf-ai')
 
   if (!pdfAiEnabled) {
-    return (
-      <ComingSoon
-        icon={FileText}
-        title="PDF AI"
-        description="Stiamo ultimando la chat sui documenti. Torna presto per iniziare a usarla."
-      />
-    )
+    return <ComingSoon variant="document" icon={FileText} />
   }
 
   return children

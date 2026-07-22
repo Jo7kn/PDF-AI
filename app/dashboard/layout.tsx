@@ -19,13 +19,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const pdfAiEnabled = await isFeatureEnabled('pdf-ai')
 
   if (!pdfAiEnabled) {
-    return (
-      <ComingSoon
-        icon={FileText}
-        title="PDF AI e la tua area personale"
-        description="Stiamo ultimando la workspace, gli strumenti AI e l'abbonamento. Torna presto per iniziare a usarli."
-      />
-    )
+    return <ComingSoon variant="dashboard" icon={FileText} />
   }
 
   return <DashboardShell>{children}</DashboardShell>

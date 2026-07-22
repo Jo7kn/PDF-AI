@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
+import { FaqSection } from '@/components/faq-section'
 import { SaveButton } from '@/components/save-button'
 import { runTextConversion, convertPdfToText, convertImageFormat, type ImageOutputFormat } from '@/app/actions/file-converter'
 import { parseCsv, csvRowsToObjects, objectsToCsv } from '@/lib/csv'
@@ -76,6 +77,7 @@ export default function FileConverterPage() {
         {mode === 'csv-json' && <CsvJsonConverter />}
         {mode === 'pdf-text' && <PdfToTextConverter />}
         {mode === 'image' && <ImageConverter />}
+        <FaqSection slug="file-converter" />
       </main>
 
       <AppFooter />

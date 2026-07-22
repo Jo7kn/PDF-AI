@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
+import { FaqSection } from '@/components/faq-section'
 import { SaveButton } from '@/components/save-button'
 import { runContractAnalysis, runContractClauses } from '@/app/actions/contract-ai'
 import type { ContractClause } from '@/lib/nvidia/contract'
@@ -167,6 +168,7 @@ export default function ContractAiPage() {
           </div>
         )}
         </TierGate>
+        <FaqSection slug="contract-ai" />
       </main>
 
       <AppFooter />

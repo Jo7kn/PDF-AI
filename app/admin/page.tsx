@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { Shield, Users, FileText, Zap, TrendingUp, type LucideIcon } from 'lucide-react'
-import { checkIsAdmin, getCurrentAdminEmail, getAnalyticsSummary, getActivityLog } from '@/app/actions/admin'
+import { Shield, Users, FileText, Zap, TrendingUp, Mail, type LucideIcon } from 'lucide-react'
+import { checkIsAdmin, getCurrentAdminEmail, getAnalyticsSummary, getActivityLog, getWaitlistSummary } from '@/app/actions/admin'
 import { getAllFeatureFlags } from '@/lib/feature-flags'
 import { FeatureFlagToggle } from '@/components/admin/feature-flag-toggle'
 
@@ -14,15 +14,17 @@ export default async function AdminPage() {
   const isAdmin = await checkIsAdmin()
   if (!isAdmin) redirect('/')
 
-  const [flags, analyticsResult, activityResult, email] = await Promise.all([
+  const [flags, analyticsResult, activityResult, waitlistResult, email] = await Promise.all([
     getAllFeatureFlags(),
     getAnalyticsSummary(),
     getActivityLog(50),
+    getWaitlistSummary(20),
     getCurrentAdminEmail(),
   ])
 
   const analytics = 'data' in analyticsResult ? analyticsResult.data : null
   const activity = 'data' in activityResult ? activityResult.data : []
+  const waitlist = 'data' in waitlistResult ? waitlistResult.data : null
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] px-4 py-10 text-white sm:px-6 lg:px-8">
@@ -84,6 +86,50 @@ export default async function AdminPage() {
                       </div>
                     ))}
                   </div>
+                </div>
+              )}
+            </>
+          )}
+        </section>
+
+        <section>
+          <h2 className="mb-1 text-lg font-semibold text-white">Lista d'attesa</h2>
+          <p className="mb-4 text-xs text-slate-500">
+            Chi si è iscritto dal form "avvisami al lancio" sulle pagine Coming Soon (vedi components/coming-soon.tsx).
+          </p>
+          {!waitlist ? (
+            <p className="text-sm text-red-300">{'error' in waitlistResult ? waitlistResult.error : 'Errore nel caricamento'}</p>
+          ) : (
+            <>
+              <div className="mb-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <StatCard icon={Mail} label="Iscritti totali" value={waitlist.total} />
+                {waitlist.bySource.slice(0, 3).map((s) => (
+                  <StatCard key={s.source} label={s.source} value={s.count} />
+                ))}
+              </div>
+
+              {waitlist.recent.length === 0 ? (
+                <p className="text-sm text-slate-500">Nessuna iscrizione ancora.</p>
+              ) : (
+                <div className="overflow-x-auto rounded-3xl border border-white/10 bg-slate-900/80">
+                  <table className="w-full text-left text-sm">
+                    <thead>
+                      <tr className="border-b border-white/10 text-xs uppercase tracking-wide text-slate-500">
+                        <th className="px-4 py-3">Email</th>
+                        <th className="px-4 py-3">Da</th>
+                        <th className="px-4 py-3">Quando</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {waitlist.recent.map((signup) => (
+                        <tr key={signup.email} className="border-b border-white/5 last:border-0">
+                          <td className="px-4 py-3 text-slate-300">{signup.email}</td>
+                          <td className="px-4 py-3 text-slate-500">{signup.source || '—'}</td>
+                          <td className="px-4 py-3 text-slate-500">{new Date(signup.createdAt).toLocaleString('it-IT')}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </>

@@ -122,6 +122,52 @@ export async function getActivityLog(limit = 50): Promise<{ data: AdminActivityE
   }
 }
 
+export interface WaitlistSignup {
+  email: string
+  source: string | null
+  createdAt: string
+}
+
+export interface WaitlistSummary {
+  total: number
+  bySource: Array<{ source: string; count: number }>
+  recent: WaitlistSignup[]
+}
+
+// Iscrizioni al form "avvisami al lancio" (vedi app/actions/waitlist.ts e
+// components/coming-soon.tsx) — altrimenti le email raccolte resterebbero
+// invisibili, chiuse nel DB senza nessuna UI per consultarle.
+export async function getWaitlistSummary(limit = 20): Promise<{ data: WaitlistSummary } | { error: string }> {
+  if (!(await isCurrentUserAdmin())) return { error: 'Unauthorized' }
+
+  const supabase = createServiceClient()
+  const [{ count: total }, { data: allSources }, { data: recentRows, error }] = await Promise.all([
+    supabase.from('launch_notifications').select('*', { count: 'exact', head: true }),
+    supabase.from('launch_notifications').select('source'),
+    supabase
+      .from('launch_notifications')
+      .select('email, source, created_at')
+      .order('created_at', { ascending: false })
+      .limit(limit),
+  ])
+
+  if (error) return { error: error.message }
+
+  const bySourceMap = new Map<string, number>()
+  for (const row of allSources || []) {
+    const key = row.source || 'unknown'
+    bySourceMap.set(key, (bySourceMap.get(key) || 0) + 1)
+  }
+
+  return {
+    data: {
+      total: total || 0,
+      bySource: Array.from(bySourceMap.entries()).map(([source, count]) => ({ source, count })).sort((a, b) => b.count - a.count),
+      recent: (recentRows || []).map((row) => ({ email: row.email, source: row.source, createdAt: row.created_at })),
+    },
+  }
+}
+
 // Usata dalla pagina /admin per il controllo di accesso: a differenza di
 // isCurrentUserAdmin() (usata internamente da questo file) è pensata per
 // essere chiamata anche da un Server Component per decidere cosa renderizzare.
