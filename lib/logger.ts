@@ -14,11 +14,7 @@ export function logEvent(level: LogLevel, message: string, meta?: Record<string,
   else if (level === 'warn') console.warn(message, meta ?? '')
   else console.log(message, meta ?? '')
 
-  void (async () => {
-    try {
-      await createServiceClient().from('app_logs').insert({ level, message, meta: meta ?? null })
-    } catch {
-      // vedi commento sopra: mai propagare
-    }
-  })()
+  // .then(undefined, ...) invece di await/try-catch: stesso fire-and-forget,
+  // nessuna IIFE. Vedi commento sopra: un fallimento qui non deve mai propagare.
+  createServiceClient().from('app_logs').insert({ level, message, meta: meta ?? null }).then(undefined, () => {})
 }

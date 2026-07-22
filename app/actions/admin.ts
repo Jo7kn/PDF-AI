@@ -242,17 +242,12 @@ export async function getSignupsByDay(days = 14): Promise<{ data: DailySignups[]
   if (!(await isCurrentUserAdmin())) return { error: 'Unauthorized' }
 
   const supabase = createServiceClient()
-  const since = new Date(Date.now() - (days - 1) * 24 * 60 * 60 * 1000)
-  since.setHours(0, 0, 0, 0)
+  const dayKeys = Array.from({ length: days }, (_, i) => new Date(Date.now() - (days - 1 - i) * 24 * 60 * 60 * 1000).toISOString().slice(0, 10))
 
-  const { data, error } = await supabase.from('users').select('created_at').gte('created_at', since.toISOString())
+  const { data, error } = await supabase.from('users').select('created_at').gte('created_at', `${dayKeys[0]}T00:00:00.000Z`)
   if (error) return { error: error.message }
 
-  const counts = new Map<string, number>()
-  for (let i = days - 1; i >= 0; i--) {
-    const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
-    counts.set(d, 0)
-  }
+  const counts = new Map<string, number>(dayKeys.map((d) => [d, 0]))
   for (const row of data || []) {
     const d = (row.created_at as string).slice(0, 10)
     if (counts.has(d)) counts.set(d, (counts.get(d) || 0) + 1)

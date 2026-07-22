@@ -8,6 +8,7 @@
 
 import { CREDIT_COSTS, TIER_GATED_TOOLS, deductCredits, getUserCredits, getUserTier, hasPaidTier, logUsage, type ToolSlug } from '@/lib/credits'
 import { isAllowed } from '@/lib/rate-limit'
+import { logEvent } from '@/lib/logger'
 
 export interface RunAiToolParams<T> {
   userId: string
@@ -58,6 +59,9 @@ export async function runAiTool<T>({ userId, tool, action, metadata, run }: RunA
   try {
     result = await run()
   } catch (error) {
+    // Il client vede sempre il fallback generico per un throw non-Error
+    // (comportamento invariato) — il dettaglio grezzo va solo nel log server.
+    logEvent('error', `Tool AI fallito: ${tool}`, { userId, tool, action, message: error instanceof Error ? error.message : String(error) })
     return { error: error instanceof Error ? error.message : 'Richiesta fallita' }
   }
 
