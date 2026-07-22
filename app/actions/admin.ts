@@ -168,6 +168,69 @@ export async function getWaitlistSummary(limit = 20): Promise<{ data: WaitlistSu
   }
 }
 
+export interface CreditAdjustmentResult {
+  success: boolean
+  error?: string
+  email?: string
+  previousBalance?: number
+  newBalance?: number
+}
+
+// Strumento di supporto: correggere manualmente il saldo di un utente (es.
+// un webhook Stripe perso, un rimborso, un gesto commerciale). delta può
+// essere negativo per sottrarre. Non scrive su usage_events: quella tabella
+// alimenta le statistiche di "utilizzo reale" in getAnalyticsSummary, e una
+// rettifica manuale non è utilizzo — mescolarle sporcherebbe le metriche.
+export async function adjustUserCredits(email: string, delta: number): Promise<CreditAdjustmentResult> {
+  if (!(await isCurrentUserAdmin())) return { success: false, error: 'unauthorized' }
+
+  const trimmedEmail = email.trim().toLowerCase()
+  if (!trimmedEmail) return { success: false, error: 'email-required' }
+  if (!Number.isFinite(delta) || delta === 0) return { success: false, error: 'invalid-amount' }
+
+  const supabase = createServiceClient()
+  const { data: user, error: findError } = await supabase
+    .from('users')
+    .select('id, credits')
+    .eq('email', trimmedEmail)
+    .single()
+
+  if (findError || !user) return { success: false, error: 'user-not-found' }
+
+  const previousBalance = user.credits ?? 0
+  const newBalance = Math.max(0, previousBalance + delta)
+
+  const { error: updateError } = await supabase.from('users').update({ credits: newBalance }).eq('id', user.id)
+  if (updateError) return { success: false, error: updateError.message }
+
+  return { success: true, email: trimmedEmail, previousBalance, newBalance }
+}
+
+function escapeCsvField(value: string): string {
+  if (/[",\n]/.test(value)) return `"${value.replace(/"/g, '""')}"`
+  return value
+}
+
+// Esporta TUTTA la waitlist (getWaitlistSummary tronca a `limit` righe per la
+// tabella a schermo) — usata dal pulsante "Esporta CSV" in /admin.
+export async function exportWaitlistCsv(): Promise<{ csv: string } | { error: string }> {
+  if (!(await isCurrentUserAdmin())) return { error: 'unauthorized' }
+
+  const supabase = createServiceClient()
+  const { data, error } = await supabase
+    .from('launch_notifications')
+    .select('email, source, created_at')
+    .order('created_at', { ascending: false })
+
+  if (error) return { error: error.message }
+
+  const header = 'email,source,created_at'
+  const rows = (data || []).map((row) =>
+    [row.email, row.source || '', row.created_at].map((v) => escapeCsvField(String(v))).join(','),
+  )
+  return { csv: [header, ...rows].join('\n') }
+}
+
 // Usata dalla pagina /admin per il controllo di accesso: a differenza di
 // isCurrentUserAdmin() (usata internamente da questo file) è pensata per
 // essere chiamata anche da un Server Component per decidere cosa renderizzare.

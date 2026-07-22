@@ -1,14 +1,39 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { Shield, Users, FileText, Zap, TrendingUp, Mail, type LucideIcon } from 'lucide-react'
+import {
+  Shield,
+  Users,
+  FileText,
+  Zap,
+  TrendingUp,
+  Mail,
+  Sliders,
+  BarChart3,
+  Megaphone,
+  Wallet,
+  Activity,
+  ArrowLeft,
+  type LucideIcon,
+} from 'lucide-react'
 import { checkIsAdmin, getCurrentAdminEmail, getAnalyticsSummary, getActivityLog, getWaitlistSummary } from '@/app/actions/admin'
 import { getAllFeatureFlags } from '@/lib/feature-flags'
 import { FeatureFlagToggle } from '@/components/admin/feature-flag-toggle'
+import { AnnouncementComposer } from '@/components/admin/announcement-composer'
+import { CreditAdjuster } from '@/components/admin/credit-adjuster'
+import { ExportWaitlistButton } from '@/components/admin/export-waitlist-button'
 
 // Pagina interna: mai indicizzata, mai linkata dal sito pubblico.
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
 }
+
+const NAV_SECTIONS = [
+  { id: 'panoramica', label: 'Panoramica' },
+  { id: 'strumenti', label: 'Strumenti' },
+  { id: 'comunicazioni', label: 'Comunicazioni' },
+  { id: 'lista-attesa', label: "Lista d'attesa" },
+  { id: 'log-attivita', label: 'Log attività' },
+]
 
 export default async function AdminPage() {
   const isAdmin = await checkIsAdmin()
@@ -25,25 +50,96 @@ export default async function AdminPage() {
   const analytics = 'data' in analyticsResult ? analyticsResult.data : null
   const activity = 'data' in activityResult ? activityResult.data : []
   const waitlist = 'data' in waitlistResult ? waitlistResult.data : null
+  const enabledCount = flags.filter((f) => f.enabled).length
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] px-4 py-10 text-white sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl space-y-10">
-        <header className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-violet-500 shadow-lg shadow-cyan-500/20">
-            <Shield className="h-5 w-5 text-white" />
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
+      <div className="sticky top-0 z-10 border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-400 to-violet-500 shadow-lg shadow-cyan-500/20">
+              <Shield className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold leading-tight text-white">Admin · AI Toolbox</p>
+              <p className="text-xs leading-tight text-slate-400">{email}</p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-2xl font-semibold text-white">Admin</h1>
-            <p className="text-sm text-slate-400">{email}</p>
-          </div>
-        </header>
+          <nav className="flex flex-wrap items-center gap-1">
+            {NAV_SECTIONS.map((s) => (
+              <a
+                key={s.id}
+                href={`#${s.id}`}
+                className="rounded-lg px-3 py-1.5 text-xs font-medium text-slate-400 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white"
+              >
+                {s.label}
+              </a>
+            ))}
+            <a
+              href="/dashboard"
+              className="ml-2 flex items-center gap-1.5 rounded-lg border border-white/10 px-3 py-1.5 text-xs font-medium text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" /> Dashboard
+            </a>
+          </nav>
+        </div>
+      </div>
 
-        <section>
-          <h2 className="mb-1 text-lg font-semibold text-white">Strumenti disponibili al pubblico</h2>
-          <p className="mb-4 text-xs text-slate-500">
-            Tutto parte spento durante il pre-lancio. Accendi ogni voce quando è pronta per utenti reali — l'effetto è immediato, nessun deploy necessario.
-          </p>
+      <div className="mx-auto max-w-6xl space-y-14 px-4 py-10 sm:px-6 lg:px-8">
+        <section id="panoramica" className="scroll-mt-24">
+          <SectionHeader icon={BarChart3} title="Panoramica" description="Numeri chiave dell'ultimo mese." />
+          {!analytics ? (
+            <ErrorNote message={'error' in analyticsResult ? analyticsResult.error : 'Errore nel caricamento'} />
+          ) : (
+            <>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <StatCard icon={Users} label="Utenti totali" value={analytics.totalUsers} accent="cyan" />
+                <StatCard icon={TrendingUp} label="Nuovi utenti (7gg)" value={analytics.newUsersLast7Days} accent="emerald" />
+                <StatCard icon={FileText} label="Documenti caricati" value={analytics.totalDocuments} accent="violet" />
+                <StatCard icon={Zap} label="Crediti usati (30gg)" value={analytics.creditsUsedLast30Days} accent="amber" />
+              </div>
+
+              <div className="mt-4 grid gap-4 sm:grid-cols-3">
+                <StatCard label="Piano Free" value={analytics.usersByTier.free} />
+                <StatCard label="Piano Pro" value={analytics.usersByTier.pro} />
+                <StatCard label="Piano Team" value={analytics.usersByTier.team} />
+              </div>
+
+              {analytics.toolUsageLast30Days.length > 0 && (
+                <div className="mt-4 rounded-3xl border border-white/10 bg-slate-900/80 p-6">
+                  <p className="mb-4 text-sm font-semibold text-white">Utilizzo per strumento (ultimi 30 giorni)</p>
+                  <div className="space-y-3">
+                    {analytics.toolUsageLast30Days.map((t) => {
+                      const max = analytics.toolUsageLast30Days[0]?.count || 1
+                      const pct = Math.max(6, Math.round((t.count / max) * 100))
+                      return (
+                        <div key={t.tool}>
+                          <div className="mb-1 flex items-center justify-between text-sm">
+                            <span className="text-slate-300">{t.tool}</span>
+                            <span className="text-slate-500">
+                              {t.count} usi · {t.creditsUsed} crediti
+                            </span>
+                          </div>
+                          <div className="h-1.5 overflow-hidden rounded-full bg-white/5">
+                            <div className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-violet-500" style={{ width: `${pct}%` }} />
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </section>
+
+        <section id="strumenti" className="scroll-mt-24">
+          <SectionHeader
+            icon={Sliders}
+            title="Strumenti disponibili al pubblico"
+            description="Tutto parte spento durante il pre-lancio. Accendi ogni voce quando è pronta per utenti reali — l'effetto è immediato, nessun deploy necessario."
+            badge={`${enabledCount}/${flags.length} attivi`}
+          />
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {flags.map((flag) => (
               <FeatureFlagToggle key={flag.slug} flag={flag} />
@@ -56,53 +152,37 @@ export default async function AdminPage() {
           )}
         </section>
 
-        <section>
-          <h2 className="mb-4 text-lg font-semibold text-white">Analitiche</h2>
-          {!analytics ? (
-            <p className="text-sm text-red-300">{'error' in analyticsResult ? analyticsResult.error : 'Errore nel caricamento'}</p>
-          ) : (
-            <>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <StatCard icon={Users} label="Utenti totali" value={analytics.totalUsers} />
-                <StatCard icon={TrendingUp} label="Nuovi utenti (7gg)" value={analytics.newUsersLast7Days} />
-                <StatCard icon={FileText} label="Documenti caricati" value={analytics.totalDocuments} />
-                <StatCard icon={Zap} label="Crediti usati (30gg)" value={analytics.creditsUsedLast30Days} />
+        <section id="comunicazioni" className="scroll-mt-24">
+          <SectionHeader icon={Megaphone} title="Comunicazioni" description="Annunci su Discord e correzioni manuali del saldo crediti." />
+          <div className="grid gap-4 lg:grid-cols-2">
+            <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6">
+              <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-white">
+                <Megaphone className="h-4 w-4 text-cyan-300" /> Annuncio su Discord
               </div>
-
-              <div className="mt-4 grid gap-4 sm:grid-cols-3">
-                <StatCard label="Piano Free" value={analytics.usersByTier.free} />
-                <StatCard label="Piano Pro" value={analytics.usersByTier.pro} />
-                <StatCard label="Piano Team" value={analytics.usersByTier.team} />
+              <AnnouncementComposer />
+            </div>
+            <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6">
+              <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-white">
+                <Wallet className="h-4 w-4 text-amber-300" /> Rettifica crediti utente
               </div>
-
-              {analytics.toolUsageLast30Days.length > 0 && (
-                <div className="mt-6 rounded-3xl border border-white/10 bg-slate-900/80 p-6">
-                  <p className="mb-4 text-sm font-semibold text-white">Utilizzo per strumento (ultimi 30 giorni)</p>
-                  <div className="space-y-2">
-                    {analytics.toolUsageLast30Days.map((t) => (
-                      <div key={t.tool} className="flex items-center justify-between text-sm">
-                        <span className="text-slate-300">{t.tool}</span>
-                        <span className="text-slate-500">{t.count} usi · {t.creditsUsed} crediti</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </>
-          )}
+              <CreditAdjuster />
+            </div>
+          </div>
         </section>
 
-        <section>
-          <h2 className="mb-1 text-lg font-semibold text-white">Lista d'attesa</h2>
-          <p className="mb-4 text-xs text-slate-500">
-            Chi si è iscritto dal form "avvisami al lancio" sulle pagine Coming Soon (vedi components/coming-soon.tsx).
-          </p>
+        <section id="lista-attesa" className="scroll-mt-24">
+          <SectionHeader
+            icon={Mail}
+            title="Lista d'attesa"
+            description='Chi si è iscritto dal form "avvisami al lancio" sulle pagine Coming Soon.'
+            action={<ExportWaitlistButton />}
+          />
           {!waitlist ? (
-            <p className="text-sm text-red-300">{'error' in waitlistResult ? waitlistResult.error : 'Errore nel caricamento'}</p>
+            <ErrorNote message={'error' in waitlistResult ? waitlistResult.error : 'Errore nel caricamento'} />
           ) : (
             <>
               <div className="mb-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <StatCard icon={Mail} label="Iscritti totali" value={waitlist.total} />
+                <StatCard icon={Mail} label="Iscritti totali" value={waitlist.total} accent="cyan" />
                 {waitlist.bySource.slice(0, 3).map((s) => (
                   <StatCard key={s.source} label={s.source} value={s.count} />
                 ))}
@@ -122,7 +202,7 @@ export default async function AdminPage() {
                     </thead>
                     <tbody>
                       {waitlist.recent.map((signup) => (
-                        <tr key={signup.email} className="border-b border-white/5 last:border-0">
+                        <tr key={signup.email} className="border-b border-white/5 last:border-0 hover:bg-white/5">
                           <td className="px-4 py-3 text-slate-300">{signup.email}</td>
                           <td className="px-4 py-3 text-slate-500">{signup.source || '—'}</td>
                           <td className="px-4 py-3 text-slate-500">{new Date(signup.createdAt).toLocaleString('it-IT')}</td>
@@ -136,13 +216,14 @@ export default async function AdminPage() {
           )}
         </section>
 
-        <section>
-          <h2 className="mb-1 text-lg font-semibold text-white">Log attività</h2>
-          <p className="mb-4 text-xs text-slate-500">
-            Registro reale degli eventi (tabella usage_events) — non è l'output stdout del server, che questo stack non persiste da nessuna parte.
-          </p>
+        <section id="log-attivita" className="scroll-mt-24">
+          <SectionHeader
+            icon={Activity}
+            title="Log attività"
+            description="Registro reale degli eventi (tabella usage_events) — non è l'output stdout del server, che questo stack non persiste da nessuna parte."
+          />
           {'error' in activityResult ? (
-            <p className="text-sm text-red-300">{activityResult.error}</p>
+            <ErrorNote message={activityResult.error} />
           ) : activity.length === 0 ? (
             <p className="text-sm text-slate-500">Nessuna attività registrata ancora.</p>
           ) : (
@@ -159,7 +240,7 @@ export default async function AdminPage() {
                 </thead>
                 <tbody>
                   {activity.map((event) => (
-                    <tr key={event.id} className="border-b border-white/5 last:border-0">
+                    <tr key={event.id} className="border-b border-white/5 last:border-0 hover:bg-white/5">
                       <td className="px-4 py-3 text-slate-300">{event.userEmail}</td>
                       <td className="px-4 py-3 text-slate-300">{event.tool}</td>
                       <td className="px-4 py-3 text-slate-500">{event.action || '—'}</td>
@@ -177,15 +258,72 @@ export default async function AdminPage() {
   )
 }
 
-function StatCard({ icon: Icon, label, value }: { icon?: LucideIcon; label: string; value: number }) {
+function SectionHeader({
+  icon: Icon,
+  title,
+  description,
+  badge,
+  action,
+}: {
+  icon: LucideIcon
+  title: string
+  description?: string
+  badge?: string
+  action?: React.ReactNode
+}) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-5">
+    <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+      <div className="flex items-start gap-3">
+        <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-white/10 text-cyan-300">
+          <Icon className="h-4 w-4" />
+        </div>
+        <div>
+          <div className="flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-white">{title}</h2>
+            {badge && (
+              <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2 py-0.5 text-[11px] font-medium text-emerald-300">
+                {badge}
+              </span>
+            )}
+          </div>
+          {description && <p className="mt-0.5 max-w-2xl text-xs text-slate-500">{description}</p>}
+        </div>
+      </div>
+      {action}
+    </div>
+  )
+}
+
+function ErrorNote({ message }: { message: string }) {
+  return <p className="text-sm text-red-300">{message}</p>
+}
+
+const ACCENTS = {
+  cyan: 'text-cyan-300',
+  emerald: 'text-emerald-300',
+  violet: 'text-violet-300',
+  amber: 'text-amber-300',
+} as const
+
+function StatCard({
+  icon: Icon,
+  label,
+  value,
+  accent,
+}: {
+  icon?: LucideIcon
+  label: string
+  value: number
+  accent?: keyof typeof ACCENTS
+}) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-5 transition-colors duration-150 ease-out hover:border-white/20">
       {Icon && (
-        <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 text-cyan-300">
+        <div className={`mb-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 ${accent ? ACCENTS[accent] : 'text-cyan-300'}`}>
           <Icon className="h-4 w-4" />
         </div>
       )}
-      <p className="text-2xl font-semibold text-white">{value}</p>
+      <p className="text-2xl font-semibold text-white">{value.toLocaleString('it-IT')}</p>
       <p className="text-sm text-slate-400">{label}</p>
     </div>
   )
