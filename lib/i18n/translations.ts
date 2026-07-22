@@ -56,6 +56,7 @@ const it = {
     favorites: 'Preferiti',
     history: 'Cronologia',
     team: 'Team',
+    invites: 'Inviti',
     billing: 'Abbonamento',
     settings: 'Impostazioni',
     allTools: 'Tutti gli strumenti',
@@ -520,6 +521,18 @@ const it = {
     runCommand: 'Esegui questo comando nel server Discord di AI Toolbox — scade tra 10 minuti.',
     checkStatus: 'Fatto — controlla lo stato',
   },
+  invitesPage: {
+    title: 'Invita amici',
+    subtitle: "Invita 5 persone che si registrano e confermano l'email: ricevi il piano Pro gratis per 30 giorni.",
+    yourLink: 'Il tuo link invito',
+    copy: 'Copia',
+    copied: 'Copiato!',
+    progress: '{count} di {target} inviti confermati',
+    rewardActive: 'Pro gratis attivo fino al {date}',
+    rewardPending: 'Invita altre {remaining} persone per sbloccare Pro gratis per 30 giorni.',
+    rewardCheck: 'Controllo dei tuoi inviti in corso…',
+    confirmedNote: "Conta solo chi si registra e conferma l'email — non basta cliccare il link.",
+  },
 }
 
 const en: typeof it = {
@@ -544,6 +557,7 @@ const en: typeof it = {
     favorites: 'Favorites',
     history: 'History',
     team: 'Team',
+    invites: 'Invites',
     billing: 'Billing',
     settings: 'Settings',
     allTools: 'All tools',
@@ -1008,6 +1022,18 @@ const en: typeof it = {
     runCommand: 'Run this in the AI Toolbox Discord server — expires in 10 minutes.',
     checkStatus: "I've run it — check status",
   },
+  invitesPage: {
+    title: 'Invite friends',
+    subtitle: 'Invite 5 people who sign up and confirm their email, and get the Pro plan free for 30 days.',
+    yourLink: 'Your invite link',
+    copy: 'Copy',
+    copied: 'Copied!',
+    progress: '{count} of {target} confirmed invites',
+    rewardActive: 'Free Pro active until {date}',
+    rewardPending: 'Invite {remaining} more people to unlock free Pro for 30 days.',
+    rewardCheck: 'Checking your invites…',
+    confirmedNote: "Only counts people who sign up and confirm their email — clicking the link alone isn't enough.",
+  },
 }
 
 const es: typeof it = {
@@ -1032,6 +1058,7 @@ const es: typeof it = {
     favorites: 'Favoritos',
     history: 'Historial',
     team: 'Equipo',
+    invites: 'Invitaciones',
     billing: 'Facturación',
     settings: 'Configuración',
     allTools: 'Todas las herramientas',
@@ -1496,6 +1523,18 @@ const es: typeof it = {
     runCommand: 'Ejecuta esto en el servidor de Discord de AI Toolbox — caduca en 10 minutos.',
     checkStatus: 'Ya lo ejecuté — comprobar estado',
   },
+  invitesPage: {
+    title: 'Invita a tus amigos',
+    subtitle: 'Invita a 5 personas que se registren y confirmen su email, y consigue el plan Pro gratis durante 30 días.',
+    yourLink: 'Tu enlace de invitación',
+    copy: 'Copiar',
+    copied: '¡Copiado!',
+    progress: '{count} de {target} invitaciones confirmadas',
+    rewardActive: 'Pro gratis activo hasta el {date}',
+    rewardPending: 'Invita a {remaining} personas más para desbloquear Pro gratis durante 30 días.',
+    rewardCheck: 'Comprobando tus invitaciones…',
+    confirmedNote: 'Solo cuentan quienes se registran y confirman su email — no basta con hacer clic en el enlace.',
+  },
 }
 
 const de: typeof it = {
@@ -1520,6 +1559,7 @@ const de: typeof it = {
     favorites: 'Favoriten',
     history: 'Verlauf',
     team: 'Team',
+    invites: 'Einladungen',
     billing: 'Abrechnung',
     settings: 'Einstellungen',
     allTools: 'Alle Tools',
@@ -1984,6 +2024,18 @@ const de: typeof it = {
     runCommand: 'Führe dies auf dem AI Toolbox Discord-Server aus — läuft in 10 Minuten ab.',
     checkStatus: 'Erledigt — Status prüfen',
   },
+  invitesPage: {
+    title: 'Freunde einladen',
+    subtitle: 'Lade 5 Personen ein, die sich registrieren und ihre E-Mail bestätigen, und erhalte 30 Tage lang Pro gratis.',
+    yourLink: 'Dein Einladungslink',
+    copy: 'Kopieren',
+    copied: 'Kopiert!',
+    progress: '{count} von {target} bestätigten Einladungen',
+    rewardActive: 'Pro gratis aktiv bis {date}',
+    rewardPending: 'Lade noch {remaining} Personen ein, um 30 Tage Pro gratis freizuschalten.',
+    rewardCheck: 'Einladungen werden geprüft…',
+    confirmedNote: 'Zählt nur, wer sich registriert und die E-Mail bestätigt — ein Klick auf den Link allein reicht nicht.',
+  },
 }
 
 const zh: typeof it = {
@@ -2008,6 +2060,7 @@ const zh: typeof it = {
     favorites: '收藏',
     history: '历史记录',
     team: '团队',
+    invites: '邀请',
     billing: '账单',
     settings: '设置',
     allTools: '所有工具',
@@ -2472,6 +2525,18 @@ const zh: typeof it = {
     runCommand: '在 AI Toolbox Discord 服务器中运行此命令 — 10 分钟后过期。',
     checkStatus: '我已运行 — 检查状态',
   },
+  invitesPage: {
+    title: '邀请好友',
+    subtitle: '邀请 5 位好友注册并确认邮箱，即可免费获得 30 天 Pro 套餐。',
+    yourLink: '你的邀请链接',
+    copy: '复制',
+    copied: '已复制！',
+    progress: '已确认 {count}/{target} 个邀请',
+    rewardActive: '免费 Pro 已激活，至 {date} 到期',
+    rewardPending: '再邀请 {remaining} 位好友即可解锁 30 天免费 Pro。',
+    rewardCheck: '正在检查你的邀请…',
+    confirmedNote: '仅统计注册并确认邮箱的好友 — 仅点击链接不计入。',
+  },
 }
 
 const fr: typeof it = {
@@ -2496,6 +2561,7 @@ const fr: typeof it = {
     favorites: 'Favoris',
     history: 'Historique',
     team: 'Équipe',
+    invites: 'Invitations',
     billing: 'Facturation',
     settings: 'Paramètres',
     allTools: 'Tous les outils',
@@ -2959,6 +3025,18 @@ const fr: typeof it = {
     generateCode: 'Générer un code',
     runCommand: 'Exécutez ceci sur le serveur Discord AI Toolbox — expire dans 10 minutes.',
     checkStatus: "C'est fait — vérifier le statut",
+  },
+  invitesPage: {
+    title: 'Invitez des amis',
+    subtitle: "Invitez 5 personnes qui s'inscrivent et confirment leur email, et obtenez le plan Pro gratuit pendant 30 jours.",
+    yourLink: "Votre lien d'invitation",
+    copy: 'Copier',
+    copied: 'Copié !',
+    progress: '{count} sur {target} invitations confirmées',
+    rewardActive: "Pro gratuit actif jusqu'au {date}",
+    rewardPending: 'Invitez encore {remaining} personnes pour débloquer Pro gratuit pendant 30 jours.',
+    rewardCheck: 'Vérification de vos invitations…',
+    confirmedNote: "Seules comptent les personnes qui s'inscrivent et confirment leur email — cliquer sur le lien ne suffit pas.",
   },
 }
 

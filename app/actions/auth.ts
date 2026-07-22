@@ -1,10 +1,12 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/service'
 import { buildAuthRedirectUrl, getOAuthOptions } from '@/lib/auth/oauth'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { DEFAULT_STARTING_CREDITS } from '@/lib/credits'
+import { generateReferralCode } from '@/lib/referrals'
 
 // Esportata (era privata) così documents.ts può riusarla invece di
 // duplicare la stessa logica di upsert.
@@ -25,12 +27,13 @@ export async function ensureUserProfile(supabase: any, user: any) {
       total_pages_used: 0,
       active_projects: 0,
       credits: DEFAULT_STARTING_CREDITS,
+      referral_code: generateReferralCode(),
     },
     { onConflict: 'id', ignoreDuplicates: true }
   )
 }
 
-export async function signUp(email: string, password: string, fullName: string) {
+export async function signUp(email: string, password: string, fullName: string, refCode?: string) {
   const supabase = await createClient()
 
   const { data, error } = await supabase.auth.signUp({
@@ -49,6 +52,19 @@ export async function signUp(email: string, password: string, fullName: string) 
 
   if (data.user) {
     await ensureUserProfile(supabase, data.user)
+
+    // Service client: bypassa RLS (serve leggere il referral_code di un
+    // altro utente) e non dipende da una sessione già stabilita, che a
+    // questo punto potrebbe non esserci ancora se la conferma email è
+    // richiesta. .is('referred_by', null) rende la scrittura idempotente e
+    // impedisce di sovrascrivere un referral già attribuito in precedenza.
+    if (refCode) {
+      const service = createServiceClient()
+      const { data: referrer } = await service.from('users').select('id').eq('referral_code', refCode.trim().toUpperCase()).single()
+      if (referrer && referrer.id !== data.user.id) {
+        await service.from('users').update({ referred_by: referrer.id }).eq('id', data.user.id).is('referred_by', null)
+      }
+    }
   }
 
   return { success: true, user: data.user }

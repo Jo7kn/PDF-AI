@@ -20,6 +20,7 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [agreed, setAgreed] = useState(false)
+  const [refCode, setRefCode] = useState<string | null>(null)
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -27,6 +28,8 @@ export default function SignupPage() {
     if (oauthError) {
       setError(oauthError)
     }
+    const ref = params.get('ref')
+    if (ref) setRefCode(ref)
   }, [])
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -50,7 +53,7 @@ export default function SignupPage() {
     setLoading(true)
     setError(null)
 
-    const result = await signUp(email, password, fullName)
+    const result = await signUp(email, password, fullName, refCode || undefined)
     
     if (result.error) {
       setError(result.error)

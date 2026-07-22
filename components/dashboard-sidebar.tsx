@@ -19,11 +19,12 @@ import {
   Settings,
   LayoutGrid,
   Users,
+  Gift,
   type LucideIcon,
 } from 'lucide-react'
 import { useLocale } from '@/lib/i18n/locale-context'
 
-type ItemKey = 'home' | 'files' | 'favorites' | 'history' | 'team' | 'billing' | 'settings'
+type ItemKey = 'home' | 'files' | 'favorites' | 'history' | 'team' | 'invites' | 'billing' | 'settings'
 
 const ITEMS: Array<{ href: string; key: ItemKey; icon: LucideIcon; exact?: boolean }> = [
   { href: '/dashboard', key: 'home', icon: LayoutDashboard, exact: true },
@@ -31,6 +32,7 @@ const ITEMS: Array<{ href: string; key: ItemKey; icon: LucideIcon; exact?: boole
   { href: '/dashboard/favorites', key: 'favorites', icon: Star },
   { href: '/dashboard/history', key: 'history', icon: History },
   { href: '/dashboard/team', key: 'team', icon: Users },
+  { href: '/dashboard/invites', key: 'invites', icon: Gift },
   { href: '/dashboard/billing', key: 'billing', icon: CreditCard },
   { href: '/dashboard/settings', key: 'settings', icon: Settings },
 ]
