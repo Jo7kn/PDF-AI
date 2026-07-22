@@ -231,6 +231,101 @@ export async function exportWaitlistCsv(): Promise<{ csv: string } | { error: st
   return { csv: [header, ...rows].join('\n') }
 }
 
+export interface DailySignups {
+  date: string
+  count: number
+}
+
+// Conteggio per giorno, non solo il totale a 7gg di getAnalyticsSummary —
+// serve per il grafico "Nuovi iscritti" in /admin.
+export async function getSignupsByDay(days = 14): Promise<{ data: DailySignups[] } | { error: string }> {
+  if (!(await isCurrentUserAdmin())) return { error: 'Unauthorized' }
+
+  const supabase = createServiceClient()
+  const since = new Date(Date.now() - (days - 1) * 24 * 60 * 60 * 1000)
+  since.setHours(0, 0, 0, 0)
+
+  const { data, error } = await supabase.from('users').select('created_at').gte('created_at', since.toISOString())
+  if (error) return { error: error.message }
+
+  const counts = new Map<string, number>()
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+    counts.set(d, 0)
+  }
+  for (const row of data || []) {
+    const d = (row.created_at as string).slice(0, 10)
+    if (counts.has(d)) counts.set(d, (counts.get(d) || 0) + 1)
+  }
+
+  return { data: Array.from(counts.entries()).map(([date, count]) => ({ date, count })) }
+}
+
+export interface RecentSignup {
+  id: string
+  email: string
+  tier: string
+  createdAt: string
+  referredBy: boolean
+}
+
+export async function getRecentSignups(limit = 20): Promise<{ data: RecentSignup[] } | { error: string }> {
+  if (!(await isCurrentUserAdmin())) return { error: 'Unauthorized' }
+
+  const supabase = createServiceClient()
+  const { data, error } = await supabase
+    .from('users')
+    .select('id, email, tier, created_at, referred_by')
+    .order('created_at', { ascending: false })
+    .limit(limit)
+
+  if (error) return { error: error.message }
+
+  return {
+    data: (data || []).map((row) => ({
+      id: row.id,
+      email: row.email,
+      tier: row.tier,
+      createdAt: row.created_at,
+      referredBy: Boolean(row.referred_by),
+    })),
+  }
+}
+
+export interface AppLogEntry {
+  id: string
+  level: 'info' | 'warn' | 'error'
+  message: string
+  meta: Record<string, unknown> | null
+  createdAt: string
+}
+
+// Console di /admin — vedi lib/logger.ts. Diversa da getActivityLog: quella
+// è il registro delle azioni utente (usage_events), questa sono eventi ed
+// errori del server stesso (webhook, elaborazione documenti, ecc.).
+export async function getRecentLogs(limit = 50): Promise<{ data: AppLogEntry[] } | { error: string }> {
+  if (!(await isCurrentUserAdmin())) return { error: 'Unauthorized' }
+
+  const supabase = createServiceClient()
+  const { data, error } = await supabase
+    .from('app_logs')
+    .select('id, level, message, meta, created_at')
+    .order('created_at', { ascending: false })
+    .limit(limit)
+
+  if (error) return { error: error.message }
+
+  return {
+    data: (data || []).map((row) => ({
+      id: row.id,
+      level: row.level,
+      message: row.message,
+      meta: row.meta,
+      createdAt: row.created_at,
+    })),
+  }
+}
+
 // Usata dalla pagina /admin per il controllo di accesso: a differenza di
 // isCurrentUserAdmin() (usata internamente da questo file) è pensata per
 // essere chiamata anche da un Server Component per decidere cosa renderizzare.

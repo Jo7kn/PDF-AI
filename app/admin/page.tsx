@@ -13,14 +13,25 @@ import {
   Wallet,
   Activity,
   ArrowLeft,
+  UserPlus,
+  Gift,
   type LucideIcon,
 } from 'lucide-react'
-import { checkIsAdmin, getCurrentAdminEmail, getAnalyticsSummary, getActivityLog, getWaitlistSummary } from '@/app/actions/admin'
+import {
+  checkIsAdmin,
+  getCurrentAdminEmail,
+  getAnalyticsSummary,
+  getActivityLog,
+  getWaitlistSummary,
+  getSignupsByDay,
+  getRecentSignups,
+} from '@/app/actions/admin'
 import { getAllFeatureFlags } from '@/lib/feature-flags'
 import { FeatureFlagToggle } from '@/components/admin/feature-flag-toggle'
 import { AnnouncementComposer } from '@/components/admin/announcement-composer'
 import { CreditAdjuster } from '@/components/admin/credit-adjuster'
 import { ExportWaitlistButton } from '@/components/admin/export-waitlist-button'
+import { ConsoleLog } from '@/components/admin/console-log'
 
 // Pagina interna: mai indicizzata, mai linkata dal sito pubblico.
 export const metadata: Metadata = {
@@ -32,24 +43,35 @@ const NAV_SECTIONS = [
   { id: 'strumenti', label: 'Strumenti' },
   { id: 'comunicazioni', label: 'Comunicazioni' },
   { id: 'lista-attesa', label: "Lista d'attesa" },
+  { id: 'console', label: 'Console' },
   { id: 'log-attivita', label: 'Log attività' },
 ]
+
+// Documented sequential "blue" ramp — vedi dataviz skill references/palette.md.
+// Un solo hue, chiarezza crescente: base scura per il valore più basso,
+// step centrale per quello medio, il più chiaro per l'ultimo — coerente col
+// trattamento "ordinal" (Free/Pro/Team sono un ordine, non categorie libere).
+const SEQUENTIAL_BLUE = { bar: '#3987e5', dark: '#256abf', mid: '#5598e7', light: '#9ec5f4' }
 
 export default async function AdminPage() {
   const isAdmin = await checkIsAdmin()
   if (!isAdmin) redirect('/')
 
-  const [flags, analyticsResult, activityResult, waitlistResult, email] = await Promise.all([
+  const [flags, analyticsResult, activityResult, waitlistResult, signupsByDayResult, recentSignupsResult, email] = await Promise.all([
     getAllFeatureFlags(),
     getAnalyticsSummary(),
     getActivityLog(50),
     getWaitlistSummary(20),
+    getSignupsByDay(14),
+    getRecentSignups(10),
     getCurrentAdminEmail(),
   ])
 
   const analytics = 'data' in analyticsResult ? analyticsResult.data : null
   const activity = 'data' in activityResult ? activityResult.data : []
   const waitlist = 'data' in waitlistResult ? waitlistResult.data : null
+  const signupsByDay = 'data' in signupsByDayResult ? signupsByDayResult.data : []
+  const recentSignups = 'data' in recentSignupsResult ? recentSignupsResult.data : []
   const enabledCount = flags.filter((f) => f.enabled).length
 
   return (
@@ -99,11 +121,42 @@ export default async function AdminPage() {
                 <StatCard icon={Zap} label="Crediti usati (30gg)" value={analytics.creditsUsedLast30Days} accent="amber" />
               </div>
 
-              <div className="mt-4 grid gap-4 sm:grid-cols-3">
-                <StatCard label="Piano Free" value={analytics.usersByTier.free} />
-                <StatCard label="Piano Pro" value={analytics.usersByTier.pro} />
-                <StatCard label="Piano Team" value={analytics.usersByTier.team} />
+              <div className="mt-4 grid gap-4 lg:grid-cols-2">
+                <SignupsChart data={signupsByDay} />
+                <TierChart usersByTier={analytics.usersByTier} />
               </div>
+
+              {recentSignups.length > 0 && (
+                <div className="mt-4 rounded-3xl border border-white/10 bg-slate-900/80 p-6">
+                  <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-white">
+                    <UserPlus className="h-4 w-4 text-cyan-300" /> Ultimi iscritti
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-sm">
+                      <thead>
+                        <tr className="border-b border-white/10 text-xs uppercase tracking-wide text-slate-500">
+                          <th className="px-2 py-2">Email</th>
+                          <th className="px-2 py-2">Piano</th>
+                          <th className="px-2 py-2">Invitato</th>
+                          <th className="px-2 py-2">Registrato</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {recentSignups.map((signup) => (
+                          <tr key={signup.id} className="border-b border-white/5 last:border-0 hover:bg-white/5">
+                            <td className="px-2 py-2.5 text-slate-300">{signup.email}</td>
+                            <td className="px-2 py-2.5 capitalize text-slate-400">{signup.tier}</td>
+                            <td className="px-2 py-2.5">
+                              {signup.referredBy && <Gift className="h-3.5 w-3.5 text-violet-300" />}
+                            </td>
+                            <td className="px-2 py-2.5 text-slate-500">{new Date(signup.createdAt).toLocaleString('it-IT')}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
 
               {analytics.toolUsageLast30Days.length > 0 && (
                 <div className="mt-4 rounded-3xl border border-white/10 bg-slate-900/80 p-6">
@@ -216,6 +269,15 @@ export default async function AdminPage() {
           )}
         </section>
 
+        <section id="console" className="scroll-mt-24">
+          <SectionHeader
+            icon={Activity}
+            title="Console"
+            description="Eventi ed errori reali del server (webhook, elaborazione documenti) — aggiornata ogni 5 secondi."
+          />
+          <ConsoleLog />
+        </section>
+
         <section id="log-attivita" className="scroll-mt-24">
           <SectionHeader
             icon={Activity}
@@ -296,6 +358,76 @@ function SectionHeader({
 
 function ErrorNote({ message }: { message: string }) {
   return <p className="text-sm text-red-300">{message}</p>
+}
+
+// Trend a 14 giorni — serie singola, sequential (un solo hue): niente
+// legenda necessaria, il titolo la identifica già (vedi color-formula.md).
+function SignupsChart({ data }: { data: Array<{ date: string; count: number }> }) {
+  const max = Math.max(1, ...data.map((d) => d.count))
+  const total = data.reduce((sum, d) => sum + d.count, 0)
+
+  return (
+    <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-5">
+      <div className="mb-4 flex items-center justify-between">
+        <p className="text-sm font-semibold text-white">Nuovi iscritti (14gg)</p>
+        <p className="text-xs text-slate-500">{total} totali</p>
+      </div>
+      <div className="flex h-28 gap-1.5">
+        {data.map((d) => {
+          const heightPct = Math.max(4, Math.round((d.count / max) * 100))
+          const label = new Date(d.date).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' })
+          return (
+            <div key={d.date} className="group relative flex flex-1 flex-col items-center justify-end">
+              <span className="pointer-events-none absolute -top-6 rounded-md bg-slate-800 px-1.5 py-0.5 text-[10px] text-white opacity-0 shadow-lg transition-opacity duration-150 ease-out group-hover:opacity-100">
+                {d.count}
+              </span>
+              <div
+                className="w-full rounded-t-sm transition-opacity duration-150 ease-out group-hover:opacity-80"
+                style={{ height: `${heightPct}%`, backgroundColor: SEQUENTIAL_BLUE.bar, minHeight: '3px' }}
+                title={`${label}: ${d.count}`}
+              />
+            </div>
+          )
+        })}
+      </div>
+      <div className="mt-1.5 flex justify-between text-[10px] text-slate-600">
+        <span>{new Date(data[0]?.date ?? Date.now()).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' })}</span>
+        <span>{new Date(data[data.length - 1]?.date ?? Date.now()).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' })}</span>
+      </div>
+    </div>
+  )
+}
+
+// Ordinal, non categorico: Free/Pro/Team è un ordine (come le taglie S/M/L),
+// quindi un solo hue con luminosità crescente invece di 3 colori distinti —
+// vedi color-formula.md "Categorical or ordinal?".
+function TierChart({ usersByTier }: { usersByTier: { free: number; pro: number; team: number } }) {
+  const rows = [
+    { label: 'Free', value: usersByTier.free, color: SEQUENTIAL_BLUE.dark },
+    { label: 'Pro', value: usersByTier.pro, color: SEQUENTIAL_BLUE.mid },
+    { label: 'Team', value: usersByTier.team, color: SEQUENTIAL_BLUE.light },
+  ]
+  const max = Math.max(1, ...rows.map((r) => r.value))
+
+  return (
+    <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-5">
+      <p className="mb-4 text-sm font-semibold text-white">Utenti per piano</p>
+      <div className="space-y-3">
+        {rows.map((r) => (
+          <div key={r.label} className="flex items-center gap-3">
+            <span className="w-10 flex-shrink-0 text-xs text-slate-400">{r.label}</span>
+            <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-white/5">
+              <div
+                className="h-full rounded-full transition-all duration-300 ease-out"
+                style={{ width: `${Math.max(4, Math.round((r.value / max) * 100))}%`, backgroundColor: r.color }}
+              />
+            </div>
+            <span className="w-8 flex-shrink-0 text-right text-xs text-slate-400">{r.value}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
 
 const ACCENTS = {

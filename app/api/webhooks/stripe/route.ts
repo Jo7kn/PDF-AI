@@ -7,6 +7,7 @@ import { createServiceClient } from '@/lib/supabase/service'
 import { getStripeClient } from '@/lib/stripe-server'
 import { STRIPE_PRICE_TIER_MAP } from '@/lib/constants'
 import { PLAN_CREDITS, setUserCredits } from '@/lib/credits'
+import { logEvent } from '@/lib/logger'
 
 function resolveTierFromPriceId(priceId: string | undefined): string | null {
   if (!priceId) return null
@@ -16,7 +17,7 @@ function resolveTierFromPriceId(priceId: string | undefined): string | null {
 export async function POST(request: NextRequest) {
   const secret = process.env.STRIPE_WEBHOOK_SECRET
   if (!secret) {
-    console.error('STRIPE_WEBHOOK_SECRET non configurata')
+    logEvent('error', 'STRIPE_WEBHOOK_SECRET non configurata')
     return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 })
   }
 
@@ -29,7 +30,7 @@ export async function POST(request: NextRequest) {
   try {
     event = getStripeClient().webhooks.constructEvent(rawBody, signatureHeader, secret)
   } catch (err) {
-    console.error('Stripe webhook: firma non valida', err)
+    logEvent('error', 'Stripe webhook: firma non valida', { err: String(err) })
     return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
   }
 
@@ -51,7 +52,7 @@ export async function POST(request: NextRequest) {
         const session = event.data.object as Stripe.Checkout.Session
         const userId = session.client_reference_id
         if (!userId) {
-          console.error('Stripe webhook: nessun client_reference_id nella sessione', session.id)
+          logEvent('warn', 'Stripe webhook: nessun client_reference_id nella sessione', { sessionId: session.id })
           break
         }
 
@@ -65,7 +66,7 @@ export async function POST(request: NextRequest) {
         }
 
         if (!tier) {
-          console.error('Stripe webhook: impossibile determinare il tier (price id non mappato?) per la sessione', session.id)
+          logEvent('error', 'Stripe webhook: impossibile determinare il tier (price id non mappato?)', { sessionId: session.id })
           break
         }
 
@@ -93,6 +94,7 @@ export async function POST(request: NextRequest) {
           },
           { onConflict: 'user_id' }
         )
+        logEvent('info', 'Stripe: nuovo abbonamento attivato', { userId, tier })
         break
       }
 
@@ -103,7 +105,7 @@ export async function POST(request: NextRequest) {
         const customerId = typeof subscription.customer === 'string' ? subscription.customer : subscription.customer.id
         const userId = await resolveUserIdFromCustomer(customerId)
         if (!userId) {
-          console.error('Stripe webhook: utente non trovato per customer', customerId)
+          logEvent('warn', 'Stripe webhook: utente non trovato per customer', { customerId })
           break
         }
 
@@ -177,7 +179,7 @@ export async function POST(request: NextRequest) {
         break
     }
   } catch (err) {
-    console.error('Stripe webhook: errore elaborazione evento', event.type, err)
+    logEvent('error', 'Stripe webhook: errore elaborazione evento', { type: event.type, err: String(err) })
     // 500 fa sì che Stripe ritenti automaticamente — corretto per un errore
     // transitorio nostro (es. DB temporaneamente giù).
     return NextResponse.json({ error: 'Internal error' }, { status: 500 })

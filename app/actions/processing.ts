@@ -7,6 +7,7 @@ import { chunkDocumentText } from '@/lib/chunking'
 import { insertMessage } from '@/lib/messages-internal'
 import { getCurrentUser } from './auth'
 import { resolveDocumentAccess } from '@/lib/document-access'
+import { logEvent } from '@/lib/logger'
 
 type ProcessingStatus = 'pending' | 'processing' | 'completed' | 'failed'
 
@@ -151,7 +152,7 @@ export async function processDocument(documentId: string, fileUrl: string) {
     return { success: true }
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
-    console.error('❌ Error processing document:', error)
+    logEvent('error', 'Errore elaborazione documento', { documentId, message })
     await setStatus(supabase, documentId, 'failed', message)
     return { error: 'Failed to process document: ' + message }
   }
@@ -202,7 +203,8 @@ export async function chatWithDocument(documentId: string, userMessage: string) 
 
     return { success: true, response: aiResponse }
   } catch (error) {
-    console.error('❌ Error in chat:', error)
-    return { error: 'Failed to generate response: ' + (error instanceof Error ? error.message : String(error)) }
+    const message = error instanceof Error ? error.message : String(error)
+    logEvent('error', 'Errore chat documento', { documentId, message })
+    return { error: 'Failed to generate response: ' + message }
   }
 }
