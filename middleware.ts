@@ -12,7 +12,6 @@ const PUBLIC_ROUTES = new Set([
   '/pricing',
   '/about',
   '/auth/callback',
-  '/auth/update-password',
   // Chiamato da Stripe (nessuna sessione utente): l'autenticazione è la
   // firma verificata dentro la route stessa, non i cookie.
   '/api/webhooks/stripe',

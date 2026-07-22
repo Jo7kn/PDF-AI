@@ -74,6 +74,7 @@ export async function runAiTool<T>({ userId, tool, action, metadata, run }: RunA
   }
 
   await logUsage(userId, tool, action, cost, metadata)
+  logEvent('info', `Tool AI eseguito: ${tool}`, { userId, tool, action, cost })
 
   return { success: true, result }
 }

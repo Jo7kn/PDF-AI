@@ -119,7 +119,11 @@ export async function signOut() {
 export async function resetPassword(email: string) {
   const supabase = await createClient()
 
-  const redirectTo = buildAuthRedirectUrl(process.env.NEXT_PUBLIC_APP_URL, '/auth/update-password')
+  // /auth/update-password non è mai esistita come pagina — il codice di
+  // recovery finiva su un 404 e non veniva mai scambiato per una sessione.
+  // Come l'OAuth, passa da /auth/callback (che fa exchangeCodeForSession)
+  // e usa ?next= per farsi rimandare a /reset-password una volta loggato.
+  const redirectTo = `${buildAuthRedirectUrl(process.env.NEXT_PUBLIC_APP_URL)}?next=/reset-password`
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo,
   })
