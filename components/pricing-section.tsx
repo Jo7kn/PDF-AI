@@ -10,6 +10,7 @@ import Link from 'next/link'
 import { Check } from 'lucide-react'
 import { PRICING_TIERS } from '@/lib/pricing'
 import { useLocale, useTranslatedList } from '@/lib/i18n/locale-context'
+import { ScrollReveal } from '@/components/scroll-reveal'
 import type { PricingTier } from '@/lib/types'
 
 export function PricingSection({ id = 'pricing' }: { id?: string }) {
@@ -17,14 +18,16 @@ export function PricingSection({ id = 'pricing' }: { id?: string }) {
 
   return (
     <section id={id} className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-      <div className="mb-12 text-center">
+      <ScrollReveal className="mb-12 text-center">
         <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-fuchsia-300">{t('pricingSection.eyebrow')}</p>
         <h2 className="text-3xl font-semibold text-white sm:text-4xl">{t('pricingSection.heading')}</h2>
-      </div>
+      </ScrollReveal>
 
       <div className="grid gap-8 md:grid-cols-3">
         {PRICING_TIERS.map((tier, index) => (
-          <PricingCard key={tier.name} tier={tier} featured={index === 1} />
+          <ScrollReveal key={tier.name} delay={index * 0.06}>
+            <PricingCard tier={tier} featured={index === 1} />
+          </ScrollReveal>
         ))}
       </div>
     </section>
@@ -58,7 +61,7 @@ function PricingCard({ tier, featured }: { tier: PricingTier; featured: boolean 
         ))}
       </ul>
 
-      <Link href="/dashboard" className={`block w-full rounded-2xl py-3 text-center font-semibold transition-colors duration-150 ease-out ${featured ? 'bg-gradient-to-r from-cyan-500 to-violet-500 text-white hover:opacity-90' : 'border border-white/10 bg-white/5 text-white hover:bg-white/10'}`}>
+      <Link href="/dashboard" className={`block w-full rounded-2xl py-3 text-center font-semibold transition-colors duration-150 ease-out active:scale-[0.98] ${featured ? 'bg-gradient-to-r from-cyan-500 to-violet-500 text-white hover:opacity-90' : 'border border-white/10 bg-white/5 text-white hover:bg-white/10'}`}>
         {t('pricingSection.choosePlan')}
       </Link>
     </div>

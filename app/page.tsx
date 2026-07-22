@@ -4,6 +4,7 @@ import { FileText, Sparkles, Calendar, ArrowRight, ShieldCheck, BrainCircuit } f
 import { LandingHeader } from '@/components/landing-header'
 import { LandingFooter } from '@/components/landing-footer'
 import { PricingSection } from '@/components/pricing-section'
+import { ScrollReveal } from '@/components/scroll-reveal'
 import { SITE_URL, SITE_NAME } from '@/lib/seo'
 
 export default function Home() {
@@ -46,7 +47,7 @@ export default function Home() {
 
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
         <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="max-w-3xl">
+          <div className="animate-fade-in-up max-w-3xl">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-1 text-sm text-cyan-200">
               <BrainCircuit className="h-4 w-4" />
               AI-powered document intelligence
@@ -62,11 +63,11 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col gap-4 sm:flex-row">
-              <Link href="/dashboard" className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-7 py-3 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90">
+              <Link href="/dashboard" className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-7 py-3 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97]">
                 Inizia gratis
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="#pricing" className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-7 py-3 font-semibold text-slate-200 transition-colors duration-150 ease-out hover:bg-white/10">
+              <Link href="#pricing" className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/5 px-7 py-3 font-semibold text-slate-200 transition-colors duration-150 ease-out hover:bg-white/10 active:scale-[0.97]">
                 Vedi i prezzi
               </Link>
             </div>
@@ -83,7 +84,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
+          <div className="animate-fade-in-up rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl" style={{ animationDelay: '80ms' }}>
             <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-4">
               <p className="mb-2 text-sm font-medium text-cyan-300">Esempio di workflow</p>
               <div className="space-y-3">
@@ -115,52 +116,59 @@ export default function Home() {
       </section>
 
       <section id="features" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mb-10 text-center">
+        <ScrollReveal className="mb-10 text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Funzionalità</p>
           <h2 className="text-3xl font-semibold text-white sm:text-4xl">Tutto quello che serve per lavorare meglio con i PDF</h2>
-        </div>
+        </ScrollReveal>
 
         <div className="grid gap-8 md:grid-cols-3">
-          <FeatureCard
-            icon={<FileText className="h-8 w-8" />}
-            title="Parsing intelligente"
-            description="Estrai testo, struttura e contenuti importanti da ogni PDF in modo rapido e affidabile."
-          />
-          <FeatureCard
-            icon={<Calendar className="h-8 w-8" />}
-            title="Rilevamento scadenze"
-            description="Individua automaticamente date, milestone e informazioni critiche nei documenti."
-          />
-          <FeatureCard
-            icon={<Sparkles className="h-8 w-8" />}
-            title="Chat con l’AI"
-            description="Fai domande naturali sui tuoi documenti e ricevi risposte immediate e pertinenti."
-          />
+          <ScrollReveal delay={0}>
+            <FeatureCard
+              icon={<FileText className="h-8 w-8" />}
+              title="Parsing intelligente"
+              description="Estrai testo, struttura e contenuti importanti da ogni PDF in modo rapido e affidabile."
+            />
+          </ScrollReveal>
+          <ScrollReveal delay={0.06}>
+            <FeatureCard
+              icon={<Calendar className="h-8 w-8" />}
+              title="Rilevamento scadenze"
+              description="Individua automaticamente date, milestone e informazioni critiche nei documenti."
+            />
+          </ScrollReveal>
+          <ScrollReveal delay={0.12}>
+            <FeatureCard
+              icon={<Sparkles className="h-8 w-8" />}
+              title="Chat con l’AI"
+              description="Fai domande naturali sui tuoi documenti e ricevi risposte immediate e pertinenti."
+            />
+          </ScrollReveal>
         </div>
       </section>
 
       <section id="tools" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mb-10 text-center">
+        <ScrollReveal className="mb-10 text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">AI Toolbox</p>
           <h2 className="text-3xl font-semibold text-white sm:text-4xl">Tutti gli strumenti AI in un unico posto</h2>
           <p className="mx-auto mt-3 max-w-2xl text-slate-300">
             Oltre alla chat sui PDF, AI Toolbox include scrittura, codice, immagini, email, contratti, dati e traduzioni.
           </p>
-        </div>
+        </ScrollReveal>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {AI_TOOLS.filter((tool) => tool.status === 'available').map((tool) => (
-            <Link
-              key={tool.slug}
-              href={tool.href}
-              className="group rounded-2xl border border-white/10 bg-slate-900/70 p-5 shadow-lg shadow-black/10 backdrop-blur-xl transition-colors duration-150 ease-out hover:bg-white/10"
-            >
-              <div className={`mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${tool.gradient} text-white`}>
-                <tool.icon className="h-5 w-5" />
-              </div>
-              <h3 className="mb-1 font-semibold text-white">{tool.name}</h3>
-              <p className="text-sm text-slate-400">{tool.tagline}</p>
-            </Link>
+          {AI_TOOLS.filter((tool) => tool.status === 'available').map((tool, i) => (
+            <ScrollReveal key={tool.slug} delay={Math.min(i, 5) * 0.04}>
+              <Link
+                href={tool.href}
+                className="group block rounded-2xl border border-white/10 bg-slate-900/70 p-5 shadow-lg shadow-black/10 backdrop-blur-xl transition-colors duration-150 ease-out hover:bg-white/10 active:scale-[0.99]"
+              >
+                <div className={`mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${tool.gradient} text-white`}>
+                  <tool.icon className="h-5 w-5" />
+                </div>
+                <h3 className="mb-1 font-semibold text-white">{tool.name}</h3>
+                <p className="text-sm text-slate-400">{tool.tagline}</p>
+              </Link>
+            </ScrollReveal>
           ))}
         </div>
 
@@ -175,16 +183,16 @@ export default function Home() {
       <PricingSection />
 
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <div className="rounded-3xl border border-white/10 bg-white/10 p-10 text-center shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
+        <ScrollReveal className="rounded-3xl border border-white/10 bg-white/10 p-10 text-center shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
           <h2 className="mb-4 text-3xl font-semibold text-white">Pronto a iniziare?</h2>
           <p className="mx-auto mb-8 max-w-2xl text-lg text-slate-300">
             Entra nella tua workspace e fai partire la tua prima analisi con l’AI.
           </p>
-          <Link href="/dashboard" className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-8 py-4 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90">
+          <Link href="/dashboard" className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-8 py-4 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97]">
             Inizia la prova gratuita
             <ArrowRight className="h-4 w-4" />
           </Link>
-        </div>
+        </ScrollReveal>
       </section>
 
       <LandingFooter />

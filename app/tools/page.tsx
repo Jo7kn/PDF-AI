@@ -52,7 +52,7 @@ export default function ToolsPage() {
       />
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
-        <section className="mb-8 rounded-3xl border border-white/10 bg-white/10 p-6 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
+        <section className="animate-fade-in-up mb-8 rounded-3xl border border-white/10 bg-white/10 p-6 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-1 text-sm text-cyan-200">
@@ -116,8 +116,10 @@ export default function ToolsPage() {
 
         {filteredTools.length > 0 ? (
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-            {filteredTools.map((tool) => (
-              <ToolCard key={tool.slug} tool={tool} userTier={userTier} flagEnabled={flags[tool.slug]} />
+            {filteredTools.map((tool, i) => (
+              <div key={tool.slug} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(i, 8) * 30}ms` }}>
+                <ToolCard tool={tool} userTier={userTier} flagEnabled={flags[tool.slug]} />
+              </div>
             ))}
           </div>
         ) : (

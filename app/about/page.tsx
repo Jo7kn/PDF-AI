@@ -10,49 +10,57 @@ export default function AboutPage() {
       <LandingHeader />
 
       <section className="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
-        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Chi siamo</p>
-        <h1 className="mb-6 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-          Una suite di strumenti AI pensata per il lavoro di ogni giorno
-        </h1>
-        <p className="mb-6 text-lg text-slate-300">
-          AI Toolbox nasce per risolvere un problema semplice: usare l'intelligenza artificiale nel lavoro quotidiano
-          oggi significa districarsi tra decine di strumenti diversi, ognuno con il proprio abbonamento, la propria
-          interfaccia e la propria curva di apprendimento. Abbiamo riunito tredici strumenti — chat sui PDF,
-          scrittura, codice, immagini, dati, contratti, traduzioni e altro — in un'unica piattaforma, con un solo
-          sistema di crediti e un'interfaccia pensata per chi lavora in italiano.
-        </p>
-        <p className="mb-12 text-lg text-slate-300">
-          Siamo un progetto giovane, ancora in fase di lancio: alcuni strumenti sono già disponibili, altri stanno
-          per arrivare. Preferiamo essere onesti su cosa funziona già oggi piuttosto che promettere più di quanto
-          possiamo mantenere.
-        </p>
-
-        <div className="mb-12 grid gap-4 sm:grid-cols-3">
-          <InfoCard
-            icon={Layers}
-            title="Tutto in un posto"
-            description="Un abbonamento invece di cinque o sei strumenti AI separati."
-          />
-          <InfoCard
-            icon={ShieldCheck}
-            title="Trasparenza"
-            description="Crediti chiari, nessun costo nascosto, nessuna promessa che non possiamo mantenere."
-          />
-          <InfoCard
-            icon={Sparkles}
-            title="Made for italiano"
-            description="Interfaccia e contenuti pensati per chi lavora in italiano, non tradotti all'ultimo momento."
-          />
+        <div className="animate-fade-in-up">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Chi siamo</p>
+          <h1 className="mb-6 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+            Una suite di strumenti AI pensata per il lavoro di ogni giorno
+          </h1>
+          <p className="mb-6 text-lg text-slate-300">
+            AI Toolbox nasce per risolvere un problema semplice: usare l'intelligenza artificiale nel lavoro quotidiano
+            oggi significa districarsi tra decine di strumenti diversi, ognuno con il proprio abbonamento, la propria
+            interfaccia e la propria curva di apprendimento. Abbiamo riunito tredici strumenti — chat sui PDF,
+            scrittura, codice, immagini, dati, contratti, traduzioni e altro — in un'unica piattaforma, con un solo
+            sistema di crediti e un'interfaccia pensata per chi lavora in italiano.
+          </p>
+          <p className="mb-12 text-lg text-slate-300">
+            Siamo un progetto giovane, ancora in fase di lancio: alcuni strumenti sono già disponibili, altri stanno
+            per arrivare. Preferiamo essere onesti su cosa funziona già oggi piuttosto che promettere più di quanto
+            possiamo mantenere.
+          </p>
         </div>
 
-        <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-8 shadow-xl shadow-black/20">
+        <div className="mb-12 grid gap-4 sm:grid-cols-3">
+          <div className="animate-fade-in-up" style={{ animationDelay: '60ms' }}>
+            <InfoCard
+              icon={Layers}
+              title="Tutto in un posto"
+              description="Un abbonamento invece di cinque o sei strumenti AI separati."
+            />
+          </div>
+          <div className="animate-fade-in-up" style={{ animationDelay: '90ms' }}>
+            <InfoCard
+              icon={ShieldCheck}
+              title="Trasparenza"
+              description="Crediti chiari, nessun costo nascosto, nessuna promessa che non possiamo mantenere."
+            />
+          </div>
+          <div className="animate-fade-in-up" style={{ animationDelay: '120ms' }}>
+            <InfoCard
+              icon={Sparkles}
+              title="Made for italiano"
+              description="Interfaccia e contenuti pensati per chi lavora in italiano, non tradotti all'ultimo momento."
+            />
+          </div>
+        </div>
+
+        <div className="animate-fade-in-up rounded-3xl border border-white/10 bg-slate-900/80 p-8 shadow-xl shadow-black/20" style={{ animationDelay: '160ms' }}>
           <h2 className="mb-3 text-2xl font-semibold text-white">Contatti</h2>
           <p className="mb-6 text-slate-300">
             Domande, segnalazioni, idee o proposte di collaborazione: scrivici, rispondiamo davvero.
           </p>
           <a
             href={`mailto:${CONTACT_EMAIL}`}
-            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-6 py-3 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90"
+            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-6 py-3 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97]"
           >
             <Mail className="h-4 w-4" />
             {CONTACT_EMAIL}
