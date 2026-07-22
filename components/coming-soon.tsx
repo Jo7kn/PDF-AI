@@ -13,7 +13,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { Clock, ArrowLeft, Sparkles, Mail, Check, Loader2, type LucideIcon } from 'lucide-react'
+import { Clock, ArrowLeft, Sparkles, Mail, Check, Loader2, FileText, CreditCard } from 'lucide-react'
 import { useLocale } from '@/lib/i18n/locale-context'
 import { joinWaitlist } from '@/app/actions/waitlist'
 
@@ -32,23 +32,29 @@ const TOOL_NAMES: Record<string, string> = {
   'email-ai': 'Email AI',
 }
 
+// variant è una stringa serializzabile, non un riferimento a componente:
+// i layout che montano <ComingSoon /> sono Server Component e non possono
+// passare un componente icona (es. icon={CreditCard}) a un Client
+// Component — React Server Components può serializzare solo dati, non
+// riferimenti a funzioni/componenti. L'icona si sceglie qui dentro, in
+// base al variant, non tramite prop.
 type ComingSoonProps =
-  | { variant: 'tool'; tool: keyof typeof TOOL_NAMES; icon?: LucideIcon }
-  | { variant: 'dashboard'; icon?: LucideIcon }
-  | { variant: 'document'; icon?: LucideIcon }
-  | { variant: 'billing'; icon?: LucideIcon }
+  | { variant: 'tool'; tool: keyof typeof TOOL_NAMES }
+  | { variant: 'dashboard' }
+  | { variant: 'document' }
+  | { variant: 'billing' }
 
 type WaitlistStatus = 'idle' | 'loading' | 'success' | 'already-joined' | 'invalid-email' | 'rate-limited' | 'error'
 
 export function ComingSoon(props: ComingSoonProps) {
   const { t } = useLocale()
-  const Icon = props.icon ?? Sparkles
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState<WaitlistStatus>('idle')
 
   let title: string
   let description: string
   let source: string
+  let Icon = Sparkles
   switch (props.variant) {
     case 'tool': {
       const name = TOOL_NAMES[props.tool]
@@ -61,16 +67,19 @@ export function ComingSoon(props: ComingSoonProps) {
       title = t('comingSoon.dashboardTitle')
       description = t('comingSoon.dashboardDescription')
       source = 'dashboard'
+      Icon = FileText
       break
     case 'document':
       title = t('comingSoon.documentTitle')
       description = t('comingSoon.documentDescription')
       source = 'document'
+      Icon = FileText
       break
     case 'billing':
       title = t('comingSoon.billingTitle')
       description = t('comingSoon.billingDescription')
       source = 'billing'
+      Icon = CreditCard
       break
   }
 

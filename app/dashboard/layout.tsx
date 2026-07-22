@@ -5,7 +5,6 @@
 // Coming Soon. La shell interattiva vera e propria è in
 // components/dashboard-shell.tsx (client component).
 
-import { FileText } from 'lucide-react'
 import { ComingSoon } from '@/components/coming-soon'
 import { DashboardShell } from '@/components/dashboard-shell'
 import { isFeatureEnabled } from '@/lib/feature-flags'
@@ -19,7 +18,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const pdfAiEnabled = await isFeatureEnabled('pdf-ai')
 
   if (!pdfAiEnabled) {
-    return <ComingSoon variant="dashboard" icon={FileText} />
+    return <ComingSoon variant="dashboard" />
   }
 
   return <DashboardShell>{children}</DashboardShell>

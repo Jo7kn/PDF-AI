@@ -4,7 +4,6 @@
 // l'admin può riaprire la workspace senza per forza riaprire anche i
 // pagamenti, e viceversa.
 
-import { CreditCard } from 'lucide-react'
 import { ComingSoon } from '@/components/coming-soon'
 import { isFeatureEnabled } from '@/lib/feature-flags'
 
@@ -17,7 +16,7 @@ export default async function BillingLayout({ children }: { children: React.Reac
   const paymentsEnabled = await isFeatureEnabled('payments')
 
   if (!paymentsEnabled) {
-    return <ComingSoon variant="billing" icon={CreditCard} />
+    return <ComingSoon variant="billing" />
   }
 
   return children

@@ -1,4 +1,3 @@
-import { FileText } from 'lucide-react'
 import { ComingSoon } from '@/components/coming-soon'
 import { isFeatureEnabled } from '@/lib/feature-flags'
 
@@ -10,7 +9,7 @@ export default async function DocumentLayout({ children }: { children: React.Rea
   const pdfAiEnabled = await isFeatureEnabled('pdf-ai')
 
   if (!pdfAiEnabled) {
-    return <ComingSoon variant="document" icon={FileText} />
+    return <ComingSoon variant="document" />
   }
 
   return children
