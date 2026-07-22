@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { SITE_URL } from '@/lib/seo'
+import { ComingSoon } from '@/components/coming-soon'
+import { isFeatureEnabled } from '@/lib/feature-flags'
 
 export const metadata: Metadata = {
   title: { absolute: 'AI Writer: Scrivi Articoli e Blog con l’AI | AI Toolbox' },
@@ -14,7 +16,14 @@ export const metadata: Metadata = {
   },
 }
 
-export default function AiWriterLayout({ children }: { children: React.ReactNode }) {
+// Senza questo, Next.js prerenderizza la pagina a build time e il flag
+// 'ai-writer' resterebbe congelato al valore letto in quel momento — il
+// toggle dell'admin non avrebbe effetto finché non si rifà il deploy.
+export const dynamic = 'force-dynamic'
+
+export default async function AiWriterLayout({ children }: { children: React.ReactNode }) {
+  const enabled = await isFeatureEnabled('ai-writer')
+
   return (
     <>
       <script
@@ -41,7 +50,11 @@ export default function AiWriterLayout({ children }: { children: React.ReactNode
           }),
         }}
       />
-      {children}
+      {!enabled ? (
+        <ComingSoon title="AI Writer" description="Stiamo ultimando AI Writer. Torna presto per iniziare a usarlo." />
+      ) : (
+        children
+      )}
     </>
   )
 }

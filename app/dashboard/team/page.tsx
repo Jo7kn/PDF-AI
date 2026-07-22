@@ -79,7 +79,7 @@ export default function TeamPage() {
     <div className="animate-fade-in-up space-y-6">
       <div className="flex items-center gap-2">
         <Users className="h-5 w-5 text-cyan-300" />
-        <h1 className="text-xl font-semibold text-white">Team</h1>
+        <h1 className="text-xl font-semibold text-white">{t('teamPage.title')}</h1>
       </div>
 
       {invitations.length > 0 && (

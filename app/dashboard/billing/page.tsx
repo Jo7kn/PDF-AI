@@ -5,11 +5,11 @@ import { CreditCard, Zap, Check } from 'lucide-react'
 import { getCurrentUserProfile } from '@/app/actions/auth'
 import { PRICING_TIERS, getTierByName } from '@/lib/pricing'
 import { buildCheckoutUrl } from '@/lib/stripe'
-import { useLocale } from '@/lib/i18n/locale-context'
+import { useLocale, translateList } from '@/lib/i18n/locale-context'
 import { Skeleton } from '@/components/skeleton'
 
 export default function BillingPage() {
-  const { t } = useLocale()
+  const { t, locale } = useLocale()
   const [profile, setProfile] = useState<{ id: string; email: string; tier: string; credits: number } | null>(null)
 
   useEffect(() => {
@@ -53,6 +53,8 @@ export default function BillingPage() {
         {PRICING_TIERS.map((tier, i) => {
           const isCurrent = currentTierName === tier.name
           const planKey = tier.name.toLowerCase() as 'free' | 'pro' | 'team'
+          const translatedFeatures = translateList(locale, `pricingTiers.${planKey}.features`)
+          const features = translatedFeatures.length ? translatedFeatures : tier.features
 
           return (
             <div
@@ -69,7 +71,7 @@ export default function BillingPage() {
               </div>
 
               <ul className="mb-6 space-y-2.5">
-                {tier.features.map((feature) => (
+                {features.map((feature) => (
                   <li key={feature} className="flex items-start gap-2 text-sm text-slate-300">
                     <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-400" />
                     <span>{feature}</span>

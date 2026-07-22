@@ -101,7 +101,7 @@ export function DiscordLinkCard() {
         <div className="space-y-3">
           <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-2.5">
             <code className="text-sm text-cyan-200">/link code:{code}</code>
-            <button onClick={handleCopy} className="text-slate-300 transition-colors duration-150 ease-out hover:text-white" title="Copy command">
+            <button onClick={handleCopy} className="text-slate-300 transition-colors duration-150 ease-out hover:text-white" title={t('common.copy')}>
               <CopyIconSwap copied={copied} />
             </button>
           </div>

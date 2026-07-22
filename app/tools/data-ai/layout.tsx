@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { SITE_URL } from '@/lib/seo'
+import { ComingSoon } from '@/components/coming-soon'
+import { isFeatureEnabled } from '@/lib/feature-flags'
 
 export const metadata: Metadata = {
   title: { absolute: 'Data AI: Analizza CSV ed Excel con l’AI | AI Toolbox' },
@@ -14,7 +16,13 @@ export const metadata: Metadata = {
   },
 }
 
-export default function DataAiLayout({ children }: { children: React.ReactNode }) {
+// Vedi commento in app/tools/ai-writer/layout.tsx: senza questo la pagina
+// verrebbe prerenderizzata a build time e il toggle admin non avrebbe effetto.
+export const dynamic = 'force-dynamic'
+
+export default async function DataAiLayout({ children }: { children: React.ReactNode }) {
+  const enabled = await isFeatureEnabled('data-ai')
+
   return (
     <>
       <script
@@ -41,7 +49,11 @@ export default function DataAiLayout({ children }: { children: React.ReactNode }
           }),
         }}
       />
-      {children}
+      {!enabled ? (
+        <ComingSoon title="Data AI" description="Stiamo ultimando Data AI. Torna presto per iniziare a usarlo." />
+      ) : (
+        children
+      )}
     </>
   )
 }

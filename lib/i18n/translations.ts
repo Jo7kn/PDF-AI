@@ -184,6 +184,29 @@ const it = {
       features: ['Chat multi-turno', 'Nessun documento richiesto', 'Risposte in Markdown'],
     },
   },
+  pricingTiers: {
+    eyebrow: 'Prezzi',
+    title: 'Piani semplici e trasparenti',
+    featured: 'Più popolare',
+    choosePlan: 'Scegli piano',
+    perMonth: '/mese',
+    free: {
+      features: ['1 progetto attivo', 'Fino a 10 pagine totali', 'Nessuna cronologia chat', 'Elaborazione standard'],
+    },
+    pro: {
+      features: ['Progetti illimitati', 'Fino a 500 pagine totali', 'Cronologia chat illimitata', 'Esportazione calendario (ICS)', 'Elaborazione prioritaria'],
+    },
+    team: {
+      features: ['Tutto quello incluso in Pro', 'Condividi progetti con 3 utenti', 'Supporto via email', 'Analisi documenti avanzata'],
+    },
+  },
+  pricingSection: {
+    eyebrow: 'Prezzi',
+    heading: 'Piani semplici e trasparenti',
+    featured: 'Più popolare',
+    perMonth: '/mese',
+    choosePlan: 'Scegli piano',
+  },
   common: {
     loading: 'Caricamento...',
     copy: 'Copia',
@@ -634,6 +657,29 @@ const en: typeof it = {
       description: 'Free-form conversation with an AI assistant, no documents or context required.',
       features: ['Multi-turn chat', 'No document needed', 'Markdown responses'],
     },
+  },
+  pricingTiers: {
+    eyebrow: 'Pricing',
+    title: 'Simple, transparent plans',
+    featured: 'Most popular',
+    choosePlan: 'Choose plan',
+    perMonth: '/month',
+    free: {
+      features: ['1 active project', 'Up to 10 total pages', 'No historical chat', 'Standard processing'],
+    },
+    pro: {
+      features: ['Unlimited projects', 'Up to 500 total pages', 'Unlimited historical chat', 'Calendar export (ICS)', 'Priority processing'],
+    },
+    team: {
+      features: ['Everything in Pro', 'Share projects with 3 users', 'Email support', 'Advanced document analysis'],
+    },
+  },
+  pricingSection: {
+    eyebrow: 'Pricing',
+    heading: 'Simple, transparent plans',
+    featured: 'Most popular',
+    perMonth: '/month',
+    choosePlan: 'Choose plan',
   },
   common: {
     loading: 'Loading...',
@@ -1086,6 +1132,29 @@ const es: typeof it = {
       features: ['Chat multivuelta', 'Sin necesidad de documentos', 'Respuestas en Markdown'],
     },
   },
+  pricingTiers: {
+    eyebrow: 'Precios',
+    title: 'Planes simples y transparentes',
+    featured: 'Más popular',
+    choosePlan: 'Elegir plan',
+    perMonth: '/mes',
+    free: {
+      features: ['1 proyecto activo', 'Hasta 10 páginas en total', 'Sin historial de chat', 'Procesamiento estándar'],
+    },
+    pro: {
+      features: ['Proyectos ilimitados', 'Hasta 500 páginas en total', 'Historial de chat ilimitado', 'Exportación de calendario (ICS)', 'Procesamiento prioritario'],
+    },
+    team: {
+      features: ['Todo lo incluido en Pro', 'Comparte proyectos con 3 usuarios', 'Soporte por email', 'Análisis avanzado de documentos'],
+    },
+  },
+  pricingSection: {
+    eyebrow: 'Precios',
+    heading: 'Planes simples y transparentes',
+    featured: 'Más popular',
+    perMonth: '/mes',
+    choosePlan: 'Elegir plan',
+  },
   common: {
     loading: 'Cargando...',
     copy: 'Copiar',
@@ -1536,6 +1605,29 @@ const de: typeof it = {
       description: 'Freies Gespräch mit einem KI-Assistenten, ohne verknüpfte Dokumente oder Kontext.',
       features: ['Mehrstufiger Chat', 'Kein Dokument nötig', 'Antworten in Markdown'],
     },
+  },
+  pricingTiers: {
+    eyebrow: 'Preise',
+    title: 'Einfache, transparente Pläne',
+    featured: 'Am beliebtesten',
+    choosePlan: 'Plan wählen',
+    perMonth: '/Monat',
+    free: {
+      features: ['1 aktives Projekt', 'Bis zu 10 Seiten insgesamt', 'Kein Chat-Verlauf', 'Standardverarbeitung'],
+    },
+    pro: {
+      features: ['Unbegrenzte Projekte', 'Bis zu 500 Seiten insgesamt', 'Unbegrenzter Chat-Verlauf', 'Kalender-Export (ICS)', 'Priorisierte Verarbeitung'],
+    },
+    team: {
+      features: ['Alles aus Pro', 'Projekte mit 3 Nutzern teilen', 'E-Mail-Support', 'Erweiterte Dokumentenanalyse'],
+    },
+  },
+  pricingSection: {
+    eyebrow: 'Preise',
+    heading: 'Einfache, transparente Pläne',
+    featured: 'Am beliebtesten',
+    perMonth: '/Monat',
+    choosePlan: 'Plan wählen',
   },
   common: {
     loading: 'Wird geladen...',
@@ -1988,6 +2080,29 @@ const zh: typeof it = {
       features: ['多轮对话', '无需文档', 'Markdown 格式回复'],
     },
   },
+  pricingTiers: {
+    eyebrow: '价格',
+    title: '简单透明的套餐',
+    featured: '最受欢迎',
+    choosePlan: '选择套餐',
+    perMonth: '/月',
+    free: {
+      features: ['1 个活跃项目', '最多 10 页', '无历史聊天记录', '标准处理速度'],
+    },
+    pro: {
+      features: ['无限项目数', '最多 500 页', '无限历史聊天记录', '日历导出（ICS）', '优先处理'],
+    },
+    team: {
+      features: ['包含 Pro 的全部功能', '与 3 名用户共享项目', '邮件支持', '高级文档分析'],
+    },
+  },
+  pricingSection: {
+    eyebrow: '价格',
+    heading: '简单透明的套餐',
+    featured: '最受欢迎',
+    perMonth: '/月',
+    choosePlan: '选择套餐',
+  },
   common: {
     loading: '加载中...',
     copy: '复制',
@@ -2438,6 +2553,29 @@ const fr: typeof it = {
       description: 'Conversation libre avec un assistant IA, sans document ni contexte associé.',
       features: ['Chat multi-tours', 'Aucun document requis', 'Réponses en Markdown'],
     },
+  },
+  pricingTiers: {
+    eyebrow: 'Tarifs',
+    title: 'Des offres simples et transparentes',
+    featured: 'Le plus populaire',
+    choosePlan: 'Choisir cette offre',
+    perMonth: '/mois',
+    free: {
+      features: ['1 projet actif', "Jusqu'à 10 pages au total", "Pas d'historique de chat", 'Traitement standard'],
+    },
+    pro: {
+      features: ['Projets illimités', "Jusqu'à 500 pages au total", 'Historique de chat illimité', 'Export calendrier (ICS)', 'Traitement prioritaire'],
+    },
+    team: {
+      features: ['Tout ce qui est inclus dans Pro', 'Partagez des projets avec 3 utilisateurs', 'Support par email', 'Analyse avancée des documents'],
+    },
+  },
+  pricingSection: {
+    eyebrow: 'Tarifs',
+    heading: 'Des offres simples et transparentes',
+    featured: 'Le plus populaire',
+    perMonth: '/mois',
+    choosePlan: 'Choisir cette offre',
   },
   common: {
     loading: 'Chargement...',
