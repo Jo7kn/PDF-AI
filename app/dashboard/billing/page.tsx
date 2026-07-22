@@ -5,9 +5,11 @@ import { CreditCard, Zap, Check } from 'lucide-react'
 import { getCurrentUserProfile } from '@/app/actions/auth'
 import { PRICING_TIERS, getTierByName } from '@/lib/pricing'
 import { buildCheckoutUrl } from '@/lib/stripe'
+import { useLocale } from '@/lib/i18n/locale-context'
 import { Skeleton } from '@/components/skeleton'
 
 export default function BillingPage() {
+  const { t } = useLocale()
   const [profile, setProfile] = useState<{ id: string; email: string; tier: string; credits: number } | null>(null)
 
   useEffect(() => {
@@ -21,12 +23,12 @@ export default function BillingPage() {
       <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
         <div className="mb-6 flex items-center gap-2">
           <CreditCard className="h-5 w-5 text-cyan-300" />
-          <h1 className="text-xl font-semibold text-white">Il tuo abbonamento</h1>
+          <h1 className="text-xl font-semibold text-white">{t('billingPage.title')}</h1>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-5 transition-transform duration-200 ease-out-strong hover:-translate-y-0.5">
-            <p className="text-sm text-slate-400">Piano attuale</p>
+            <p className="text-sm text-slate-400">{t('billingPage.currentPlanLabel')}</p>
             {profile ? (
               <p className="mt-1 text-2xl font-semibold text-cyan-300">{currentTierName}</p>
             ) : (
@@ -34,7 +36,7 @@ export default function BillingPage() {
             )}
           </div>
           <div className="rounded-2xl border border-amber-400/20 bg-amber-400/10 p-5 transition-transform duration-200 ease-out-strong hover:-translate-y-0.5">
-            <p className="text-sm text-amber-200/80">Crediti disponibili</p>
+            <p className="text-sm text-amber-200/80">{t('nav.credits')}</p>
             {profile ? (
               <p className="mt-1 flex items-center gap-1.5 text-2xl font-semibold text-white">
                 <Zap className="h-5 w-5 fill-amber-300 text-amber-300" />
@@ -63,7 +65,7 @@ export default function BillingPage() {
               <h3 className="mb-1 text-lg font-semibold text-white">{tier.name}</h3>
               <div className="mb-4">
                 <span className="text-3xl font-bold text-white">€{tier.price}</span>
-                <span className="text-slate-400">/mese</span>
+                <span className="text-slate-400">{t('billingPage.perMonth')}</span>
               </div>
 
               <ul className="mb-6 space-y-2.5">
@@ -77,14 +79,14 @@ export default function BillingPage() {
 
               {isCurrent ? (
                 <div className="rounded-xl border border-cyan-400/30 bg-cyan-400/10 px-4 py-2.5 text-center text-sm font-semibold text-cyan-200">
-                  Piano attuale
+                  {t('billingPage.currentPlanBadge')}
                 </div>
               ) : planKey === 'free' ? (
                 <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-center text-sm text-slate-500">
-                  Piano gratuito
+                  {t('billingPage.freePlanBadge')}
                 </div>
               ) : (
-                <UpgradeButton plan={planKey} profile={profile} label={`Passa a ${tier.name}`} />
+                <UpgradeButton plan={planKey} profile={profile} label={t('billingPage.upgradeTo', { name: tier.name })} />
               )}
             </div>
           )
@@ -103,6 +105,7 @@ function UpgradeButton({
   profile: { id: string; email: string } | null
   label: string
 }) {
+  const { t } = useLocale()
   if (!profile) return null
 
   const url = buildCheckoutUrl(plan, profile.id, profile.email)
@@ -111,10 +114,10 @@ function UpgradeButton({
     return (
       <button
         disabled
-        title="Configura STRIPE_CHECKOUT_URLS in lib/constants.ts"
+        title={t('billingPage.notConfiguredTooltip')}
         className="block w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-center text-sm text-slate-500 opacity-50"
       >
-        {label} (non configurato)
+        {t('billingPage.notConfigured', { label })}
       </button>
     )
   }

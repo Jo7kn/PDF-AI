@@ -84,6 +84,7 @@ export default function TranslatorAiPage() {
       />
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
+        <h1 className="mb-4 text-xl font-semibold text-white sm:text-2xl">Translator AI: traduci documenti mantenendo il formato</h1>
         <div className="mb-6 flex flex-wrap items-center justify-center gap-3">
           <LanguageSelect value={sourceLanguage} onChange={setSourceLanguage} options={[AUTO_DETECT, ...LANGUAGES]} />
           <button

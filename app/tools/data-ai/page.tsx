@@ -144,6 +144,7 @@ export default function DataAiPage() {
       />
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
+        <h1 className="mb-4 text-xl font-semibold text-white sm:text-2xl">Data AI: analizza CSV ed Excel con l’AI</h1>
         <TierGate gradient="from-sky-400 to-blue-500">
         {!parsed && (
           <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">

@@ -14,6 +14,7 @@ import {
   removeMember,
 } from '@/app/actions/workspace'
 import { getTierByName } from '@/lib/pricing'
+import { useLocale } from '@/lib/i18n/locale-context'
 
 interface WorkspaceMember {
   user_id: string
@@ -33,6 +34,7 @@ interface Invitation {
 }
 
 export default function TeamPage() {
+  const { t } = useLocale()
   const [profile, setProfile] = useState<{ id: string; tier: string } | null>(null)
   const [workspace, setWorkspace] = useState<Workspace | null | undefined>(undefined)
   const [invitations, setInvitations] = useState<Invitation[]>([])
@@ -62,7 +64,7 @@ export default function TeamPage() {
       <div className="space-y-6">
         <div className="flex items-center gap-2">
           <Users className="h-5 w-5 text-cyan-300" />
-          <h1 className="text-xl font-semibold text-white">Team</h1>
+          <h1 className="text-xl font-semibold text-white">{t('teamPage.title')}</h1>
         </div>
         <div className="space-y-3 rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
           <Skeleton className="h-5 w-32" />
@@ -82,7 +84,7 @@ export default function TeamPage() {
 
       {invitations.length > 0 && (
         <section className="rounded-3xl border border-cyan-400/20 bg-cyan-400/10 p-6">
-          <h2 className="mb-3 text-sm font-semibold text-cyan-200">Inviti in sospeso</h2>
+          <h2 className="mb-3 text-sm font-semibold text-cyan-200">{t('teamPage.pendingInvites')}</h2>
           <div className="space-y-2">
             {invitations.map((inv) => (
               <InvitationRow key={inv.id} invitation={inv} onHandled={load} />
@@ -94,8 +96,8 @@ export default function TeamPage() {
       {!isTeamPlan && !workspace && (
         <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
           <p className="text-sm text-slate-400">
-            Creare o entrare in un team richiede il piano Team.{' '}
-            <a href="/dashboard/billing" className="text-cyan-300 hover:text-cyan-200">Passa a Team →</a>
+            {t('teamPage.requiresTeamPlan')}{' '}
+            <a href="/dashboard/billing" className="text-cyan-300 hover:text-cyan-200">{t('teamPage.upgradeToTeam')}</a>
           </p>
         </section>
       )}
@@ -108,6 +110,7 @@ export default function TeamPage() {
 }
 
 function InvitationRow({ invitation, onHandled }: { invitation: Invitation; onHandled: () => void }) {
+  const { t } = useLocale()
   const [loading, setLoading] = useState(false)
 
   const handle = async (action: 'accept' | 'decline') => {
@@ -120,7 +123,7 @@ function InvitationRow({ invitation, onHandled }: { invitation: Invitation; onHa
   return (
     <div className="flex items-center justify-between rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 text-sm">
       <span className="text-white">
-        Invito per unirti a <span className="font-medium">{invitation.workspaceName}</span> come {invitation.role}
+        {t('teamPage.inviteFor', { workspace: invitation.workspaceName, role: invitation.role })}
       </span>
       <div className="flex gap-2">
         <button
@@ -128,14 +131,14 @@ function InvitationRow({ invitation, onHandled }: { invitation: Invitation; onHa
           disabled={loading}
           className="inline-flex items-center gap-1 rounded-lg bg-emerald-500/15 px-3 py-1.5 text-xs text-emerald-300 transition-colors duration-150 ease-out hover:bg-emerald-500/25"
         >
-          <Check className="h-3.5 w-3.5" /> Accetta
+          <Check className="h-3.5 w-3.5" /> {t('teamPage.accept')}
         </button>
         <button
           onClick={() => handle('decline')}
           disabled={loading}
           className="inline-flex items-center gap-1 rounded-lg bg-white/5 px-3 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10"
         >
-          <X className="h-3.5 w-3.5" /> Rifiuta
+          <X className="h-3.5 w-3.5" /> {t('teamPage.decline')}
         </button>
       </div>
     </div>
@@ -143,6 +146,7 @@ function InvitationRow({ invitation, onHandled }: { invitation: Invitation; onHa
 }
 
 function CreateWorkspaceCard({ onCreated }: { onCreated: () => void }) {
+  const { t } = useLocale()
   const [name, setName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -163,14 +167,14 @@ function CreateWorkspaceCard({ onCreated }: { onCreated: () => void }) {
 
   return (
     <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
-      <h2 className="mb-1 text-lg font-semibold text-white">Crea il tuo team</h2>
-      <p className="mb-4 text-sm text-slate-400">Invita fino ai membri previsti dal tuo piano.</p>
+      <h2 className="mb-1 text-lg font-semibold text-white">{t('teamPage.createTitle')}</h2>
+      <p className="mb-4 text-sm text-slate-400">{t('teamPage.createSubtitle')}</p>
       <form onSubmit={handleCreate} className="flex gap-2">
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Nome del team..."
+          placeholder={t('teamPage.namePlaceholder')}
           className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-cyan-400/50 focus:outline-none"
         />
         <button
@@ -178,7 +182,7 @@ function CreateWorkspaceCard({ onCreated }: { onCreated: () => void }) {
           disabled={loading || !name.trim()}
           className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
         >
-          {loading ? <Loader2 className="h-4 w-4 animate-spin-fast" /> : 'Crea'}
+          {loading ? <Loader2 className="h-4 w-4 animate-spin-fast" /> : t('teamPage.createButton')}
         </button>
       </form>
       {error && (
@@ -200,6 +204,7 @@ function WorkspaceCard({
   currentUserId: string
   onChanged: () => void
 }) {
+  const { t } = useLocale()
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -244,7 +249,7 @@ function WorkspaceCard({
             {(canManage || member.user_id === currentUserId) && member.role !== 'owner' && (
               <button
                 onClick={() => handleRemove(member.user_id)}
-                title={member.user_id === currentUserId ? 'Esci dal team' : 'Rimuovi'}
+                title={member.user_id === currentUserId ? t('teamPage.leaveTeam') : t('teamPage.removeMember')}
                 className="text-slate-500 transition-colors duration-150 ease-out hover:text-red-300"
               >
                 {member.user_id === currentUserId ? <LogOut className="h-4 w-4" /> : <X className="h-4 w-4" />}
@@ -260,7 +265,7 @@ function WorkspaceCard({
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email della persona da invitare..."
+            placeholder={t('teamPage.emailPlaceholder')}
             className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-cyan-400/50 focus:outline-none"
           />
           <button

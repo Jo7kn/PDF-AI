@@ -50,6 +50,7 @@ export default function FileConverterPage() {
       />
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
+        <h1 className="mb-4 text-xl font-semibold text-white sm:text-2xl">File Converter: converti file con l’intelligenza artificiale</h1>
         <div className="mb-6 flex flex-wrap gap-2">
           {MODES.map((m) => (
             <button

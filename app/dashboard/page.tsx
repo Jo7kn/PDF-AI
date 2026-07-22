@@ -12,7 +12,7 @@ import { LOCALE_DATE_TAG } from '@/lib/i18n/translations'
 import { Skeleton, SkeletonRow, SkeletonStat } from '@/components/skeleton'
 
 export default function DashboardOverviewPage() {
-  const { locale } = useLocale()
+  const { locale, t } = useLocale()
   const [profile, setProfile] = useState<{ email: string; tier: string; credits: number } | null>(null)
   const [events, setEvents] = useState<UsageEvent[] | null>(null)
 
@@ -29,7 +29,7 @@ export default function DashboardOverviewPage() {
       >
         <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-1 text-sm text-cyan-200">
           <Sparkles className="h-4 w-4" />
-          Bentornato{profile ? `, ${profile.email.split('@')[0]}` : ''}
+          {t('dashboardPage.welcomeBack')}{profile ? `, ${profile.email.split('@')[0]}` : ''}
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
@@ -45,14 +45,14 @@ export default function DashboardOverviewPage() {
                   <Zap className="h-5 w-5 fill-amber-300" />
                 </div>
                 <p className="text-3xl font-semibold text-white">{profile.credits}</p>
-                <p className="text-sm text-amber-200/80">Crediti disponibili</p>
+                <p className="text-sm text-amber-200/80">{t('nav.credits')}</p>
               </div>
               <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-5 transition-transform duration-200 ease-out-strong hover:-translate-y-0.5">
                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-cyan-300">
                   <CreditCard className="h-5 w-5" />
                 </div>
                 <p className="text-3xl font-semibold text-white">{getTierByName(profile.tier)?.name || profile.tier}</p>
-                <p className="text-sm text-slate-400">Piano attuale</p>
+                <p className="text-sm text-slate-400">{t('dashboardPage.currentPlanLabel')}</p>
               </div>
             </>
           )}
@@ -61,10 +61,10 @@ export default function DashboardOverviewPage() {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="animate-fade-in-up" style={{ animationDelay: '60ms' }}>
-          <QuickLink href="/dashboard/files" icon={FolderOpen} title="I tuoi file" description="Documenti, cartelle e tag" />
+          <QuickLink href="/dashboard/files" icon={FolderOpen} title={t('dashboardPage.filesTitle')} description={t('dashboardPage.filesDescription')} />
         </div>
         <div className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
-          <QuickLink href="/dashboard/billing" icon={CreditCard} title="Abbonamento" description="Piano, crediti, upgrade" />
+          <QuickLink href="/dashboard/billing" icon={CreditCard} title={t('dashboardPage.subscriptionTitle')} description={t('dashboardPage.subscriptionDescription')} />
         </div>
       </div>
 
@@ -72,10 +72,10 @@ export default function DashboardOverviewPage() {
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <History className="h-5 w-5 text-cyan-300" />
-            <h2 className="text-lg font-semibold text-white">Attività recente</h2>
+            <h2 className="text-lg font-semibold text-white">{t('dashboardPage.recentActivity')}</h2>
           </div>
           <Link href="/dashboard/history" className="text-sm font-medium text-cyan-300 transition-colors duration-150 ease-out hover:text-cyan-200">
-            Vedi tutta →
+            {t('dashboardPage.viewAll')}
           </Link>
         </div>
 
@@ -91,7 +91,7 @@ export default function DashboardOverviewPage() {
         )}
 
         {events && events.length === 0 && (
-          <p className="py-4 text-sm text-slate-500">Nessuna attività ancora. Prova uno degli strumenti AI.</p>
+          <p className="py-4 text-sm text-slate-500">{t('dashboardPage.empty')}</p>
         )}
 
         {events && events.length > 0 && (

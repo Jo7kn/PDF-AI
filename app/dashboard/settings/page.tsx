@@ -11,7 +11,7 @@ import { Skeleton } from '@/components/skeleton'
 
 export default function SettingsPage() {
   const [profile, setProfile] = useState<{ email: string } | null>(null)
-  const { locale, setLocale } = useLocale()
+  const { locale, setLocale, t } = useLocale()
 
   useEffect(() => {
     getCurrentUserProfile().then((p) => p && setProfile(p))
@@ -22,12 +22,12 @@ export default function SettingsPage() {
       <section className="animate-fade-in-up rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
         <div className="mb-6 flex items-center gap-2">
           <Settings className="h-5 w-5 text-cyan-300" />
-          <h1 className="text-xl font-semibold text-white">Impostazioni account</h1>
+          <h1 className="text-xl font-semibold text-white">{t('settingsPage.title')}</h1>
         </div>
 
         <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-300">
           <Mail className="h-4 w-4" />
-          Email
+          {t('settingsPage.emailLabel')}
         </label>
         {profile ? (
           <input
@@ -44,7 +44,7 @@ export default function SettingsPage() {
       <section className="animate-fade-in-up rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20" style={{ animationDelay: '60ms' }}>
         <div className="mb-4 flex items-center gap-2">
           <Globe className="h-5 w-5 text-cyan-300" />
-          <h2 className="text-lg font-semibold text-white">Lingua</h2>
+          <h2 className="text-lg font-semibold text-white">{t('settingsPage.languageTitle')}</h2>
         </div>
         <div className="flex flex-wrap gap-2">
           {LOCALES.map((code) => (

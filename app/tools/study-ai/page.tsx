@@ -87,6 +87,7 @@ export default function StudyAiPage() {
       />
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
+        <h1 className="mb-4 text-xl font-semibold text-white sm:text-2xl">Study AI: flashcard, quiz e tutor AI per studiare</h1>
         <TierGate gradient="from-amber-400 to-yellow-500">
         <div className="mb-6 flex flex-wrap gap-2">
           {MODES.map((m) => (

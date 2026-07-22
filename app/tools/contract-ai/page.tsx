@@ -63,6 +63,7 @@ export default function ContractAiPage() {
       />
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
+        <h1 className="mb-4 text-xl font-semibold text-white sm:text-2xl">Contract AI: analizza contratti e clausole a rischio</h1>
         <TierGate gradient="from-slate-400 to-zinc-500">
         <div className="mb-4 rounded-2xl border border-amber-400/20 bg-amber-400/10 p-3 text-sm text-amber-200">
           {t('contractAiPage.disclaimer')}

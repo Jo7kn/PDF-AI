@@ -9,7 +9,7 @@ import { LOCALE_DATE_TAG } from '@/lib/i18n/translations'
 import { SkeletonRow } from '@/components/skeleton'
 
 export default function HistoryPage() {
-  const { locale } = useLocale()
+  const { locale, t } = useLocale()
   const [events, setEvents] = useState<UsageEvent[] | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -27,12 +27,12 @@ export default function HistoryPage() {
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <History className="h-5 w-5 text-cyan-300" />
-          <h1 className="text-xl font-semibold text-white">Cronologia utilizzo</h1>
+          <h1 className="text-xl font-semibold text-white">{t('historyPage.title')}</h1>
         </div>
         {events && events.length > 0 && (
           <div className="flex items-center gap-1.5 rounded-full border border-amber-400/20 bg-amber-400/10 px-3 py-1.5 text-sm text-amber-200">
             <Zap className="h-3.5 w-3.5" />
-            {totalCredits} crediti usati (ultime {events.length})
+            {t('historyPage.creditsUsed', { count: totalCredits, total: events.length })}
           </div>
         )}
       </div>
@@ -50,7 +50,7 @@ export default function HistoryPage() {
       {events && events.length === 0 && (
         <div className="animate-fade-in-up py-12 text-center">
           <History className="mx-auto mb-4 h-16 w-16 text-slate-600" />
-          <p className="text-slate-400">Nessuna attività ancora. Prova uno degli strumenti AI.</p>
+          <p className="text-slate-400">{t('historyPage.empty')}</p>
         </div>
       )}
 
