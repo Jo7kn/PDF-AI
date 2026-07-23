@@ -27,7 +27,7 @@ export const dynamic = 'force-dynamic'
 // senza questo la piattaforma uccide la funzione al default (10s) prima che
 // il retry interno del client NVIDIA finisca — "Status: 0" nei log, nessun
 // errore applicativo da vedere.
-export const maxDuration = 60
+export const maxDuration = 120
 
 export default async function AiWriterLayout({ children }: { children: React.ReactNode }) {
   const enabled = await isFeatureEnabled('ai-writer')

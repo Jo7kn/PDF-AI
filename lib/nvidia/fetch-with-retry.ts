@@ -3,16 +3,22 @@
 // Era duplicata identica in ognuno dei 10 client tool (writer/code/
 // translator/image/chat/contract/email/data/converter/study) — ogni copia
 // aveva finito per divergere sui default (45-90s x 2-3 tentativi, fino a
-// ~183s nel caso peggiore), ben oltre i 60s massimi di maxDuration su
-// Vercel Hobby. La piattaforma uccide la funzione dall'esterno prima che
-// questo codice riesca anche solo a fallire con un errore leggibile —
-// nei log risulta "Status: 0" senza nessuna richiesta esterna completata.
-// Default qui pensati per stare sotto i 60s con margine per auth/crediti/DB.
+// ~183s nel caso peggiore).
+//
+// ATTENZIONE valore tetto: questo progetto ha Fluid Compute attivo, il tetto
+// reale osservato in produzione (Vercel -> Function Invocation -> Maximum)
+// e' 5 minuti, non i 60s "Hobby classico" — verificato da un log reale dove
+// un primo tentativo a 22s x2 (~45s totali) non e' bastato e NVIDIA e' stata
+// interrotta a meta' risposta. Questi default (1 retry, 55s a tentativo =
+// ~111s worst case) restano ben sotto il maxDuration=120 impostato nei
+// layout.tsx dei tool, che a sua volta resta ben sotto il tetto reale di
+// 300s — se emergono altri abort reali nei log, alza ancora prima di
+// pensare che sia un problema diverso.
 export async function fetchWithRetry(
   url: string,
   options: RequestInit,
   retries = 1,
-  timeoutMs = 22000,
+  timeoutMs = 55000,
 ): Promise<Response> {
   for (let attempt = 0; attempt <= retries; attempt += 1) {
     const controller = new AbortController()

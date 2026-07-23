@@ -2,7 +2,7 @@ import os
 
 from openai import OpenAI
 
-api_key = os.getenv("NVIDIA_API_KEY")
+api_key = "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"
 if not api_key:
   raise RuntimeError("NVIDIA_API_KEY environment variable is required")
 

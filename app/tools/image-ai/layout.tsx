@@ -24,7 +24,7 @@ export const dynamic = 'force-dynamic'
 
 // Vedi commento in app/tools/ai-writer/layout.tsx: tetto Vercel Hobby per la
 // Server Action del tool.
-export const maxDuration = 60
+export const maxDuration = 120
 
 export default async function ImageAiLayout({ children }: { children: React.ReactNode }) {
   const enabled = await isFeatureEnabled('image-ai')

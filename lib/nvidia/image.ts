@@ -64,8 +64,6 @@ export async function generateImage(request: GenerateImageRequest): Promise<Gene
         ...(request.seed !== undefined ? { seed: request.seed } : {}),
       }),
     },
-    1,
-    25000,
   )
 
   if (!response.ok) {

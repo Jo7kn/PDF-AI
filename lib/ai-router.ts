@@ -25,6 +25,8 @@ const INSUFFICIENT_CREDITS_ERROR =
 
 const TIER_GATE_ERROR = 'Questo strumento richiede il piano Pro o Team. Passa a un piano superiore per sbloccarlo.'
 
+const GENERIC_AI_ERROR = 'Il modello AI non ha risposto correttamente. Riprova tra poco.'
+
 // 15 chiamate AI/minuto per utente: copre un uso normale intenso (anche
 // generazioni multiple ravvicinate) ma blocca flood/loop client rotti.
 const AI_RATE_LIMIT = 15
@@ -59,10 +61,17 @@ export async function runAiTool<T>({ userId, tool, action, metadata, run }: RunA
   try {
     result = await run()
   } catch (error) {
-    // Il client vede sempre il fallback generico per un throw non-Error
-    // (comportamento invariato) — il dettaglio grezzo va solo nel log server.
-    logEvent('error', `Tool AI fallito: ${tool}`, { userId, tool, action, message: error instanceof Error ? error.message : String(error) })
-    return { error: error instanceof Error ? error.message : 'Richiesta fallita' }
+    const rawMessage = error instanceof Error ? error.message : String(error)
+    // AbortError (timeout di fetchWithRetry) e TypeError (fetch di rete
+    // fallita) sono errori tecnici grezzi, mai in italiano — es. "This
+    // operation was aborted". Li sostituiamo con un messaggio comprensibile;
+    // gli errori di validazione dei tool (es. "Nessun input fornito") sono
+    // già scritti apposta per l'utente e passano invariati. Il dettaglio
+    // grezzo va comunque nel log server per il debug.
+    const isRawTechnicalError = error instanceof Error && (error.name === 'AbortError' || error.name === 'TypeError')
+
+    logEvent('error', `Tool AI fallito: ${tool}`, { userId, tool, action, message: rawMessage })
+    return { error: isRawTechnicalError ? GENERIC_AI_ERROR : rawMessage }
   }
 
   const deducted = await deductCredits(userId, cost)
