@@ -9,7 +9,9 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loader2, KeyRound, Mail, RotateCw, Check } from 'lucide-react'
 
-const RESEND_COOLDOWN_S = 30
+// Supabase throttla il resend a ~60s lato server di default — un cooldown
+// più corto qui garantirebbe quasi sempre un primo tentativo fallito.
+const RESEND_COOLDOWN_S = 60
 
 function VerifyEmailForm() {
   const router = useRouter()
