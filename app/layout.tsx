@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 import { MotionConfig } from "framer-motion"
+import { Analytics } from "@vercel/analytics/next"
+import { SentryInit } from "@/components/sentry-init"
 import { LocaleProvider } from "@/lib/i18n/locale-context"
 import { RouteProgress } from "@/components/route-progress"
 import { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION, CONTACT_EMAIL } from "@/lib/seo"
@@ -120,6 +122,8 @@ export default function RootLayout({
             {children}
           </LocaleProvider>
         </MotionConfig>
+        <SentryInit />
+        <Analytics />
       </body>
     </html>
   )

@@ -156,13 +156,13 @@ const de: TranslationDict = {
   },
   pricingTiers: {
     free: {
-      features: ['1 aktives Projekt', 'Bis zu 10 Seiten insgesamt', 'Kein Chat-Verlauf', 'Standardverarbeitung'],
+      features: ['50 KI-Credits pro Monat', '1 aktives Projekt', 'Bis zu 10 Seiten insgesamt', 'Kein Chat-Verlauf', 'Standardverarbeitung'],
     },
     pro: {
-      features: ['Unbegrenzte Projekte', 'Bis zu 500 Seiten insgesamt', 'Unbegrenzter Chat-Verlauf', 'Kalender-Export (ICS)', 'Priorisierte Verarbeitung'],
+      features: ['1000 KI-Credits pro Monat', 'Unbegrenzte Projekte', 'Bis zu 500 Seiten insgesamt', 'Unbegrenzter Chat-Verlauf', 'Kalender-Export (ICS)', 'Priorisierte Verarbeitung'],
     },
     team: {
-      features: ['Alles aus Pro', 'Projekte mit 3 Nutzern teilen', 'E-Mail-Support', 'Erweiterte Dokumentenanalyse'],
+      features: ['3000 KI-Credits pro Monat', 'Alles aus Pro', 'Projekte mit 3 Nutzern teilen', 'E-Mail-Support', 'Erweiterte Dokumentenanalyse'],
     },
   },
   pricingSection: {

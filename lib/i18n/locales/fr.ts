@@ -156,13 +156,13 @@ const fr: TranslationDict = {
   },
   pricingTiers: {
     free: {
-      features: ['1 projet actif', "Jusqu'à 10 pages au total", "Pas d'historique de chat", 'Traitement standard'],
+      features: ['50 crédits IA par mois', '1 projet actif', "Jusqu'à 10 pages au total", "Pas d'historique de chat", 'Traitement standard'],
     },
     pro: {
-      features: ['Projets illimités', "Jusqu'à 500 pages au total", 'Historique de chat illimité', 'Export calendrier (ICS)', 'Traitement prioritaire'],
+      features: ['1000 crédits IA par mois', 'Projets illimités', "Jusqu'à 500 pages au total", 'Historique de chat illimité', 'Export calendrier (ICS)', 'Traitement prioritaire'],
     },
     team: {
-      features: ['Tout ce qui est inclus dans Pro', 'Partagez des projets avec 3 utilisateurs', 'Support par email', 'Analyse avancée des documents'],
+      features: ['3000 crédits IA par mois', 'Tout ce qui est inclus dans Pro', 'Partagez des projets avec 3 utilisateurs', 'Support par email', 'Analyse avancée des documents'],
     },
   },
   pricingSection: {

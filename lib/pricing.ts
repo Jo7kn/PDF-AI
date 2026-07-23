@@ -1,10 +1,12 @@
 import { PricingTier } from './types'
+import { PLAN_CREDITS } from './credits'
 
 export const PRICING_TIERS: PricingTier[] = [
   {
     name: 'Free',
     price: 0,
     features: [
+      `${PLAN_CREDITS.free} AI credits/month`,
       '1 active project',
       'Up to 10 total pages',
       'No historical chat',
@@ -25,6 +27,7 @@ export const PRICING_TIERS: PricingTier[] = [
     name: 'Pro',
     price: 19,
     features: [
+      `${PLAN_CREDITS.pro} AI credits/month`,
       'Unlimited projects',
       'Up to 500 total pages',
       'Unlimited historical chat',
@@ -46,6 +49,7 @@ export const PRICING_TIERS: PricingTier[] = [
     name: 'Team',
     price: 39,
     features: [
+      `${PLAN_CREDITS.team} AI credits/month`,
       'Everything in Pro',
       'Share projects with 3 users',
       'Email support',

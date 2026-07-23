@@ -156,13 +156,13 @@ const en: TranslationDict = {
   },
   pricingTiers: {
     free: {
-      features: ['1 active project', 'Up to 10 total pages', 'No historical chat', 'Standard processing'],
+      features: ['50 AI credits/month', '1 active project', 'Up to 10 total pages', 'No historical chat', 'Standard processing'],
     },
     pro: {
-      features: ['Unlimited projects', 'Up to 500 total pages', 'Unlimited historical chat', 'Calendar export (ICS)', 'Priority processing'],
+      features: ['1,000 AI credits/month', 'Unlimited projects', 'Up to 500 total pages', 'Unlimited historical chat', 'Calendar export (ICS)', 'Priority processing'],
     },
     team: {
-      features: ['Everything in Pro', 'Share projects with 3 users', 'Email support', 'Advanced document analysis'],
+      features: ['3,000 AI credits/month', 'Everything in Pro', 'Share projects with 3 users', 'Email support', 'Advanced document analysis'],
     },
   },
   pricingSection: {

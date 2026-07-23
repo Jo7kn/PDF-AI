@@ -160,13 +160,13 @@ const it = {
   },
   pricingTiers: {
     free: {
-      features: ['1 progetto attivo', 'Fino a 10 pagine totali', 'Nessuna cronologia chat', 'Elaborazione standard'],
+      features: ['50 crediti AI al mese', '1 progetto attivo', 'Fino a 10 pagine totali', 'Nessuna cronologia chat', 'Elaborazione standard'],
     },
     pro: {
-      features: ['Progetti illimitati', 'Fino a 500 pagine totali', 'Cronologia chat illimitata', 'Esportazione calendario (ICS)', 'Elaborazione prioritaria'],
+      features: ['1000 crediti AI al mese', 'Progetti illimitati', 'Fino a 500 pagine totali', 'Cronologia chat illimitata', 'Esportazione calendario (ICS)', 'Elaborazione prioritaria'],
     },
     team: {
-      features: ['Tutto quello incluso in Pro', 'Condividi progetti con 3 utenti', 'Supporto via email', 'Analisi documenti avanzata'],
+      features: ['3000 crediti AI al mese', 'Tutto quello incluso in Pro', 'Condividi progetti con 3 utenti', 'Supporto via email', 'Analisi documenti avanzata'],
     },
   },
   pricingSection: {
