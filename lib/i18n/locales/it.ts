@@ -203,6 +203,16 @@ const it = {
     resultPlaceholder: 'Il risultato apparirà qui',
     download: 'Scarica',
   },
+  // Messaggi a rotazione durante l'attesa di una risposta AI (vedi
+  // components/ai-loading-state.tsx) — condivisi da tutti i tool, così le
+  // richieste più lente (fino a ~2 minuti con retry, vedi
+  // lib/nvidia/fetch-with-retry.ts) non sembrano bloccate.
+  aiLoading: {
+    stage1: 'Sto elaborando la tua richiesta...',
+    stage2: 'Il modello AI sta ancora lavorando...',
+    stage3: 'Le richieste più complesse possono richiedere fino a un minuto...',
+    stage4: 'Ancora un po’ di pazienza, sto quasi finendo...',
+  },
   filesPage: {
     tabPdf: 'Documenti PDF',
     tabSaved: 'Altri salvataggi',

@@ -18,6 +18,7 @@ import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
 import { FaqSection } from '@/components/faq-section'
 import { SaveButton } from '@/components/save-button'
+import { AiLoadingState } from '@/components/ai-loading-state'
 import { runAiWriter } from '@/app/actions/ai-writer'
 import type { WriterAction } from '@/lib/nvidia/writer'
 import { useLocale } from '@/lib/i18n/locale-context'
@@ -197,10 +198,7 @@ export default function AiWriterPage() {
             </div>
 
             {loading && (
-              <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-500">
-                <Loader2 className="h-8 w-8 animate-spin-fast" />
-                <p className="text-sm">{t('aiWriterPage.writing')}</p>
-              </div>
+              <AiLoadingState />
             )}
 
             {!loading && !output && !error && (

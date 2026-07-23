@@ -199,6 +199,12 @@ const de: TranslationDict = {
     resultPlaceholder: 'Das Ergebnis erscheint hier',
     download: 'Herunterladen',
   },
+  aiLoading: {
+    stage1: 'Deine Anfrage wird bearbeitet...',
+    stage2: 'Das KI-Modell arbeitet noch...',
+    stage3: 'Komplexere Anfragen können bis zu einer Minute dauern...',
+    stage4: 'Noch etwas Geduld, gleich fertig...',
+  },
   filesPage: {
     tabPdf: 'PDF-Dokumente',
     tabSaved: 'Weitere Speicherungen',

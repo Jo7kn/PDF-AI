@@ -18,6 +18,7 @@ import {
 } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
+import { AiLoadingState } from '@/components/ai-loading-state'
 import { FaqSection } from '@/components/faq-section'
 import { SaveButton } from '@/components/save-button'
 import { runTextConversion, convertPdfToText, convertImageFormat, type ImageOutputFormat } from '@/app/actions/file-converter'
@@ -157,11 +158,7 @@ function TextConverter() {
             </div>
           )}
         </div>
-        {loading && (
-          <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-500">
-            <Loader2 className="h-8 w-8 animate-spin-fast" />
-          </div>
-        )}
+        {loading && <AiLoadingState />}
         {!loading && !output && (
           <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-600">
             <Sparkles className="h-10 w-10" />
@@ -377,11 +374,7 @@ function PdfToTextConverter() {
             <p className="text-sm">{t('fileConverterPage.extractedTextPlaceholder')}</p>
           </div>
         )}
-        {loading && (
-          <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-500">
-            <Loader2 className="h-8 w-8 animate-spin-fast" />
-          </div>
-        )}
+        {loading && <AiLoadingState />}
         {output && (
           <pre className="max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm text-slate-100">{output}</pre>
         )}

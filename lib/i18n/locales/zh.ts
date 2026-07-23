@@ -199,6 +199,12 @@ const zh: TranslationDict = {
     resultPlaceholder: '结果将显示在这里',
     download: '下载',
   },
+  aiLoading: {
+    stage1: '正在处理你的请求...',
+    stage2: 'AI 模型仍在处理中...',
+    stage3: '更复杂的请求可能需要长达一分钟...',
+    stage4: '再耐心等一下，马上就好...',
+  },
   filesPage: {
     tabPdf: 'PDF 文档',
     tabSaved: '其他已保存内容',

@@ -13,6 +13,7 @@ import { AppFooter } from '@/components/app-footer'
 import { FaqSection } from '@/components/faq-section'
 import { SaveButton } from '@/components/save-button'
 import { TierGate } from '@/components/tier-gate'
+import { AiLoadingState } from '@/components/ai-loading-state'
 import { runImageAi } from '@/app/actions/image-ai'
 import type { ImageAspect } from '@/lib/nvidia/image'
 import { useLocale } from '@/lib/i18n/locale-context'
@@ -153,10 +154,7 @@ export default function ImageAiPage() {
 
             <div className="flex flex-1 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-slate-950/60">
               {loading && (
-                <div className="flex flex-col items-center gap-3 p-8 text-slate-500">
-                  <Loader2 className="h-8 w-8 animate-spin-fast" />
-                  <p className="text-sm">{t('imageAiPage.drawing')}</p>
-                </div>
+                <AiLoadingState className="p-8" />
               )}
 
               {!loading && !imageUrl && (

@@ -14,6 +14,7 @@ import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
 import { FaqSection } from '@/components/faq-section'
 import { SaveButton } from '@/components/save-button'
+import { AiLoadingState } from '@/components/ai-loading-state'
 import { runTranslatorAi } from '@/app/actions/translator-ai'
 import { useLocale } from '@/lib/i18n/locale-context'
 
@@ -158,10 +159,7 @@ export default function TranslatorAiPage() {
             </div>
 
             {loading && (
-              <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-500">
-                <Loader2 className="h-8 w-8 animate-spin-fast" />
-                <p className="text-sm">{t('translatorAiPage.translatingResult')}</p>
-              </div>
+              <AiLoadingState />
             )}
 
             {!loading && !output && !error && (
