@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { Gift, Copy, Check, PartyPopper } from 'lucide-react'
 import { Skeleton } from '@/components/skeleton'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { getReferralStatus, type ReferralStatus } from '@/app/actions/referrals'
 import { useLocale } from '@/lib/i18n/locale-context'
 import { LOCALE_DATE_TAG } from '@/lib/i18n/translations'
@@ -36,10 +38,10 @@ export default function InvitesPage() {
           <Gift className="h-5 w-5 text-cyan-300" />
           <h1 className="text-xl font-semibold text-white">{t('invitesPage.title')}</h1>
         </div>
-        <div className="space-y-3 rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+        <Card className="space-y-3">
           <Skeleton className="h-5 w-32" />
           <Skeleton className="h-10 w-full" />
-        </div>
+        </Card>
       </div>
     )
   }
@@ -56,23 +58,20 @@ export default function InvitesPage() {
         <h1 className="text-xl font-semibold text-white">{t('invitesPage.title')}</h1>
       </div>
 
-      <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+      <Card>
         <p className="mb-4 text-sm text-slate-400">{t('invitesPage.subtitle')}</p>
 
         <label className="mb-1.5 block text-xs font-medium text-slate-500">{t('invitesPage.yourLink')}</label>
         <div className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5">
           <code className="truncate text-sm text-cyan-200">{link}</code>
-          <button
-            onClick={handleCopy}
-            className="inline-flex flex-shrink-0 items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-medium text-white transition-colors duration-150 ease-out hover:bg-white/20 active:scale-[0.97]"
-          >
+          <Button onClick={handleCopy} variant="subtle" size="sm" className="flex-shrink-0 gap-1.5">
             {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
             {copied ? t('invitesPage.copied') : t('invitesPage.copy')}
-          </button>
+          </Button>
         </div>
-      </section>
+      </Card>
 
-      <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+      <Card>
         {status.rewardActive && status.rewardExpiresAt ? (
           <div className="flex items-center gap-3 rounded-xl border border-emerald-400/25 bg-emerald-400/10 px-4 py-3">
             <PartyPopper className="h-5 w-5 flex-shrink-0 text-emerald-300" />
@@ -96,7 +95,7 @@ export default function InvitesPage() {
         </div>
 
         <p className="mt-4 text-xs text-slate-500">{t('invitesPage.confirmedNote')}</p>
-      </section>
+      </Card>
     </div>
   )
 }

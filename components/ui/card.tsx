@@ -3,11 +3,15 @@
 import { cn } from '@/lib/utils'
 import { HTMLAttributes, forwardRef } from 'react'
 
+// rounded-3xl/shadow-xl invece di rounded-xl/shadow-lg: la maggior parte
+// delle card reali nell'app (dashboard, admin) usa quella variante — questo
+// primitivo era rimasto sul valore più vecchio e finiva reimplementato a
+// mano ovunque invece di essere usato.
 const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('rounded-xl border border-white/10 bg-slate-900/80 text-white shadow-lg shadow-black/20', className)}
+      className={cn('rounded-3xl border border-white/10 bg-slate-900/80 p-6 text-white shadow-xl shadow-black/20', className)}
       {...props}
     />
   )

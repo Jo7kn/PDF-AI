@@ -10,6 +10,7 @@
 import { useState } from 'react'
 import { Send, Loader2, Check, AlertCircle } from 'lucide-react'
 import { sendDiscordAnnouncement } from '@/app/actions/discord-announce'
+import { Button } from '@/components/ui/button'
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
@@ -82,14 +83,10 @@ export function AnnouncementComposer() {
           )}
           {status === 'idle' && <span className="text-slate-500">{message.length}/4096 caratteri</span>}
         </div>
-        <button
-          type="submit"
-          disabled={status === 'loading' || !message.trim()}
-          className="inline-flex flex-shrink-0 items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
-        >
+        <Button type="submit" className="flex-shrink-0 gap-2" disabled={status === 'loading' || !message.trim()}>
           {status === 'loading' ? <Loader2 className="h-4 w-4 animate-spin-fast" /> : <Send className="h-4 w-4" />}
           Invia annuncio
-        </button>
+        </Button>
       </div>
     </form>
   )

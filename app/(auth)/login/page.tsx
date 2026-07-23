@@ -86,7 +86,7 @@ const handleGoogleLogin = async () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="w-full border-white/10 bg-slate-950/80 text-white placeholder:text-slate-500"
-              icon={<Mail className="w-4 h-4 text-slate-400" />}
+              icon={<Mail className="w-4 h-4" />}
             />
           </div>
           <div className="space-y-2">
@@ -103,7 +103,7 @@ const handleGoogleLogin = async () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               className="w-full border-white/10 bg-slate-950/80 text-white placeholder:text-slate-500"
-              icon={<Lock className="w-4 h-4 text-slate-400" />}
+              icon={<Lock className="w-4 h-4" />}
             />
           </div>
           {error && (

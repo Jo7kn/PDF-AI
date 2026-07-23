@@ -9,6 +9,7 @@
 import { useState } from 'react'
 import { Zap, Loader2, Check, AlertCircle } from 'lucide-react'
 import { adjustUserCredits } from '@/app/actions/admin'
+import { Button } from '@/components/ui/button'
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
@@ -60,14 +61,10 @@ export function CreditAdjuster() {
           placeholder="+50 o -20"
           className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-cyan-400/50 focus:outline-none sm:w-32"
         />
-        <button
-          type="submit"
-          disabled={status === 'loading' || !email.trim() || !amount}
-          className="inline-flex flex-shrink-0 items-center justify-center gap-2 rounded-xl bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition-colors duration-150 ease-out hover:bg-white/20 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
-        >
+        <Button type="submit" variant="subtle" className="flex-shrink-0 gap-2" disabled={status === 'loading' || !email.trim() || !amount}>
           {status === 'loading' ? <Loader2 className="h-4 w-4 animate-spin-fast" /> : <Zap className="h-4 w-4" />}
           Applica
-        </button>
+        </Button>
       </div>
       {status === 'success' && (
         <p className="flex items-center gap-1.5 text-xs text-emerald-300">

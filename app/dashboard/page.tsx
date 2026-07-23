@@ -40,20 +40,26 @@ export default function DashboardOverviewPage() {
             </>
           ) : (
             <>
-              <div className="rounded-2xl border border-amber-400/20 bg-amber-400/10 p-5 shadow-lg shadow-amber-500/5 transition-[transform,box-shadow] duration-200 ease-out-strong hover:-translate-y-0.5 hover:shadow-xl hover:shadow-amber-500/15">
+              <Link
+                href="/dashboard/billing"
+                className="rounded-2xl border border-amber-400/20 bg-amber-400/10 p-5 shadow-lg shadow-amber-500/5 transition-[transform,box-shadow] duration-200 ease-out-strong hover:-translate-y-0.5 hover:shadow-xl hover:shadow-amber-500/15"
+              >
                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-400/15 text-amber-300">
                   <Zap className="h-5 w-5 fill-amber-300" />
                 </div>
                 <p className="text-3xl font-semibold text-white">{profile.credits}</p>
                 <p className="text-sm text-amber-200/80">{t('nav.credits')}</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-5 shadow-lg shadow-cyan-500/5 transition-[transform,box-shadow] duration-200 ease-out-strong hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cyan-500/15">
+              </Link>
+              <Link
+                href="/dashboard/billing"
+                className="rounded-2xl border border-white/10 bg-slate-950/40 p-5 shadow-lg shadow-cyan-500/5 transition-[transform,box-shadow] duration-200 ease-out-strong hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cyan-500/15"
+              >
                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-cyan-300">
                   <CreditCard className="h-5 w-5" />
                 </div>
                 <p className="text-3xl font-semibold text-white">{getTierByName(profile.tier)?.name || profile.tier}</p>
                 <p className="text-sm text-slate-400">{t('dashboardPage.currentPlanLabel')}</p>
-              </div>
+              </Link>
             </>
           )}
         </div>

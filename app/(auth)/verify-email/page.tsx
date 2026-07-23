@@ -87,7 +87,7 @@ function VerifyEmailForm() {
               required
               maxLength={6}
               className="w-full border-white/10 bg-slate-950/80 text-center text-lg tracking-[0.5em] text-white placeholder:text-slate-500"
-              icon={<KeyRound className="w-4 h-4 text-slate-400" />}
+              icon={<KeyRound className="w-4 h-4" />}
             />
           </div>
           {error && (
