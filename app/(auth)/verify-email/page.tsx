@@ -81,19 +81,19 @@ function VerifyEmailForm() {
             <Input
               type="text"
               inputMode="numeric"
-              placeholder="123456"
+              placeholder="12345678"
               value={code}
               onChange={(e) => setCode(e.target.value)}
               required
-              maxLength={6}
-              className="w-full border-white/10 bg-slate-950/80 text-center text-lg tracking-[0.5em] text-white placeholder:text-slate-500"
+              maxLength={8}
+              className="w-full border-white/10 bg-slate-950/80 text-center text-lg tracking-[0.35em] text-white placeholder:text-slate-500"
               icon={<KeyRound className="w-4 h-4" />}
             />
           </div>
           {error && (
             <div className="animate-fade-in-up rounded-xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-200">{error}</div>
           )}
-          <Button type="submit" className="w-full bg-gradient-to-r from-fuchsia-500 to-violet-500 hover:from-fuchsia-400 hover:to-violet-400" disabled={loading || code.trim().length < 6}>
+          <Button type="submit" className="w-full bg-gradient-to-r from-fuchsia-500 to-violet-500 hover:from-fuchsia-400 hover:to-violet-400" disabled={loading || code.trim().length < 8}>
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin-fast" />

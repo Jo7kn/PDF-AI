@@ -75,7 +75,7 @@ export async function signUp(email: string, password: string, fullName: string, 
   return { success: true, user: data.user, needsVerification: !data.session }
 }
 
-// Codice a 6 cifre inviato via email da Supabase (richiede che il template
+// Codice a 8 cifre inviato via email da Supabase (richiede che il template
 // "Confirm signup" in Authentication -> Email Templates includa {{ .Token }}
 // — di default mostra solo un link, non un codice).
 export async function verifyEmailCode(email: string, code: string) {
