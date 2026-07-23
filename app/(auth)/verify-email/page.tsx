@@ -24,9 +24,9 @@ function VerifyEmailForm() {
 
   useEffect(() => {
     if (cooldown <= 0) return
-    const timer = setInterval(() => setCooldown((s) => s - 1), 1000)
+    const timer = setInterval(() => setCooldown((s) => Math.max(0, s - 1)), 1000)
     return () => clearInterval(timer)
-  }, [cooldown])
+  }, [cooldown > 0])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
