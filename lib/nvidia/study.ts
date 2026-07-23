@@ -10,7 +10,7 @@ import { fetchWithRetry } from './fetch-with-retry'
 const NVIDIA_STUDY_API_KEY = process.env.NVIDIA_STUDY_API_KEY || process.env.NVIDIA_API_KEY
 const NVIDIA_BASE_URL = process.env.NVIDIA_NIM_BASE_URL || 'https://integrate.api.nvidia.com/v1'
 
-const STUDY_MODEL = 'meta/llama-3.3-70b-instruct'
+const STUDY_MODEL = 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning'
 
 export type StudyAction = 'flashcards' | 'quiz' | 'tutor' | 'plan'
 

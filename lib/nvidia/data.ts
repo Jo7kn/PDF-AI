@@ -12,7 +12,7 @@ const NVIDIA_DATA_API_KEY =
   process.env.NVIDIA_DATA_API_KEY || process.env.NVIDIA_CODE_API_KEY || process.env.NVIDIA_API_KEY
 const NVIDIA_BASE_URL = process.env.NVIDIA_NIM_BASE_URL || 'https://integrate.api.nvidia.com/v1'
 
-const DATA_MODEL = 'meta/llama-3.3-70b-instruct'
+const DATA_MODEL = 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning'
 
 export async function generateDataInsights(datasetSummary: string): Promise<string> {
   if (!NVIDIA_DATA_API_KEY) {

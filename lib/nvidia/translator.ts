@@ -12,7 +12,7 @@ const NVIDIA_BASE_URL = process.env.NVIDIA_NIM_BASE_URL || 'https://integrate.ap
 // nvidia/riva-translate-4b-instruct esiste nel catalogo NVIDIA ma non è
 // abilitato per questo account (404 "Not found for account"): usiamo il
 // modello instruct generico, verificato funzionante con questa key.
-const TRANSLATE_MODEL = 'meta/llama-3.3-70b-instruct'
+const TRANSLATE_MODEL = 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning'
 
 export interface TranslateRequest {
   text: string

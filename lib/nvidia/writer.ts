@@ -11,7 +11,7 @@ const NVIDIA_WRITER_API_KEY =
   process.env.NVIDIA_WRITER_API_KEY || process.env.NVIDIA_CODE_API_KEY || process.env.NVIDIA_API_KEY
 const NVIDIA_BASE_URL = process.env.NVIDIA_NIM_BASE_URL || 'https://integrate.api.nvidia.com/v1'
 
-const WRITER_MODEL = 'meta/llama-3.3-70b-instruct'
+const WRITER_MODEL = 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning'
 
 export type WriterAction = 'article' | 'email' | 'blog' | 'summary' | 'proofread' | 'rewrite'
 
