@@ -64,7 +64,7 @@ export default function ForgotPasswordPage() {
               />
             </div>
             {error && (
-              <div className="rounded-xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-200">{error}</div>
+              <div className="animate-fade-in-up rounded-xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-200">{error}</div>
             )}
             <Button type="submit" className="w-full bg-gradient-to-r from-cyan-500 to-violet-500 hover:from-cyan-400 hover:to-violet-400" disabled={loading}>
               {loading ? (

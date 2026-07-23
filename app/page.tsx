@@ -160,7 +160,7 @@ export default function Home() {
             <ScrollReveal key={tool.slug} delay={Math.min(i, 5) * 0.04}>
               <Link
                 href={tool.href}
-                className="group block rounded-2xl border border-white/10 bg-slate-900/70 p-5 shadow-lg shadow-black/10 backdrop-blur-xl transition-colors duration-150 ease-out hover:bg-white/10 active:scale-[0.99]"
+                className="group block rounded-2xl border border-white/10 bg-slate-900/70 p-5 shadow-lg shadow-black/10 backdrop-blur-xl transition-[background-color,box-shadow,border-color,transform] duration-200 ease-out hover:border-cyan-400/30 hover:bg-white/10 hover:shadow-xl hover:shadow-cyan-500/10 active:scale-[0.99]"
               >
                 <div className={`mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${tool.gradient} text-white`}>
                   <tool.icon className="h-5 w-5" />
@@ -203,8 +203,8 @@ export default function Home() {
 
 function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-8 shadow-lg shadow-black/10 backdrop-blur-xl transition-colors duration-150 ease-out hover:bg-white/10">
-      <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-violet-500 text-white">
+    <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-8 shadow-lg shadow-black/10 backdrop-blur-xl transition-[background-color,box-shadow,border-color] duration-200 ease-out hover:border-cyan-400/30 hover:bg-white/10 hover:shadow-2xl hover:shadow-cyan-500/10">
+      <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-violet-500 text-white shadow-lg shadow-cyan-500/30">
         {icon}
       </div>
       <h3 className="mb-3 text-xl font-semibold text-white">{title}</h3>

@@ -150,7 +150,7 @@ export default function SignupPage() {
             />
           </div>
           {error && (
-            <div className="rounded-xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-200">
+            <div className="animate-fade-in-up rounded-xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-200">
               {error}
             </div>
           )}

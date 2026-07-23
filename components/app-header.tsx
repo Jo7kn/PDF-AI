@@ -45,7 +45,7 @@ export function AppHeader({ icon: Icon, title, subtitle, gradient, active, logoH
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6 lg:px-8">
         <Link href={logoHref} className="group flex items-center gap-3">
           <div
-            className={`flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br ${gradient} shadow-lg shadow-black/20 ring-1 ring-white/10 transition-transform duration-200 group-hover:scale-105 group-hover:rotate-3`}
+            className={`flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br ${gradient} shadow-lg shadow-black/20 ring-1 ring-white/10 transition-[transform,box-shadow] duration-200 group-hover:scale-105 group-hover:rotate-3 group-hover:shadow-xl group-hover:shadow-cyan-500/25`}
           >
             <Icon className="h-5 w-5 text-white" />
           </div>

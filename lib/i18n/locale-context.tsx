@@ -7,9 +7,14 @@
 // condivisa già tradotta, vedi translations.ts). t() fa fallback a una
 // stringa vuota se la chiave non esiste, e all'italiano se manca solo
 // la traduzione in quella lingua.
+//
+// I dizionari non italiani sono caricati on demand (vedi translations.ts):
+// finché non arrivano, lookup() ricade sull'italiano — nessuno stato di
+// loading da propagare ai componenti chiamanti. dictVersion forza un nuovo
+// render (e quindi una nuova lookup) quando un caricamento pigro completa.
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { DEFAULT_LOCALE, LOCALES, TRANSLATIONS, type Locale } from './translations'
+import { DEFAULT_LOCALE, LOCALES, itTranslations, getLoadedDict, loadDict, type Locale } from './translations'
 
 const STORAGE_KEY = 'ai-toolbox-locale'
 
@@ -30,21 +35,27 @@ function interpolate(value: string, params?: Record<string, string | number>): s
   return value.replace(/\{(\w+)\}/g, (match, key) => (key in params ? String(params[key]) : match))
 }
 
+function lookup(locale: Locale, path: string): unknown {
+  const value = getNested(getLoadedDict(locale), path)
+  return value === undefined ? getNested(itTranslations, path) : value
+}
+
 // Variante non-hook di t(), usabile fuori dal render (es. dentro un
 // .filter()/.map() su una lista, dove gli hook non sono ammessi).
 export function translate(locale: Locale, path: string, params?: Record<string, string | number>): string {
-  const value = getNested(TRANSLATIONS[locale], path) ?? getNested(TRANSLATIONS[DEFAULT_LOCALE], path)
+  const value = lookup(locale, path)
   if (typeof value !== 'string') return path
   return interpolate(value, params)
 }
 
 export function translateList(locale: Locale, path: string): string[] {
-  const value = getNested(TRANSLATIONS[locale], path) ?? getNested(TRANSLATIONS[DEFAULT_LOCALE], path)
+  const value = lookup(locale, path)
   return Array.isArray(value) ? value : []
 }
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(DEFAULT_LOCALE)
+  const [dictVersion, setDictVersion] = useState(0)
 
   useEffect(() => {
     const stored = window.localStorage.getItem(STORAGE_KEY)
@@ -57,6 +68,17 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     document.documentElement.lang = locale
   }, [locale])
 
+  useEffect(() => {
+    if (getLoadedDict(locale)) return
+    let cancelled = false
+    loadDict(locale).then(() => {
+      if (!cancelled) setDictVersion((v) => v + 1)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [locale])
+
   const setLocale = (next: Locale) => {
     setLocaleState(next)
     window.localStorage.setItem(STORAGE_KEY, next)
@@ -64,11 +86,12 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
 
   const t = useMemo(() => {
     return (path: string, params?: Record<string, string | number>): string => {
-      const value = getNested(TRANSLATIONS[locale], path) ?? getNested(TRANSLATIONS[DEFAULT_LOCALE], path)
+      const value = lookup(locale, path)
       if (typeof value !== 'string') return path
       return interpolate(value, params)
     }
-  }, [locale])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locale, dictVersion])
 
   const contextValue = useMemo(() => ({ locale, setLocale, t }), [locale, t])
 
@@ -85,6 +108,5 @@ export function useLocale(): LocaleContextValue {
 // invece di una stringa singola.
 export function useTranslatedList(path: string): string[] {
   const { locale } = useLocale()
-  const value = getNested(TRANSLATIONS[locale], path) ?? getNested(TRANSLATIONS[DEFAULT_LOCALE], path)
-  return Array.isArray(value) ? value : []
+  return translateList(locale, path)
 }
