@@ -67,7 +67,34 @@ export async function signUp(email: string, password: string, fullName: string, 
     }
   }
 
-  return { success: true, user: data.user }
+  // data.session è null quando il progetto Supabase richiede la conferma
+  // email (Authentication -> Providers -> Email -> "Confirm email"): il
+  // signup è riuscito ma l'utente non è ancora loggato. Il chiamante deve
+  // mandarlo a inserire il codice invece che alla dashboard, dove il
+  // middleware lo rimbalzerebbe subito al login senza spiegazioni.
+  return { success: true, user: data.user, needsVerification: !data.session }
+}
+
+// Codice a 6 cifre inviato via email da Supabase (richiede che il template
+// "Confirm signup" in Authentication -> Email Templates includa {{ .Token }}
+// — di default mostra solo un link, non un codice).
+export async function verifyEmailCode(email: string, code: string) {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.auth.verifyOtp({ email, token: code, type: 'signup' })
+  if (error) return { error: error.message }
+  if (!data.user) return { error: 'Verifica riuscita ma nessun utente restituito' }
+
+  await ensureUserProfile(supabase, data.user)
+  revalidatePath('/dashboard')
+  return { success: true }
+}
+
+export async function resendVerificationCode(email: string) {
+  const supabase = await createClient()
+  const { error } = await supabase.auth.resend({ type: 'signup', email })
+  if (error) return { error: error.message }
+  return { success: true }
 }
 
 export async function signIn(email: string, password: string) {
@@ -119,11 +146,7 @@ export async function signOut() {
 export async function resetPassword(email: string) {
   const supabase = await createClient()
 
-  // /auth/update-password non è mai esistita come pagina — il codice di
-  // recovery finiva su un 404 e non veniva mai scambiato per una sessione.
-  // Come l'OAuth, passa da /auth/callback (che fa exchangeCodeForSession)
-  // e usa ?next= per farsi rimandare a /reset-password una volta loggato.
-  const redirectTo = `${buildAuthRedirectUrl(process.env.NEXT_PUBLIC_APP_URL)}?next=/reset-password`
+  const redirectTo = buildAuthRedirectUrl(process.env.NEXT_PUBLIC_APP_URL, '/auth/update-password')
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo,
   })

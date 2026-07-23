@@ -54,10 +54,12 @@ export default function SignupPage() {
     setError(null)
 
     const result = await signUp(email, password, fullName, refCode || undefined)
-    
+
     if (result.error) {
       setError(result.error)
       setLoading(false)
+    } else if (result.needsVerification) {
+      router.push(`/verify-email?email=${encodeURIComponent(email)}`)
     } else {
       router.push('/dashboard')
       router.refresh()

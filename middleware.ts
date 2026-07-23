@@ -8,10 +8,12 @@ const PUBLIC_ROUTES = new Set([
   '/signup',
   '/forgotpass',
   '/reset-password',
+  '/verify-email',
   '/terms',
   '/pricing',
   '/about',
   '/auth/callback',
+  '/auth/update-password',
   // Chiamato da Stripe (nessuna sessione utente): l'autenticazione è la
   // firma verificata dentro la route stessa, non i cookie.
   '/api/webhooks/stripe',
@@ -37,6 +39,7 @@ const GUEST_ONLY_ROUTES = new Set([
   '/signup',
   '/forgotpass',
   '/reset-password',
+  '/verify-email',
 ])
 
 const AUTHENTICATED_HOME = '/dashboard'

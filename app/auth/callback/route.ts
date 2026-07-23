@@ -56,13 +56,7 @@ export async function GET(request: NextRequest) {
     // total_pages_used/active_projects di un utente esistente.
     await ensureUserProfile(supabase, user)
 
-    // Usato dal recovery password (vedi resetPassword in app/actions/auth.ts)
-    // per atterrare su /reset-password invece della dashboard dopo lo
-    // scambio del code. Solo path relativi: mai un redirect verso host esterni.
-    const next = requestUrl.searchParams.get('next')
-    const destination = next && next.startsWith('/') ? next : '/dashboard'
-
-    return NextResponse.redirect(new URL(destination, requestUrl.origin))
+    return NextResponse.redirect(new URL('/dashboard', requestUrl.origin))
 
   } catch (err) {
     console.error('OAuth callback: unexpected error', err instanceof Error ? err.message : err)

@@ -90,7 +90,12 @@ const handleGoogleLogin = async () => {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-300">Password</label>
+            <div className="flex items-center justify-between">
+              <label className="text-sm font-medium text-slate-300">Password</label>
+              <Link href="/forgotpass" className="text-xs text-cyan-300 transition-colors duration-150 ease-out hover:text-cyan-200">
+                Password dimenticata?
+              </Link>
+            </div>
             <Input
               type="password"
               placeholder="••••••••"

@@ -6,7 +6,7 @@ import { resetPassword } from '@/app/actions/auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Loader2, Mail, CheckCircle } from 'lucide-react'
+import { Loader2, Mail, CheckCircle, KeyRound } from 'lucide-react'
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
@@ -14,14 +14,13 @@ export default function ForgotPasswordPage() {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
-const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-  e.preventDefault()
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     setLoading(true)
     setError(null)
-    setSuccess(false)
 
     const result = await resetPassword(email)
-    
+
     if (result.error) {
       setError(result.error)
     } else {
@@ -31,61 +30,60 @@ const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 p-4">
-      <Card className="w-full max-w-md shadow-2xl border border-white/10 bg-slate-900/90 backdrop-blur-xl">
-        <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-bold text-white">Reset Password</CardTitle>
-          <CardDescription className="text-slate-300">
-            Ti invieremo un link per reimpostare la password
+    <Card className="w-full border border-white/10 bg-slate-900/85 p-2 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
+      <CardHeader className="space-y-3 px-6 pt-6 text-left">
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-violet-500 shadow-lg shadow-cyan-500/20">
+          <KeyRound className="h-5 w-5 text-white" />
+        </div>
+        <div>
+          <CardTitle className="text-2xl font-semibold text-white">Password dimenticata</CardTitle>
+          <CardDescription className="mt-2 text-sm text-slate-400">
+            Ti invieremo un link per reimpostare la password.
           </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {success ? (
-            <div className="text-center py-6">
-              <CheckCircle className="w-16 h-16 text-emerald-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-emerald-300">Email inviata!</h3>
-              <p className="text-sm text-slate-400 mt-2">
-                Controlla la tua casella di posta per le istruzioni.
-              </p>
+        </div>
+      </CardHeader>
+      <CardContent className="space-y-4 px-6 pb-6">
+        {success ? (
+          <div className="py-6 text-center">
+            <CheckCircle className="mx-auto mb-4 h-16 w-16 text-emerald-400" />
+            <h3 className="text-lg font-semibold text-emerald-300">Email inviata!</h3>
+            <p className="mt-2 text-sm text-slate-400">Controlla la tua casella di posta per le istruzioni.</p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-300">Email</label>
+              <Input
+                type="email"
+                placeholder="esempio@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full border-white/10 bg-slate-950/80 text-white placeholder:text-slate-500"
+                icon={<Mail className="w-4 h-4 text-slate-400" />}
+              />
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300">Email</label>
-                <Input
-                  type="email"
-                  placeholder="esempio@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full bg-slate-950 text-white"
-                  icon={<Mail className="w-4 h-4 text-slate-400" />}
-                />
-              </div>
-              {error && (
-                <div className="text-sm text-red-200 bg-red-500/10 border border-red-400/20 p-3 rounded-lg">
-                  {error}
-                </div>
+            {error && (
+              <div className="rounded-xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-200">{error}</div>
+            )}
+            <Button type="submit" className="w-full bg-gradient-to-r from-cyan-500 to-violet-500 hover:from-cyan-400 hover:to-violet-400" disabled={loading}>
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin-fast" />
+                  Invio...
+                </>
+              ) : (
+                'Invia link di reset'
               )}
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin-fast" />
-                    Invio...
-                  </>
-                ) : (
-                  'Invia link di reset'
-                )}
-              </Button>
-            </form>
-          )}
-        </CardContent>
-        <CardFooter className="flex justify-center">
-          <Link href="/login" className="text-sm text-blue-600 hover:underline">
-            Torna al login
-          </Link>
-        </CardFooter>
-      </Card>
-    </div>
+            </Button>
+          </form>
+        )}
+      </CardContent>
+      <CardFooter className="flex justify-center border-t border-white/10 px-6 py-4">
+        <Link href="/login" className="text-sm font-semibold text-cyan-300 transition-colors duration-150 ease-out hover:text-cyan-200">
+          Torna al login
+        </Link>
+      </CardFooter>
+    </Card>
   )
 }
