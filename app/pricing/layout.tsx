@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { SITE_URL, SITE_NAME } from '@/lib/seo'
+import { SITE_URL, SITE_NAME, buildBreadcrumbSchema } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: { absolute: 'Prezzi e Piani AI Toolbox: Free, Pro, Team | AI Toolbox' },
@@ -47,6 +47,13 @@ export default function PricingLayout({ children }: { children: React.ReactNode 
           }}
         />
       ))}
+      <script
+        type="application/ld+json"
+        // JSON-LD statico: nessun input utente, safe da iniettare così.
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(buildBreadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Prezzi', path: '/pricing' }])),
+        }}
+      />
       {children}
     </>
   )

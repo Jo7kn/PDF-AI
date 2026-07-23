@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { SITE_NAME } from '@/lib/seo'
+import { SITE_NAME, buildBreadcrumbSchema } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: { absolute: 'Chi siamo e contatti | AI Toolbox' },
@@ -16,5 +16,16 @@ export const metadata: Metadata = {
 }
 
 export default function AboutLayout({ children }: { children: React.ReactNode }) {
-  return children
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        // JSON-LD statico: nessun input utente, safe da iniettare così.
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(buildBreadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Chi siamo', path: '/about' }])),
+        }}
+      />
+      {children}
+    </>
+  )
 }

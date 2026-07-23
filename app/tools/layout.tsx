@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { buildBreadcrumbSchema } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: 'Tutti gli strumenti AI',
@@ -14,5 +15,16 @@ export const metadata: Metadata = {
 }
 
 export default function ToolsLayout({ children }: { children: React.ReactNode }) {
-  return children
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        // JSON-LD statico: nessun input utente, safe da iniettare così.
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(buildBreadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Strumenti', path: '/tools' }])),
+        }}
+      />
+      {children}
+    </>
+  )
 }

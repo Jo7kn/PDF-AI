@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { SITE_URL, SITE_NAME } from '@/lib/seo'
+import { SITE_URL, SITE_NAME, buildBreadcrumbSchema } from '@/lib/seo'
 import { ComingSoon } from '@/components/coming-soon'
 import { isFeatureEnabled } from '@/lib/feature-flags'
 import { buildFaqSchema } from '@/lib/faq-data'
@@ -55,6 +55,19 @@ export default async function ChatAiLayout({ children }: { children: React.React
         type="application/ld+json"
         // JSON-LD statico: nessun input utente, safe da iniettare così.
         dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema('chat-ai')) }}
+      />
+      <script
+        type="application/ld+json"
+        // JSON-LD statico: nessun input utente, safe da iniettare così.
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            buildBreadcrumbSchema([
+              { name: 'Home', path: '/' },
+              { name: 'Strumenti', path: '/tools' },
+              { name: 'Chat AI', path: '/tools/chat-ai' },
+            ])
+          ),
+        }}
       />
       {!enabled ? (
         <ComingSoon variant="tool" tool="chat-ai" />

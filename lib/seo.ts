@@ -13,3 +13,20 @@ export const CONTACT_EMAIL = 'info@neuropdf.it'
 
 export const DEFAULT_DESCRIPTION =
   'Suite di strumenti AI in italiano: chatta con i tuoi PDF, scrivi articoli ed email, genera codice e immagini, analizza contratti e dati, traduci documenti. Inizia gratis.'
+
+// BreadcrumbList JSON-LD: aiuta Google (rich snippet con il percorso invece
+// del solo URL) e i motori "answer" (GEO/AEO) a capire dove una pagina si
+// trova nella gerarchia del sito. `items` è la lista Home -> ... -> pagina
+// corrente; position è 1-based per spec schema.org.
+export function buildBreadcrumbSchema(items: Array<{ name: string; path: string }>) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: item.name,
+      item: `${SITE_URL}${item.path}`,
+    })),
+  }
+}
