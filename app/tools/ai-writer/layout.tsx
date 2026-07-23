@@ -23,6 +23,12 @@ export const metadata: Metadata = {
 // toggle dell'admin non avrebbe effetto finché non si rifà il deploy.
 export const dynamic = 'force-dynamic'
 
+// Tetto Vercel Hobby per la Server Action del tool (app/actions/ai-writer.ts):
+// senza questo la piattaforma uccide la funzione al default (10s) prima che
+// il retry interno del client NVIDIA finisca — "Status: 0" nei log, nessun
+// errore applicativo da vedere.
+export const maxDuration = 60
+
 export default async function AiWriterLayout({ children }: { children: React.ReactNode }) {
   const enabled = await isFeatureEnabled('ai-writer')
 

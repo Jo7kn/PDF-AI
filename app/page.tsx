@@ -1,13 +1,25 @@
 import Link from 'next/link'
 import { AI_TOOLS } from '@/lib/tools'
-import { FileText, Sparkles, Calendar, ArrowRight, ShieldCheck, BrainCircuit } from 'lucide-react'
+import { FileText, Sparkles, Calendar, ArrowRight, ShieldCheck, BrainCircuit, AlertTriangle } from 'lucide-react'
 import { LandingHeader } from '@/components/landing-header'
 import { LandingFooter } from '@/components/landing-footer'
 import { PricingSection } from '@/components/pricing-section'
 import { ScrollReveal } from '@/components/scroll-reveal'
 import { SITE_URL, SITE_NAME } from '@/lib/seo'
 
-export default function Home() {
+export default function Home({
+  searchParams,
+}: {
+  searchParams: { error_code?: string; error?: string }
+}) {
+  // Su link email scaduti/gia' usati (reset password, conferma, magic link)
+  // Supabase reindirizza al Site URL configurato (questa root) invece che
+  // alla pagina custom richiesta via redirectTo, con l'errore in query string
+  // — senza questo banner l'utente vedrebbe solo la home normale, senza
+  // capire perche' e' finito qui invece che nel flusso che si aspettava.
+  const linkExpired = searchParams.error_code === 'otp_expired'
+  const authErrored = !linkExpired && searchParams.error === 'access_denied'
+
   return (
     <>
       <script
@@ -44,6 +56,23 @@ export default function Home() {
       />
     <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.16),_transparent_30%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
       <LandingHeader />
+
+      {(linkExpired || authErrored) && (
+        <div className="mx-auto max-w-2xl px-4 pt-6 sm:px-6 lg:px-8">
+          <div className="animate-fade-in-up flex items-center gap-3 rounded-2xl border border-amber-400/20 bg-amber-500/10 p-4 text-sm text-amber-200">
+            <AlertTriangle className="h-5 w-5 flex-shrink-0" />
+            <p>
+              {linkExpired
+                ? 'Il link che hai usato è scaduto o è già stato usato.'
+                : 'Il link che hai usato non è più valido.'}{' '}
+              <Link href="/forgotpass" className="font-semibold underline underline-offset-2 hover:text-amber-100">
+                Richiedine uno nuovo
+              </Link>
+              .
+            </p>
+          </div>
+        </div>
+      )}
 
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
         <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">

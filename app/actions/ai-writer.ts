@@ -1,6 +1,9 @@
 // app/actions/ai-writer.ts
 'use server'
 
+// maxDuration (tetto Vercel Hobby) sta in app/tools/ai-writer/layout.tsx: un
+// file 'use server' puo' esportare solo funzioni async, la route segment
+// config va sul layout che invoca l'azione.
 import { getCurrentUser } from './auth'
 import { runWriterAssistant, type WriterAction } from '@/lib/nvidia/writer'
 import { runAiTool } from '@/lib/ai-router'

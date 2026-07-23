@@ -5,6 +5,8 @@
 // una nuova; resta comunque possibile assegnargliene una dedicata in futuro
 // impostando NVIDIA_WRITER_API_KEY, senza toccare questo file.
 
+import { fetchWithRetry } from './fetch-with-retry'
+
 const NVIDIA_WRITER_API_KEY =
   process.env.NVIDIA_WRITER_API_KEY || process.env.NVIDIA_CODE_API_KEY || process.env.NVIDIA_API_KEY
 const NVIDIA_BASE_URL = process.env.NVIDIA_NIM_BASE_URL || 'https://integrate.api.nvidia.com/v1'
@@ -19,26 +21,6 @@ export interface WriterRequest {
   text?: string // testo esistente su cui lavorare (summary, proofread, rewrite)
   tone?: string
   length?: string
-}
-
-async function fetchWithRetry(url: string, options: RequestInit, retries = 2, timeoutMs = 45000): Promise<Response> {
-  for (let attempt = 0; attempt <= retries; attempt += 1) {
-    const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), timeoutMs)
-    try {
-      const response = await fetch(url, { ...options, signal: controller.signal })
-      clearTimeout(timeout)
-      if (response.ok || attempt === retries) return response
-      if (response.status >= 400 && response.status < 500 && response.status !== 429) return response
-      console.warn(`[ai-writer] tentativo ${attempt + 1} fallito con status ${response.status}, riprovo...`)
-    } catch (error) {
-      clearTimeout(timeout)
-      if (attempt === retries) throw error
-      console.warn(`[ai-writer] tentativo ${attempt + 1} fallito, riprovo...`, error)
-      await new Promise((resolve) => setTimeout(resolve, 1000 * (attempt + 1)))
-    }
-  }
-  throw new Error('fetchWithRetry failed unexpectedly')
 }
 
 function buildPrompt({ action, prompt, text, tone, length }: WriterRequest): { system: string; user: string } {
@@ -127,8 +109,6 @@ export async function runWriterAssistant(request: WriterRequest): Promise<string
         max_tokens: 4096,
       }),
     },
-    2,
-    60000,
   )
 
   if (!response.ok) {

@@ -4,6 +4,8 @@
 // non usa /chat/completions ma l'endpoint "genai" (funzioni NVCF) per la
 // generazione immagini via black-forest-labs/flux.1-dev.
 
+import { fetchWithRetry } from './fetch-with-retry'
+
 const NVIDIA_IMAGE_API_KEY = process.env.NVIDIA_IMAGE_API_KEY || process.env.NVIDIA_API_KEY
 const NVIDIA_GENAI_BASE_URL = process.env.NVIDIA_GENAI_BASE_URL || 'https://ai.api.nvidia.com/v1/genai'
 
@@ -31,26 +33,6 @@ export interface GenerateImageRequest {
 export interface GeneratedImage {
   dataUrl: string
   seed: number
-}
-
-async function fetchWithRetry(url: string, options: RequestInit, retries = 1, timeoutMs = 90000): Promise<Response> {
-  for (let attempt = 0; attempt <= retries; attempt += 1) {
-    const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), timeoutMs)
-    try {
-      const response = await fetch(url, { ...options, signal: controller.signal })
-      clearTimeout(timeout)
-      if (response.ok || attempt === retries) return response
-      if (response.status >= 400 && response.status < 500 && response.status !== 429) return response
-      console.warn(`[image-ai] tentativo ${attempt + 1} fallito con status ${response.status}, riprovo...`)
-    } catch (error) {
-      clearTimeout(timeout)
-      if (attempt === retries) throw error
-      console.warn(`[image-ai] tentativo ${attempt + 1} fallito, riprovo...`, error)
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-    }
-  }
-  throw new Error('fetchWithRetry failed unexpectedly')
 }
 
 export async function generateImage(request: GenerateImageRequest): Promise<GeneratedImage> {
@@ -83,7 +65,7 @@ export async function generateImage(request: GenerateImageRequest): Promise<Gene
       }),
     },
     1,
-    90000,
+    25000,
   )
 
   if (!response.ok) {
