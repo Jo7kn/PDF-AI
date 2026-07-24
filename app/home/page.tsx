@@ -7,6 +7,7 @@ import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
 import { ToolCard } from '@/components/tool-card'
 import { AnnouncementConsole } from '@/components/announcement-console'
+import { DemoVideoCard } from '@/components/demo-video-card'
 import { AI_TOOLS } from '@/lib/tools'
 import { getCurrentUserProfile } from '@/app/actions/auth'
 import { getPublicFeatureFlags } from '@/app/actions/feature-flags'
@@ -69,7 +70,10 @@ export default function HomePage() {
           </div>
         </section>
 
-        <AnnouncementConsole className="mx-auto mb-10 max-w-4xl" />
+        <div className="mx-auto mb-10 grid max-w-6xl gap-6 lg:grid-cols-2">
+          <AnnouncementConsole className="w-full" />
+          <DemoVideoCard className="w-full" />
+        </div>
 
         <section className="mb-10 grid gap-4 sm:grid-cols-3">
           <InfoCard icon={Layers} title={t('home.infoModularTitle')} description={t('home.infoModularDesc')} />

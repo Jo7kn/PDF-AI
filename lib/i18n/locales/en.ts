@@ -633,6 +633,10 @@ const en: TranslationDict = {
     empty: 'No announcements yet. Stay tuned',
     live: 'live',
   },
+  demoVideo: {
+    windowTitle: 'Product demo',
+    comingSoon: 'Video coming soon',
+  },
 }
 
 export default en

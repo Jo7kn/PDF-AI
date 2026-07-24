@@ -644,6 +644,10 @@ const it = {
     empty: 'Nessun annuncio ancora. Resta sintonizzato',
     live: 'live',
   },
+  demoVideo: {
+    windowTitle: 'Video di presentazione',
+    comingSoon: 'Video in arrivo',
+  },
 }
 
 export type TranslationDict = typeof it

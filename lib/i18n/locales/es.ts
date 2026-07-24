@@ -636,6 +636,10 @@ const es: TranslationDict = {
     empty: 'Aún no hay anuncios. Mantente atento',
     live: 'live',
   },
+  demoVideo: {
+    windowTitle: 'Video de presentación',
+    comingSoon: 'Video próximamente',
+  },
 }
 
 export default es

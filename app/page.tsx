@@ -6,6 +6,7 @@ import { LandingFooter } from '@/components/landing-footer'
 import { PricingSection } from '@/components/pricing-section'
 import { ScrollReveal } from '@/components/scroll-reveal'
 import { AnnouncementConsole } from '@/components/announcement-console'
+import { DemoVideoCard } from '@/components/demo-video-card'
 import { SITE_URL, SITE_NAME } from '@/lib/seo'
 
 export default function Home({
@@ -145,7 +146,10 @@ export default function Home({
         </div>
       </section>
 
-      <AnnouncementConsole />
+      <div className="mx-auto grid max-w-6xl gap-6 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+        <AnnouncementConsole className="w-full" />
+        <DemoVideoCard className="w-full" />
+      </div>
 
       <section id="features" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <ScrollReveal className="mb-10 text-center">

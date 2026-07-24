@@ -641,6 +641,10 @@ const de: TranslationDict = {
     empty: 'Noch keine Ankündigungen. Bleib dran',
     live: 'live',
   },
+  demoVideo: {
+    windowTitle: 'Produktvideo',
+    comingSoon: 'Video folgt in Kürze',
+  },
 }
 
 export default de

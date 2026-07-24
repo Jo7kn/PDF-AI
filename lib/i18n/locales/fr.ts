@@ -643,6 +643,10 @@ const fr: TranslationDict = {
     empty: 'Aucune annonce pour le moment. Restez à l\'écoute',
     live: 'live',
   },
+  demoVideo: {
+    windowTitle: 'Vidéo de présentation',
+    comingSoon: 'Vidéo bientôt disponible',
+  },
 }
 
 export default fr

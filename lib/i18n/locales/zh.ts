@@ -615,6 +615,10 @@ const zh: TranslationDict = {
     empty: '暂无公告，敬请期待',
     live: '实时',
   },
+  demoVideo: {
+    windowTitle: '产品演示',
+    comingSoon: '视频即将上线',
+  },
 }
 
 export default zh
