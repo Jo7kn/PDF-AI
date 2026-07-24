@@ -7,18 +7,19 @@
 //
 // ATTENZIONE valore tetto: questo progetto ha Fluid Compute attivo, il tetto
 // reale osservato in produzione (Vercel -> Function Invocation -> Maximum)
-// e' 5 minuti, non i 60s "Hobby classico" — verificato da un log reale dove
-// un primo tentativo a 22s x2 (~45s totali) non e' bastato e NVIDIA e' stata
-// interrotta a meta' risposta. Questi default (1 retry, 55s a tentativo =
-// ~111s worst case) restano ben sotto il maxDuration=120 impostato nei
-// layout.tsx dei tool, che a sua volta resta ben sotto il tetto reale di
-// 300s — se emergono altri abort reali nei log, alza ancora prima di
-// pensare che sia un problema diverso.
+// e' 5 minuti, non i 60s "Hobby classico". Il default precedente (55s x2 =
+// ~111s worst case) non bastava: log reali del 24/07 mostrano ENTRAMBI i
+// tentativi abortiti a 55s su Code AI (anche prima di passare a un modello
+// piu' grande — sembra latenza/coda lato NVIDIA NIM, non solo dimensione
+// del modello). Alzato a 90s x2 = ~181s worst case, con maxDuration nei
+// layout.tsx dei tool alzato in parallelo a 240 per starci sotto — se
+// emergono altri abort reali nei log, alza ancora prima di pensare che sia
+// un problema diverso.
 export async function fetchWithRetry(
   url: string,
   options: RequestInit,
   retries = 1,
-  timeoutMs = 55000,
+  timeoutMs = 90000,
 ): Promise<Response> {
   for (let attempt = 0; attempt <= retries; attempt += 1) {
     const controller = new AbortController()
