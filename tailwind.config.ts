@@ -94,12 +94,28 @@ const config = {
           from: { transform: "translateX(-100%)" },
           to: { transform: "translateX(100%)" },
         },
-        // Ticker orizzontale infinito (hero home): il contenuto è duplicato
-        // 2x nel DOM, lo scroll di metà larghezza (-50%) fa combaciare la
-        // seconda copia esattamente dove finiva la prima — nessuno scatto.
-        marquee: {
-          from: { transform: "translateX(0)" },
-          to: { transform: "translateX(-50%)" },
+        // Rotazione lenta per l'orb decorativo dell'hero — solo transform,
+        // nessun impatto su layout/paint.
+        "spin-slow": {
+          from: { transform: "rotate(0deg)" },
+          to: { transform: "rotate(360deg)" },
+        },
+        "spin-slow-reverse": {
+          from: { transform: "rotate(360deg)" },
+          to: { transform: "rotate(0deg)" },
+        },
+        // Respiro lento dello sfondo hero: scala e opacità, mai posizione
+        // (evita reflow), così lo sfondo sembra vivo senza distrarre.
+        "pulse-slow": {
+          "0%, 100%": { transform: "scale(1)", opacity: "0.6" },
+          "50%": { transform: "scale(1.08)", opacity: "0.9" },
+        },
+        // Stelline sparse nello sfondo hero: opacità che va e viene con
+        // delay diversi per punto, mai in sincrono (altrimenti lampeggia
+        // tutto insieme invece di sembrare un cielo stellato).
+        twinkle: {
+          "0%, 100%": { opacity: "0.15" },
+          "50%": { opacity: "0.9" },
         },
       },
       animation: {
@@ -108,7 +124,10 @@ const config = {
         "fade-in-up": "fade-in-up 260ms cubic-bezier(0.23, 1, 0.32, 1) both",
         "spin-fast": "spin-fast 0.7s linear infinite",
         shimmer: "shimmer 1.8s ease-in-out infinite",
-        marquee: "marquee 28s linear infinite",
+        "spin-slow": "spin-slow 18s linear infinite",
+        "spin-slow-reverse": "spin-slow-reverse 24s linear infinite",
+        "pulse-slow": "pulse-slow 6s ease-in-out infinite",
+        twinkle: "twinkle 3s ease-in-out infinite",
       },
     },
   },

@@ -10,6 +10,23 @@ import { DemoVideoCard } from '@/components/demo-video-card'
 import { CtaLink } from '@/components/ui/cta-link'
 import { SITE_URL, SITE_NAME } from '@/lib/seo'
 
+// Posizioni fisse (non random ad ogni render, altrimenti "saltano" ad ogni
+// re-render di Home) per le stelline decorative dietro l'hero.
+const STAR_POSITIONS = [
+  { left: '8%', top: '15%', size: '3px', delay: '0s' },
+  { left: '18%', top: '55%', size: '2px', delay: '0.6s' },
+  { left: '28%', top: '20%', size: '2px', delay: '1.4s' },
+  { left: '35%', top: '75%', size: '3px', delay: '0.3s' },
+  { left: '12%', top: '85%', size: '2px', delay: '2s' },
+  { left: '62%', top: '12%', size: '2px', delay: '1s' },
+  { left: '72%', top: '60%', size: '3px', delay: '1.8s' },
+  { left: '82%', top: '25%', size: '2px', delay: '0.8s' },
+  { left: '90%', top: '70%', size: '2px', delay: '2.4s' },
+  { left: '55%', top: '85%', size: '2px', delay: '1.2s' },
+  { left: '45%', top: '10%', size: '3px', delay: '2.8s' },
+  { left: '95%', top: '45%', size: '2px', delay: '0.4s' },
+]
+
 export default function Home({
   searchParams,
 }: {
@@ -80,8 +97,24 @@ export default function Home({
       <section className="relative overflow-hidden">
         {/* Glow dietro al titolo — stesso trattamento della hero card
             (cyan/violet), solo più diffuso. pointer-events-none così non
-            interferisce con click/selezione del testo sopra. */}
-        <div className="pointer-events-none absolute left-1/2 top-0 -z-10 h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-gradient-to-br from-cyan-500/25 via-violet-500/20 to-transparent blur-3xl" />
+            interferisce con click/selezione del testo sopra. pulse-slow
+            (scale+opacity, mai posizione) fa "respirare" lo sfondo senza
+            causare reflow. */}
+        <div className="animate-pulse-slow pointer-events-none absolute left-1/2 top-0 -z-10 h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-gradient-to-br from-cyan-500/25 via-violet-500/20 to-transparent blur-3xl" />
+
+        {/* Stelline sparse: opacità che pulsa con delay diversi per punto,
+            mai in sincrono — altrimenti sembra un flash invece di un cielo
+            stellato. Solo sopra lg: sotto lo spazio è troppo stretto e
+            distrarrebbe dal testo. */}
+        <div className="pointer-events-none absolute inset-0 -z-10 hidden lg:block">
+          {STAR_POSITIONS.map((star, i) => (
+            <span
+              key={i}
+              className="animate-twinkle absolute rounded-full bg-white"
+              style={{ left: star.left, top: star.top, width: star.size, height: star.size, animationDelay: star.delay }}
+            />
+          ))}
+        </div>
 
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
           <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
@@ -151,22 +184,22 @@ export default function Home({
           </div>
         </div>
 
-        {/* Ticker infinito dei 10 tool — contenuto duplicato 2x, l'animazione
-            scorre di metà larghezza esatta (-50%) così la seconda copia
-            combacia dove finiva la prima, nessuno scatto visibile. Maschera
-            ai bordi per dissolvere l'entrata/uscita invece di un taglio netto. */}
-        <div className="relative border-y border-white/10 bg-white/[0.03] py-4 [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
-          <div className="flex w-max animate-marquee gap-3 hover:[animation-play-state:paused]">
-            {[...AI_TOOLS, ...AI_TOOLS].map((tool, i) => (
-              <div
-                key={`${tool.slug}-${i}`}
-                className="flex flex-shrink-0 items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300"
-              >
-                <span className={`h-1.5 w-1.5 rounded-full bg-gradient-to-br ${tool.gradient}`} />
-                {tool.name}
-              </div>
-            ))}
+        {/* Orb centrale animato: due anelli concentrici che ruotano in
+            direzioni opposte (mai la stessa velocità/verso, altrimenti
+            sembrano fermi l'uno rispetto all'altro) attorno a un nucleo
+            pulsante. Solo transform/opacity — nessun impatto su layout. */}
+        <div className="relative flex flex-col items-center gap-6 border-y border-white/10 bg-white/[0.02] py-16">
+          <div className="relative flex h-64 w-64 items-center justify-center sm:h-72 sm:w-72">
+            <div className="animate-spin-slow absolute inset-0 rounded-full border border-cyan-400/25 [border-top-color:transparent] [border-right-color:transparent]" />
+            <div className="animate-spin-slow-reverse absolute inset-6 rounded-full border border-violet-400/25 [border-bottom-color:transparent] [border-left-color:transparent]" />
+            <div className="animate-pulse-slow absolute inset-10 rounded-full bg-gradient-to-br from-cyan-500/40 via-violet-500/30 to-fuchsia-500/30 blur-2xl" />
+            <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-cyan-400 to-violet-500 shadow-2xl shadow-cyan-500/40 sm:h-28 sm:w-28">
+              <Sparkles className="h-10 w-10 text-white sm:h-12 sm:w-12" />
+            </div>
           </div>
+          <p className="text-center text-sm font-medium uppercase tracking-[0.3em] text-slate-400">
+            {AI_TOOLS.filter((t) => t.status === 'available').length}+ strumenti AI, un solo abbonamento
+          </p>
         </div>
       </section>
 
