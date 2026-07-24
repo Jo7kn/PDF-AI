@@ -1,9 +1,9 @@
-import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { LandingHeader } from '@/components/landing-header'
 import { LandingFooter } from '@/components/landing-footer'
 import { PricingSection } from '@/components/pricing-section'
 import { ScrollReveal } from '@/components/scroll-reveal'
+import { CtaLink } from '@/components/ui/cta-link'
 
 const faqs = [
   {
@@ -45,7 +45,7 @@ export default function PricingPage() {
         <div className="space-y-4">
           {faqs.map((faq, i) => (
             <ScrollReveal key={faq.q} delay={i * 0.05}>
-              <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-6 backdrop-blur-xl">
+              <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-black/10 backdrop-blur-xl">
                 <p className="mb-2 font-semibold text-white">{faq.q}</p>
                 <p className="text-slate-400">{faq.a}</p>
               </div>
@@ -60,13 +60,10 @@ export default function PricingPage() {
           <p className="mx-auto mb-8 max-w-2xl text-lg text-slate-300">
             Attiva il piano Free con 50 crediti al mese, senza carta di credito.
           </p>
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-8 py-4 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97]"
-          >
+          <CtaLink href="/dashboard" size="lg" className="px-8 py-4">
             Inizia gratis
             <ArrowRight className="h-4 w-4" />
-          </Link>
+          </CtaLink>
         </ScrollReveal>
       </section>
 

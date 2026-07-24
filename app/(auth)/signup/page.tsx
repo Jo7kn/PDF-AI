@@ -88,7 +88,7 @@ export default function SignupPage() {
   }
 
   return (
-    <Card className="w-full border border-white/10 bg-slate-900/85 p-2 shadow-2xl shadow-fuchsia-500/10 backdrop-blur-xl">
+    <Card className="w-full border border-white/10 bg-slate-900/85 p-0 shadow-2xl shadow-fuchsia-500/10">
       <CardHeader className="space-y-3 px-6 pt-6 text-left">
         <div className="inline-flex w-fit items-center gap-2 rounded-full border border-fuchsia-400/25 bg-fuchsia-400/10 px-3 py-1 text-sm text-fuchsia-200">
           <Sparkles className="h-4 w-4" />
@@ -162,7 +162,7 @@ export default function SignupPage() {
               id="terms"
               checked={agreed}
               onChange={(e) => setAgreed(e.target.checked)}
-              className="mt-0.5 h-4 w-4 rounded border-white/20 bg-slate-900 text-cyan-400 focus:ring-cyan-500"
+              className="mt-0.5 h-4 w-4 rounded border-white/20 bg-slate-900 text-cyan-400 focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-slate-900"
             />
             <label htmlFor="terms" className="text-sm text-slate-400">
               {t('signup.agreePrefix')}{' '}

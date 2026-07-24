@@ -39,7 +39,7 @@ function PricingCard({ tier, featured }: { tier: PricingTier; featured: boolean 
   const features = useTranslatedList(`pricingTiers.${tier.name.toLowerCase()}.features`)
 
   return (
-    <div className={`relative rounded-3xl border p-8 shadow-lg shadow-black/10 backdrop-blur-xl transition-colors duration-150 ease-out hover:bg-white/10 ${featured ? 'border-cyan-400/40 bg-cyan-500/10' : 'border-white/10 bg-slate-900/70'}`}>
+    <div className={`relative rounded-3xl border p-8 shadow-lg shadow-black/10 backdrop-blur-xl transition-colors duration-150 ease-out-strong ${featured ? 'border-cyan-400/40 bg-cyan-500/10 hover:bg-cyan-500/15' : 'border-white/10 bg-slate-900/70 hover:bg-white/10'}`}>
       {featured && (
         <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-4 py-1 text-sm font-semibold text-white">
           {t('pricingSection.featured')}
@@ -61,7 +61,7 @@ function PricingCard({ tier, featured }: { tier: PricingTier; featured: boolean 
         ))}
       </ul>
 
-      <Link href="/dashboard" className={`block w-full rounded-2xl py-3 text-center font-semibold transition-colors duration-150 ease-out active:scale-[0.98] ${featured ? 'bg-gradient-to-r from-cyan-500 to-violet-500 text-white hover:opacity-90' : 'border border-white/10 bg-white/5 text-white hover:bg-white/10'}`}>
+      <Link href="/dashboard" className={`block w-full rounded-2xl py-3 text-center font-semibold transition-[transform,background-color] duration-150 ease-out-strong active:scale-[0.97] ${featured ? 'bg-gradient-to-r from-cyan-500 to-violet-500 text-white hover:from-cyan-400 hover:to-violet-400' : 'border border-white/10 bg-white/5 text-white hover:bg-white/10'}`}>
         {t('pricingSection.choosePlan')}
       </Link>
     </div>

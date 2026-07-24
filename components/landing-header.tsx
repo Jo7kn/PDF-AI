@@ -22,7 +22,7 @@ export function LandingHeader() {
             <Sparkles className="h-5 w-5 text-white" />
           </div>
           <div>
-            <p className="text-lg font-semibold tracking-tight text-white">PDF AI</p>
+            <p className="text-lg font-semibold tracking-tight text-white">AI Toolbox</p>
             <p className="text-xs text-slate-400">{t('nav.tagline')}</p>
           </div>
         </Link>
@@ -34,10 +34,10 @@ export function LandingHeader() {
           <Link href="#pricing" className="text-sm font-medium text-slate-300 transition-colors duration-150 ease-out hover:text-white">
             {t('nav.pricing')}
           </Link>
-          <Link href="/login" className="rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-slate-300 transition-colors duration-150 ease-out hover:border-cyan-400/30 hover:text-white active:scale-[0.97]">
+          <Link href="/login" className="rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-slate-300 transition-[transform,background-color,border-color] duration-150 ease-out-strong hover:border-cyan-400/30 hover:text-white active:scale-[0.97]">
             {t('nav.login')}
           </Link>
-          <Link href="/signup" className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors duration-150 ease-out hover:bg-white/20 active:scale-[0.97]">
+          <Link href="/signup" className="rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition-[transform,background-color] duration-150 ease-out-strong hover:bg-white/20 active:scale-[0.97]">
             {t('nav.signup')}
           </Link>
         </nav>

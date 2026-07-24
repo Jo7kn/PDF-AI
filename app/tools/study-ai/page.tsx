@@ -94,7 +94,7 @@ export default function StudyAiPage() {
           {MODES.map((m) => (
             <button
               key={m.key}
-              onClick={() => { setMode(m.key); setInput(''); resetOutputs() }}
+              onClick={() => { setMode(m.key); resetOutputs() }}
               className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-150 ease-out active:scale-[0.97] ${
                 mode === m.key
                   ? 'border-amber-400/40 bg-amber-400/15 text-amber-200'

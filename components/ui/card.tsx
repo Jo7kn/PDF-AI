@@ -7,11 +7,20 @@ import { HTMLAttributes, forwardRef } from 'react'
 // delle card reali nell'app (dashboard, admin) usa quella variante — questo
 // primitivo era rimasto sul valore più vecchio e finiva reimplementato a
 // mano ovunque invece di essere usato.
+//
+// backdrop-blur-xl + inset top-highlight (restyle): senza blur le card sono
+// rettangoli scuri opachi, non vetro — il blur mancava ovunque tranne sulla
+// hero card della home. L'inset highlight simula luce che colpisce il bordo
+// superiore, l'unico dettaglio che distingue lo stato di riposo di una card
+// da un semplice rettangolo con bordo.
 const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('rounded-3xl border border-white/10 bg-slate-900/80 p-6 text-white shadow-xl shadow-black/20', className)}
+      className={cn(
+        'rounded-3xl border border-white/10 bg-slate-900/80 p-6 text-white backdrop-blur-xl shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06),0_20px_25px_-5px_rgba(0,0,0,0.3)]',
+        className,
+      )}
       {...props}
     />
   )

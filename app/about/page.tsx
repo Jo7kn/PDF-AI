@@ -60,7 +60,7 @@ export default function AboutPage() {
           </p>
           <a
             href={`mailto:${CONTACT_EMAIL}`}
-            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-6 py-3 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97]"
+            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-6 py-3 font-semibold text-white shadow-lg shadow-cyan-500/25 transition-[transform,background-color] duration-150 ease-out-strong hover:from-cyan-400 hover:to-violet-400 active:scale-[0.97]"
           >
             <Mail className="h-4 w-4" />
             {CONTACT_EMAIL}
@@ -82,7 +82,7 @@ export default function AboutPage() {
 
 function InfoCard({ icon: Icon, title, description }: { icon: typeof Layers; title: string; description: string }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-5">
+    <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-black/10 backdrop-blur-xl transition-[background-color,box-shadow,border-color] duration-200 ease-out-strong hover:border-cyan-400/30 hover:bg-white/10 hover:shadow-2xl hover:shadow-cyan-500/10">
       <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-cyan-300">
         <Icon className="h-5 w-5" />
       </div>

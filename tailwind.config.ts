@@ -94,6 +94,13 @@ const config = {
           from: { transform: "translateX(-100%)" },
           to: { transform: "translateX(100%)" },
         },
+        // Ticker orizzontale infinito (hero home): il contenuto è duplicato
+        // 2x nel DOM, lo scroll di metà larghezza (-50%) fa combaciare la
+        // seconda copia esattamente dove finiva la prima — nessuno scatto.
+        marquee: {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -101,6 +108,7 @@ const config = {
         "fade-in-up": "fade-in-up 260ms cubic-bezier(0.23, 1, 0.32, 1) both",
         "spin-fast": "spin-fast 0.7s linear infinite",
         shimmer: "shimmer 1.8s ease-in-out infinite",
+        marquee: "marquee 28s linear infinite",
       },
     },
   },

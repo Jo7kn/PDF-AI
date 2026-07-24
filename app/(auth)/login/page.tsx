@@ -64,7 +64,7 @@ const handleGoogleLogin = async () => {
   }
 
   return (
-    <Card className="w-full border border-white/10 bg-slate-900/85 p-2 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
+    <Card className="w-full border border-white/10 bg-slate-900/85 p-0 shadow-2xl shadow-cyan-500/10">
       <CardHeader className="space-y-3 px-6 pt-6 text-left">
         <div className="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-sm text-emerald-200">
           <ShieldCheck className="h-4 w-4" />

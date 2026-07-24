@@ -61,7 +61,7 @@ function VerifyEmailForm() {
   }
 
   return (
-    <Card className="w-full border border-white/10 bg-slate-900/85 p-2 shadow-2xl shadow-fuchsia-500/10 backdrop-blur-xl">
+    <Card className="w-full border border-white/10 bg-slate-900/85 p-0 shadow-2xl shadow-fuchsia-500/10">
       <CardHeader className="space-y-3 px-6 pt-6 text-left">
         <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-violet-500 shadow-lg shadow-cyan-500/20">
           <KeyRound className="h-5 w-5 text-white" />

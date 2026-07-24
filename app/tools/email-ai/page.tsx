@@ -88,7 +88,7 @@ export default function EmailAiPage() {
           {MODES.map((m) => (
             <button
               key={m.key}
-              onClick={() => { setMode(m.key); setOutput(null); setError(null); setInput(''); setExtraNote('') }}
+              onClick={() => { setMode(m.key); setOutput(null); setError(null) }}
               className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-150 ease-out active:scale-[0.97] ${
                 mode === m.key
                   ? 'border-blue-400/40 bg-blue-400/15 text-blue-200'
