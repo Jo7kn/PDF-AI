@@ -20,6 +20,7 @@ import {
   LayoutGrid,
   Users,
   Gift,
+  Shield,
   type LucideIcon,
 } from 'lucide-react'
 import { useLocale } from '@/lib/i18n/locale-context'
@@ -42,7 +43,7 @@ function useActiveMap() {
   return (item: (typeof ITEMS)[number]) => (item.exact ? pathname === item.href : pathname.startsWith(item.href))
 }
 
-export function DashboardSidebar() {
+export function DashboardSidebar({ isAdmin }: { isAdmin?: boolean }) {
   const isActive = useActiveMap()
   const { t } = useLocale()
 
@@ -91,6 +92,16 @@ export function DashboardSidebar() {
           <LayoutGrid className="h-4 w-4 flex-shrink-0 transition-transform duration-200 ease-out-strong group-hover:translate-x-0.5" />
           {t('sidebar.allTools')}
         </Link>
+
+        {isAdmin && (
+          <Link
+            href="/admin"
+            className="group mt-3 flex flex-shrink-0 items-center gap-2.5 rounded-xl border border-amber-400/20 bg-amber-400/10 px-3.5 py-2.5 text-sm font-medium text-amber-200 transition-colors duration-150 ease-out hover:border-amber-400/40 hover:bg-amber-400/15 active:scale-[0.98]"
+          >
+            <Shield className="h-4 w-4 flex-shrink-0 transition-transform duration-200 ease-out-strong group-hover:translate-x-0.5" />
+            {t('sidebar.adminPanel')}
+          </Link>
+        )}
       </aside>
 
       {/* Mobile: riga orizzontale scorrevole in cima al contenuto */}
@@ -127,6 +138,15 @@ export function DashboardSidebar() {
           <LayoutGrid className="h-3.5 w-3.5" />
           {t('sidebar.tools')}
         </Link>
+        {isAdmin && (
+          <Link
+            href="/admin"
+            className="flex flex-shrink-0 items-center gap-1.5 rounded-full border border-amber-400/20 bg-amber-400/10 px-3.5 py-1.5 text-xs font-medium text-amber-200 transition-colors duration-150 ease-out hover:border-amber-400/40 active:scale-[0.97]"
+          >
+            <Shield className="h-3.5 w-3.5" />
+            {t('sidebar.adminPanel')}
+          </Link>
+        )}
       </nav>
     </>
   )

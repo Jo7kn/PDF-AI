@@ -32,6 +32,7 @@ const it = {
     billing: 'Abbonamento',
     settings: 'Impostazioni',
     allTools: 'Tutti gli strumenti',
+    adminPanel: 'Pannello Admin',
     tools: 'Strumenti',
   },
   footer: {
@@ -647,6 +648,15 @@ const it = {
   demoVideo: {
     windowTitle: 'Video di presentazione',
     comingSoon: 'Video in arrivo',
+  },
+  authPromo: {
+    badge: 'Nuovo: AI per documenti PDF',
+    title: 'Carica un PDF e scopri subito le risposte.',
+    subtitle: 'Chatta con i tuoi documenti, estrai contenuti chiave e organizza il lavoro in pochi secondi.',
+    feature1: 'Analisi rapida dei documenti',
+    feature2: 'Risposte precise con AI',
+    feature3: 'Archiviazione ordinata',
+    feature4: 'Accesso sicuro e veloce',
   },
 }
 

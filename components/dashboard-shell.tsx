@@ -14,7 +14,7 @@ import { AppFooter } from '@/components/app-footer'
 import { DashboardSidebar } from '@/components/dashboard-sidebar'
 import { PageTransition } from '@/components/animations/page-transition'
 
-export function DashboardShell({ children }: { children: React.ReactNode }) {
+export function DashboardShell({ children, isAdmin }: { children: React.ReactNode; isAdmin?: boolean }) {
   return (
     <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
       <AppHeader
@@ -26,7 +26,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       />
 
       <div className="flex flex-1 flex-col md:flex-row">
-        <DashboardSidebar />
+        <DashboardSidebar isAdmin={isAdmin} />
         <main className="min-w-0 flex-1">
           <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
             <PageTransition>{children}</PageTransition>

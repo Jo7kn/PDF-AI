@@ -28,6 +28,7 @@ const en: TranslationDict = {
     billing: 'Billing',
     settings: 'Settings',
     allTools: 'All tools',
+    adminPanel: 'Admin Panel',
     tools: 'Tools',
   },
   footer: {
@@ -636,6 +637,15 @@ const en: TranslationDict = {
   demoVideo: {
     windowTitle: 'Product demo',
     comingSoon: 'Video coming soon',
+  },
+  authPromo: {
+    badge: 'New: AI for PDF documents',
+    title: 'Upload a PDF and get answers instantly.',
+    subtitle: 'Chat with your documents, extract key content, and organize your work in seconds.',
+    feature1: 'Fast document analysis',
+    feature2: 'Accurate AI answers',
+    feature3: 'Organized storage',
+    feature4: 'Secure, fast access',
   },
 }
 

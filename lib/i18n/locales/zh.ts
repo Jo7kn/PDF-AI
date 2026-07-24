@@ -28,6 +28,7 @@ const zh: TranslationDict = {
     billing: '账单',
     settings: '设置',
     allTools: '所有工具',
+    adminPanel: '管理面板',
     tools: '工具',
   },
   footer: {
@@ -618,6 +619,15 @@ const zh: TranslationDict = {
   demoVideo: {
     windowTitle: '产品演示',
     comingSoon: '视频即将上线',
+  },
+  authPromo: {
+    badge: '全新：PDF 文档 AI',
+    title: '上传 PDF，立即获得答案。',
+    subtitle: '与你的文档对话，提取关键内容，几秒钟内整理好你的工作。',
+    feature1: '快速文档分析',
+    feature2: '精准的 AI 回答',
+    feature3: '有序的存储管理',
+    feature4: '安全快速的访问',
   },
 }
 

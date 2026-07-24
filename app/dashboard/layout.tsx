@@ -8,6 +8,7 @@
 import { ComingSoon } from '@/components/coming-soon'
 import { DashboardShell } from '@/components/dashboard-shell'
 import { isFeatureEnabled } from '@/lib/feature-flags'
+import { checkIsAdmin } from '@/app/actions/admin'
 
 // Senza questo, Next.js prerenderizza la pagina a build time e il flag
 // 'pdf-ai' resterebbe congelato al valore letto in quel momento — il
@@ -15,11 +16,11 @@ import { isFeatureEnabled } from '@/lib/feature-flags'
 export const dynamic = 'force-dynamic'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const pdfAiEnabled = await isFeatureEnabled('pdf-ai')
+  const [pdfAiEnabled, isAdmin] = await Promise.all([isFeatureEnabled('pdf-ai'), checkIsAdmin()])
 
   if (!pdfAiEnabled) {
     return <ComingSoon variant="dashboard" />
   }
 
-  return <DashboardShell>{children}</DashboardShell>
+  return <DashboardShell isAdmin={isAdmin}>{children}</DashboardShell>
 }

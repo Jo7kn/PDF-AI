@@ -28,6 +28,7 @@ const fr: TranslationDict = {
     billing: 'Facturation',
     settings: 'Paramètres',
     allTools: 'Tous les outils',
+    adminPanel: 'Panneau admin',
     tools: 'Outils',
   },
   footer: {
@@ -646,6 +647,15 @@ const fr: TranslationDict = {
   demoVideo: {
     windowTitle: 'Vidéo de présentation',
     comingSoon: 'Vidéo bientôt disponible',
+  },
+  authPromo: {
+    badge: 'Nouveau : IA pour documents PDF',
+    title: 'Téléchargez un PDF et obtenez des réponses instantanément.',
+    subtitle: 'Discutez avec vos documents, extrayez le contenu clé et organisez votre travail en quelques secondes.',
+    feature1: 'Analyse rapide des documents',
+    feature2: 'Réponses IA précises',
+    feature3: 'Stockage organisé',
+    feature4: 'Accès sécurisé et rapide',
   },
 }
 

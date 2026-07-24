@@ -28,6 +28,7 @@ const de: TranslationDict = {
     billing: 'Abrechnung',
     settings: 'Einstellungen',
     allTools: 'Alle Tools',
+    adminPanel: 'Admin-Bereich',
     tools: 'Tools',
   },
   footer: {
@@ -644,6 +645,15 @@ const de: TranslationDict = {
   demoVideo: {
     windowTitle: 'Produktvideo',
     comingSoon: 'Video folgt in Kürze',
+  },
+  authPromo: {
+    badge: 'Neu: KI für PDF-Dokumente',
+    title: 'Lade ein PDF hoch und erhalte sofort Antworten.',
+    subtitle: 'Chatte mit deinen Dokumenten, extrahiere wichtige Inhalte und organisiere deine Arbeit in Sekunden.',
+    feature1: 'Schnelle Dokumentenanalyse',
+    feature2: 'Präzise KI-Antworten',
+    feature3: 'Organisierte Ablage',
+    feature4: 'Sicherer, schneller Zugriff',
   },
 }
 
