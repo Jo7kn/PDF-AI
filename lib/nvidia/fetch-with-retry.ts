@@ -7,19 +7,25 @@
 //
 // ATTENZIONE valore tetto: questo progetto ha Fluid Compute attivo, il tetto
 // reale osservato in produzione (Vercel -> Function Invocation -> Maximum)
-// e' 5 minuti, non i 60s "Hobby classico". Il default precedente (55s x2 =
-// ~111s worst case) non bastava: log reali del 24/07 mostrano ENTRAMBI i
-// tentativi abortiti a 55s su Code AI (anche prima di passare a un modello
-// piu' grande — sembra latenza/coda lato NVIDIA NIM, non solo dimensione
-// del modello). Alzato a 90s x2 = ~181s worst case, con maxDuration nei
-// layout.tsx dei tool alzato in parallelo a 240 per starci sotto — se
-// emergono altri abort reali nei log, alza ancora prima di pensare che sia
-// un problema diverso.
+// e' 5 minuti, non i 60s "Hobby classico". Storia dei default, per non
+// ripetere gli stessi tentativi falliti:
+// - 55s x2 (~111s worst case): non bastava, log reali del 24/07 mostravano
+//   ENTRAMBI i tentativi abortiti su Code AI.
+// - 90s x2 (~181s worst case): il timeout si e' risolto, ma e' emerso un
+//   problema diverso — un 503 "Worker local total request limit reached"
+//   (capacita' condivisa NVIDIA esaurita su un modello popolare). Il ramo
+//   5xx NON aspettava affatto prima di ritentare (solo il ramo eccezione/
+//   abort aveva un backoff) — il secondo tentativo colpiva lo stesso worker
+//   sovraccarico a distanza di zero secondi.
+// Ora: backoff su ENTRAMBI i rami, 70s x3 tentativi (~219s worst case,
+// dentro il maxDuration=240 dei tool) — se riemerge lo stesso problema,
+// il modello scelto per quel tool va probabilmente cambiato con uno meno
+// conteso, non solo ritentato piu' volte.
 export async function fetchWithRetry(
   url: string,
   options: RequestInit,
-  retries = 1,
-  timeoutMs = 90000,
+  retries = 2,
+  timeoutMs = 70000,
 ): Promise<Response> {
   for (let attempt = 0; attempt <= retries; attempt += 1) {
     const controller = new AbortController()
@@ -30,11 +36,12 @@ export async function fetchWithRetry(
       if (response.ok || attempt === retries) return response
       if (response.status >= 400 && response.status < 500 && response.status !== 429) return response
       console.warn(`[nvidia] tentativo ${attempt + 1} fallito con status ${response.status}, riprovo...`)
+      await new Promise((resolve) => setTimeout(resolve, 3000 * (attempt + 1)))
     } catch (error) {
       clearTimeout(timeout)
       if (attempt === retries) throw error
       console.warn(`[nvidia] tentativo ${attempt + 1} fallito, riprovo...`, error)
-      await new Promise((resolve) => setTimeout(resolve, 1000 * (attempt + 1)))
+      await new Promise((resolve) => setTimeout(resolve, 3000 * (attempt + 1)))
     }
   }
   throw new Error('fetchWithRetry failed unexpectedly')
