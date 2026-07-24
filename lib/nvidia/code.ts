@@ -1,16 +1,14 @@
 // lib/nvidia/code.ts
 //
-// Client NVIDIA NIM dedicato al modulo Code AI. Volutamente indipendente
-// da lib/nvidia/nim.ts (usato da PDF AI): stesso provider, ma key, modello
-// e retry logic separati, cosi' i due moduli restano rimovibili/aggiornabili
-// senza toccarsi a vicenda.
+// Client dedicato al modulo Code AI. Migrato da NVIDIA NIM a Gemini (24/07,
+// scelta esplicita dell'utente) — percorso file invariato per non toccare
+// gli import in app/actions/code-ai.ts, solo il provider sotto e' cambiato.
 
-import { fetchWithRetry } from './fetch-with-retry'
+import { generateContent } from '../gemini-client'
 
-const NVIDIA_CODE_API_KEY = process.env.NVIDIA_CODE_API_KEY 
-const NVIDIA_BASE_URL = process.env.NVIDIA_NIM_BASE_URL || 'https://integrate.api.nvidia.com/v1'
+const GEMINI_CODE_API_KEY = process.env.GEMINI_CODE_API_KEY || process.env.GEMINI_API_KEY
 
-const CODE_MODEL = 'meta/llama-3.3-70b-instruct'
+const CODE_MODEL = 'gemini-flash-latest'
 
 export type CodeAction = 'generate' | 'debug' | 'refactor' | 'explain' | 'convert'
 
@@ -74,8 +72,8 @@ function buildPrompt({ action, code, prompt, language, targetLanguage }: CodeReq
 }
 
 export async function runCodeAssistant(request: CodeRequest): Promise<string> {
-  if (!NVIDIA_CODE_API_KEY) {
-    throw new Error('NVIDIA_CODE_API_KEY non configurata')
+  if (!GEMINI_CODE_API_KEY) {
+    throw new Error('GEMINI_CODE_API_KEY non configurata')
   }
 
   const input = request.action === 'generate' ? request.prompt : request.code
@@ -85,39 +83,14 @@ export async function runCodeAssistant(request: CodeRequest): Promise<string> {
 
   const { system, user } = buildPrompt(request)
 
-  const response = await fetchWithRetry(
-    `${NVIDIA_BASE_URL}/chat/completions`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${NVIDIA_CODE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: CODE_MODEL,
-        messages: [
-          { role: 'system', content: system },
-          { role: 'user', content: user },
-        ],
-        temperature: 0.2,
-        top_p: 0.9,
-        max_tokens: 4096,
-      }),
-    },
-  )
-
-  if (!response.ok) {
-    const errorText = await response.text()
-    console.error(`[code-ai] errore NVIDIA (status ${response.status}):`, errorText)
-    throw new Error('Il modello AI non ha risposto correttamente. Riprova tra poco.')
-  }
-
-  const data = await response.json()
-  const result = data.choices?.[0]?.message?.content
-
-  if (!result) {
-    throw new Error('Risposta vuota dal modello AI')
-  }
-
-  return result
+  return generateContent({
+    apiKey: GEMINI_CODE_API_KEY,
+    model: CODE_MODEL,
+    systemInstruction: system,
+    parts: [{ text: user }],
+    temperature: 0.2,
+    topP: 0.9,
+    maxOutputTokens: 4096,
+    logLabel: 'code-ai',
+  })
 }

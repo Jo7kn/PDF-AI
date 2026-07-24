@@ -99,7 +99,7 @@ export async function processDocument(documentId: string, fileUrl: string) {
     // ------------------------------------------------------------------
     // Indicizzazione per la ricerca semantica: chunking + embedding.
     // Isolato in un try/catch proprio: se questo passaggio fallisce
-    // (es. NVIDIA_EMBED_API_KEY assente o momentaneamente giù), il
+    // (es. GEMINI_EMBED_API_KEY assente o momentaneamente giù), il
     // documento deve comunque risultare "completed" — riassunto, scadenze
     // e chat funzionano lo stesso, semplicemente non sarà cercabile
     // insieme agli altri finché non viene rielaborato.

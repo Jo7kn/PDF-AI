@@ -1,18 +1,13 @@
 // lib/nvidia/translator.ts
 //
-// Client NVIDIA NIM dedicato al modulo Translator AI. Stesso provider degli
-// altri moduli, key e modulo indipendenti cosi' resta rimovibile/aggiornabile
-// senza toccare gli altri tool.
+// Client dedicato al modulo Translator AI. Migrato da NVIDIA NIM a Gemini
+// (24/07) — percorso file invariato, solo il provider sotto e' cambiato.
 
-import { fetchWithRetry } from './fetch-with-retry'
+import { generateContent } from '../gemini-client'
 
-const NVIDIA_TRANSLATOR_API_KEY = process.env.NVIDIA_TRANSLATOR_API_KEY || process.env.NVIDIA_API_KEY
-const NVIDIA_BASE_URL = process.env.NVIDIA_NIM_BASE_URL || 'https://integrate.api.nvidia.com/v1'
+const GEMINI_TRANSLATOR_API_KEY = process.env.GEMINI_TRANSLATOR_API_KEY || process.env.GEMINI_API_KEY
 
-// nvidia/riva-translate-4b-instruct esiste nel catalogo NVIDIA ma non è
-// abilitato per questo account (404 "Not found for account"): usiamo il
-// modello instruct generico, verificato funzionante con questa key.
-const TRANSLATE_MODEL = 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning'
+const TRANSLATE_MODEL = 'gemini-flash-latest'
 
 export interface TranslateRequest {
   text: string
@@ -21,8 +16,8 @@ export interface TranslateRequest {
 }
 
 export async function translateText(request: TranslateRequest): Promise<string> {
-  if (!NVIDIA_TRANSLATOR_API_KEY) {
-    throw new Error('NVIDIA_TRANSLATOR_API_KEY non configurata')
+  if (!GEMINI_TRANSLATOR_API_KEY) {
+    throw new Error('GEMINI_TRANSLATOR_API_KEY non configurata')
   }
   if (!request.text || !request.text.trim()) {
     throw new Error('Nessun testo da tradurre')
@@ -36,39 +31,14 @@ export async function translateText(request: TranslateRequest): Promise<string> 
     'markdown, tabelle, spaziatura tra paragrafi): traduci solo il contenuto testuale, non la struttura. ' +
     'Rispondi SOLO con il testo tradotto, senza premesse, spiegazioni o commenti aggiuntivi.'
 
-  const response = await fetchWithRetry(
-    `${NVIDIA_BASE_URL}/chat/completions`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${NVIDIA_TRANSLATOR_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: TRANSLATE_MODEL,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: request.text },
-        ],
-        temperature: 0.2,
-        top_p: 0.9,
-        max_tokens: 4096,
-      }),
-    },
-  )
-
-  if (!response.ok) {
-    const errorText = await response.text()
-    console.error(`[translator-ai] errore NVIDIA (status ${response.status}):`, errorText)
-    throw new Error('Il modello AI non ha risposto correttamente. Riprova tra poco.')
-  }
-
-  const data = await response.json()
-  const result = data.choices?.[0]?.message?.content
-
-  if (!result) {
-    throw new Error('Risposta vuota dal modello AI')
-  }
-
-  return result
+  return generateContent({
+    apiKey: GEMINI_TRANSLATOR_API_KEY,
+    model: TRANSLATE_MODEL,
+    systemInstruction: systemPrompt,
+    parts: [{ text: request.text }],
+    temperature: 0.2,
+    topP: 0.9,
+    maxOutputTokens: 4096,
+    logLabel: 'translator-ai',
+  })
 }

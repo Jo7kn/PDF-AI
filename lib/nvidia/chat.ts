@@ -1,15 +1,16 @@
 // lib/nvidia/chat.ts
 //
-// Client NVIDIA NIM per Chat AI generale: stesso modello/dominio di PDF AI
-// (lib/nvidia/nim.ts) ma senza contesto documento, conversazione multi-turn
-// libera. Modulo indipendente per restare rimovibile/aggiornabile da solo.
+// Client dedicato a Chat AI generale (conversazione multi-turno libera,
+// senza contesto documento). Migrato da NVIDIA NIM a Gemini (24/07) —
+// percorso file invariato, solo il provider sotto e' cambiato. Gemini usa
+// role:"model" per il turno AI nella history, non "assistant" come le API
+// OpenAI-compatibili — da qui la mappatura sotto.
 
-import { fetchWithRetry } from './fetch-with-retry'
+import { generateContent, type GeminiTurn } from '../gemini-client'
 
-const NVIDIA_CHAT_API_KEY = process.env.NVIDIA_CHAT_API_KEY || process.env.NVIDIA_API_KEY
-const NVIDIA_BASE_URL = process.env.NVIDIA_NIM_BASE_URL || 'https://integrate.api.nvidia.com/v1'
+const GEMINI_CHAT_API_KEY = process.env.GEMINI_CHAT_API_KEY || process.env.GEMINI_API_KEY
 
-const CHAT_MODEL = 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning'
+const CHAT_MODEL = 'gemini-flash-lite-latest'
 
 export interface ChatMessage {
   role: 'user' | 'assistant'
@@ -17,8 +18,8 @@ export interface ChatMessage {
 }
 
 export async function runGeneralChat(messages: ChatMessage[]): Promise<string> {
-  if (!NVIDIA_CHAT_API_KEY) {
-    throw new Error('NVIDIA_CHAT_API_KEY non configurata')
+  if (!GEMINI_CHAT_API_KEY) {
+    throw new Error('GEMINI_CHAT_API_KEY non configurata')
   }
   if (!messages.length) {
     throw new Error('Nessun messaggio da inviare')
@@ -29,36 +30,19 @@ export async function runGeneralChat(messages: ChatMessage[]): Promise<string> {
     'in un\'altra lingua) in modo chiaro e conciso, usando Markdown quando aiuta la leggibilità (elenchi, ' +
     'blocchi di codice, grassetto). Se non sai qualcosa, dillo invece di inventare.'
 
-  const response = await fetchWithRetry(
-    `${NVIDIA_BASE_URL}/chat/completions`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${NVIDIA_CHAT_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: CHAT_MODEL,
-        messages: [{ role: 'system', content: systemPrompt }, ...messages],
-        temperature: 0.6,
-        top_p: 0.95,
-        max_tokens: 2048,
-      }),
-    },
-  )
+  const contents: GeminiTurn[] = messages.map((m) => ({
+    role: m.role === 'assistant' ? 'model' : 'user',
+    parts: [{ text: m.content }],
+  }))
 
-  if (!response.ok) {
-    const errorText = await response.text()
-    console.error(`[chat-ai] errore NVIDIA (status ${response.status}):`, errorText)
-    throw new Error('Il modello AI non ha risposto correttamente. Riprova tra poco.')
-  }
-
-  const data = await response.json()
-  const result = data.choices?.[0]?.message?.content
-
-  if (!result) {
-    throw new Error('Risposta vuota dal modello AI')
-  }
-
-  return result
+  return generateContent({
+    apiKey: GEMINI_CHAT_API_KEY,
+    model: CHAT_MODEL,
+    systemInstruction: systemPrompt,
+    contents,
+    temperature: 0.6,
+    topP: 0.95,
+    maxOutputTokens: 2048,
+    logLabel: 'chat-ai',
+  })
 }

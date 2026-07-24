@@ -1,15 +1,14 @@
 // lib/nvidia/contract.ts
 //
-// Client NVIDIA NIM dedicato al modulo Contract AI. Stesso dominio di PDF AI
-// (analisi di documenti), quindi riusa la key principale invece di richiederne
-// una nuova.
+// Client dedicato al modulo Contract AI. Migrato da NVIDIA NIM a Gemini
+// (24/07) — percorso file invariato, solo il provider sotto e' cambiato.
 
-import { fetchWithRetry } from './fetch-with-retry'
+import { generateContent } from '../gemini-client'
 
-const NVIDIA_CONTRACT_API_KEY = process.env.NVIDIA_CONTRACT_API_KEY || process.env.NVIDIA_API_KEY
-const NVIDIA_BASE_URL = process.env.NVIDIA_NIM_BASE_URL || 'https://integrate.api.nvidia.com/v1'
+const GEMINI_CONTRACT_API_KEY =
+  process.env.GEMINI_CONTRACT_API_KEY || process.env.GEMINI_CODE_API_KEY || process.env.GEMINI_API_KEY
 
-const CONTRACT_MODEL = 'meta/llama-3.3-70b-instruct'
+const CONTRACT_MODEL = 'gemini-flash-latest'
 
 export interface ContractClause {
   clause: string
@@ -18,41 +17,20 @@ export interface ContractClause {
 }
 
 async function callModel(system: string, user: string, temperature: number): Promise<string> {
-  if (!NVIDIA_CONTRACT_API_KEY) {
-    throw new Error('NVIDIA_CONTRACT_API_KEY non configurata')
+  if (!GEMINI_CONTRACT_API_KEY) {
+    throw new Error('GEMINI_CONTRACT_API_KEY non configurata')
   }
 
-  const response = await fetchWithRetry(
-    `${NVIDIA_BASE_URL}/chat/completions`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${NVIDIA_CONTRACT_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: CONTRACT_MODEL,
-        messages: [
-          { role: 'system', content: system },
-          { role: 'user', content: user },
-        ],
-        temperature,
-        top_p: 0.9,
-        max_tokens: 4096,
-      }),
-    },
-  )
-
-  if (!response.ok) {
-    const errorText = await response.text()
-    console.error(`[contract-ai] errore NVIDIA (status ${response.status}):`, errorText)
-    throw new Error('Il modello AI non ha risposto correttamente. Riprova tra poco.')
-  }
-
-  const data = await response.json()
-  const result = data.choices?.[0]?.message?.content
-  if (!result) throw new Error('Risposta vuota dal modello AI')
-  return result
+  return generateContent({
+    apiKey: GEMINI_CONTRACT_API_KEY,
+    model: CONTRACT_MODEL,
+    systemInstruction: system,
+    parts: [{ text: user }],
+    temperature,
+    topP: 0.9,
+    maxOutputTokens: 4096,
+    logLabel: 'contract-ai',
+  })
 }
 
 export async function analyzeContract(text: string): Promise<string> {

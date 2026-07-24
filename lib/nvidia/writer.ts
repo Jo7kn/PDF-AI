@@ -1,17 +1,14 @@
 // lib/nvidia/writer.ts
 //
-// Client NVIDIA NIM dedicato al modulo AI Writer. Su richiesta esplicita
-// riusa la stessa key di Code AI (NVIDIA_CODE_API_KEY) invece di richiederne
-// una nuova; resta comunque possibile assegnargliene una dedicata in futuro
-// impostando NVIDIA_WRITER_API_KEY, senza toccare questo file.
+// Client dedicato al modulo AI Writer. Migrato da NVIDIA NIM a Gemini
+// (24/07) — percorso file invariato, solo il provider sotto e' cambiato.
 
-import { fetchWithRetry } from './fetch-with-retry'
+import { generateContent } from '../gemini-client'
 
-const NVIDIA_WRITER_API_KEY =
-  process.env.NVIDIA_WRITER_API_KEY || process.env.NVIDIA_CODE_API_KEY || process.env.NVIDIA_API_KEY
-const NVIDIA_BASE_URL = process.env.NVIDIA_NIM_BASE_URL || 'https://integrate.api.nvidia.com/v1'
+const GEMINI_WRITER_API_KEY =
+  process.env.GEMINI_WRITER_API_KEY || process.env.GEMINI_CODE_API_KEY || process.env.GEMINI_API_KEY
 
-const WRITER_MODEL = 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning'
+const WRITER_MODEL = 'gemini-flash-latest'
 
 export type WriterAction = 'article' | 'email' | 'blog' | 'summary' | 'proofread' | 'rewrite'
 
@@ -78,8 +75,8 @@ function buildPrompt({ action, prompt, text, tone, length }: WriterRequest): { s
 }
 
 export async function runWriterAssistant(request: WriterRequest): Promise<string> {
-  if (!NVIDIA_WRITER_API_KEY) {
-    throw new Error('NVIDIA_WRITER_API_KEY non configurata')
+  if (!GEMINI_WRITER_API_KEY) {
+    throw new Error('GEMINI_WRITER_API_KEY non configurata')
   }
 
   const needsText = request.action === 'summary' || request.action === 'proofread' || request.action === 'rewrite'
@@ -90,39 +87,14 @@ export async function runWriterAssistant(request: WriterRequest): Promise<string
 
   const { system, user } = buildPrompt(request)
 
-  const response = await fetchWithRetry(
-    `${NVIDIA_BASE_URL}/chat/completions`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${NVIDIA_WRITER_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: WRITER_MODEL,
-        messages: [
-          { role: 'system', content: system },
-          { role: 'user', content: user },
-        ],
-        temperature: 0.7,
-        top_p: 0.95,
-        max_tokens: 4096,
-      }),
-    },
-  )
-
-  if (!response.ok) {
-    const errorText = await response.text()
-    console.error(`[ai-writer] errore NVIDIA (status ${response.status}):`, errorText)
-    throw new Error('Il modello AI non ha risposto correttamente. Riprova tra poco.')
-  }
-
-  const data = await response.json()
-  const result = data.choices?.[0]?.message?.content
-
-  if (!result) {
-    throw new Error('Risposta vuota dal modello AI')
-  }
-
-  return result
+  return generateContent({
+    apiKey: GEMINI_WRITER_API_KEY,
+    model: WRITER_MODEL,
+    systemInstruction: system,
+    parts: [{ text: user }],
+    temperature: 0.7,
+    topP: 0.95,
+    maxOutputTokens: 4096,
+    logLabel: 'ai-writer',
+  })
 }

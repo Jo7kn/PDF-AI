@@ -1,16 +1,14 @@
 // lib/nvidia/study.ts
 //
-// Client NVIDIA NIM dedicato al modulo Study AI (flashcard, quiz, tutor,
-// piano di studio). Riusa la key di PDF AI: stesso dominio (contenuti
-// didattici a partire da testo/argomenti), key gia' verificata e con la
-// quota piu' ampia sull'account.
+// Client dedicato al modulo Study AI (flashcard, quiz, tutor, piano di
+// studio). Migrato da NVIDIA NIM a Gemini (24/07) — percorso file invariato,
+// solo il provider sotto e' cambiato.
 
-import { fetchWithRetry } from './fetch-with-retry'
+import { generateContent } from '../gemini-client'
 
-const NVIDIA_STUDY_API_KEY = process.env.NVIDIA_STUDY_API_KEY || process.env.NVIDIA_API_KEY
-const NVIDIA_BASE_URL = process.env.NVIDIA_NIM_BASE_URL || 'https://integrate.api.nvidia.com/v1'
+const GEMINI_STUDY_API_KEY = process.env.GEMINI_STUDY_API_KEY || process.env.GEMINI_API_KEY
 
-const STUDY_MODEL = 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning'
+const STUDY_MODEL = 'gemini-flash-latest'
 
 export type StudyAction = 'flashcards' | 'quiz' | 'tutor' | 'plan'
 
@@ -33,41 +31,20 @@ export interface QuizQuestion {
 }
 
 async function callModel(system: string, user: string, temperature: number): Promise<string> {
-  if (!NVIDIA_STUDY_API_KEY) {
-    throw new Error('NVIDIA_STUDY_API_KEY non configurata')
+  if (!GEMINI_STUDY_API_KEY) {
+    throw new Error('GEMINI_STUDY_API_KEY non configurata')
   }
 
-  const response = await fetchWithRetry(
-    `${NVIDIA_BASE_URL}/chat/completions`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${NVIDIA_STUDY_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: STUDY_MODEL,
-        messages: [
-          { role: 'system', content: system },
-          { role: 'user', content: user },
-        ],
-        temperature,
-        top_p: 0.9,
-        max_tokens: 4096,
-      }),
-    },
-  )
-
-  if (!response.ok) {
-    const errorText = await response.text()
-    console.error(`[study-ai] errore NVIDIA (status ${response.status}):`, errorText)
-    throw new Error('Il modello AI non ha risposto correttamente. Riprova tra poco.')
-  }
-
-  const data = await response.json()
-  const result = data.choices?.[0]?.message?.content
-  if (!result) throw new Error('Risposta vuota dal modello AI')
-  return result
+  return generateContent({
+    apiKey: GEMINI_STUDY_API_KEY,
+    model: STUDY_MODEL,
+    systemInstruction: system,
+    parts: [{ text: user }],
+    temperature,
+    topP: 0.9,
+    maxOutputTokens: 4096,
+    logLabel: 'study-ai',
+  })
 }
 
 function parseJsonArray<T>(raw: string): T[] {

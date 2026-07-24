@@ -1,22 +1,23 @@
 // lib/nvidia/nim.ts
+//
+// Client PDF AI. Migrato da NVIDIA NIM a Gemini (24/07) — percorso file
+// invariato, provider sotto cambiato. Vantaggio reale del cambio: Gemini è
+// nativamente multimodale, quindi l'OCR non ha più bisogno di un modello
+// vision separato dal modello di chat (era llama-3.2-90b-vision-instruct
+// contro nemotron-3-nano-omni) — stesso modello, l'immagine è solo un altro
+// "part" della richiesta. La key resta separata (GEMINI_VISION_API_KEY) per
+// isolare la quota, visto che l'OCR fa una chiamata per pagina.
+
 import { createClient } from '@/lib/supabase/server'
+import { generateContent, embedContent, type GeminiPart } from '@/lib/gemini-client'
 import pdfParse from 'pdf-parse'
 
-const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY || process.env.NVIDIA_NIM_API_KEY
-const NVIDIA_BASE_URL = process.env.NVIDIA_NIM_BASE_URL || 'https://integrate.api.nvidia.com/v1'
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY
+const GEMINI_VISION_API_KEY = process.env.GEMINI_VISION_API_KEY || GEMINI_API_KEY
+const GEMINI_EMBED_API_KEY = process.env.GEMINI_EMBED_API_KEY || GEMINI_API_KEY
 
-// Key separata per gli embedding: stesso provider (NVIDIA NIM), ma quota
-// e rate-limit indipendenti dalla key usata per chat/OCR.
-const NVIDIA_EMBED_API_KEY = process.env.NVIDIA_EMBED_API_KEY
-
-// Key separata per l'OCR (vision): stesso motivo, quota indipendente dalla
-// chat testuale. Fallback su NVIDIA_API_KEY se non ancora impostata.
-const NVIDIA_VISION_API_KEY = process.env.NVIDIA_VISION_API_KEY || NVIDIA_API_KEY
-
-// Modelli
-const CHAT_MODEL = 'nvidia/llama-3.3-nemotron-super-49b-v1.5'
-const VISION_MODEL = 'meta/llama-3.2-90b-vision-instruct'
-const EMBED_MODEL = 'nvidia/nemotron-3-embed-1b'
+const CHAT_MODEL = 'gemini-flash-latest'
+const EMBED_MODEL = 'gemini-embedding-001'
 
 // Cache TTL 1 ora
 const CACHE_TTL = 60 * 60 * 1000
@@ -25,7 +26,7 @@ const responseCache = new Map<string, { data: any; timestamp: number }>()
 // Limiti OCR
 const MAX_PAGES = 30 // safety cap: oltre questo numero il costo/tempo esplode
 const OCR_CONCURRENCY = 3 // pagine processate in parallelo
-// La maggior parte degli endpoint vision NIM rifiuta o degrada immagini inline
+// La maggior parte degli endpoint vision rifiuta o degrada immagini inline
 // oltre ~180KB di base64. Comprimiamo per stare sotto questa soglia mantenendo
 // la risoluzione più alta possibile.
 const MAX_IMAGE_BASE64_BYTES = 180 * 1024
@@ -67,9 +68,7 @@ async function getPdfToImg(): Promise<PdfToImgFn> {
 }
 
 // pdf-to-img restituisce PNG grezzi. Serve sharp per:
-// 1) ri-codificarli correttamente come JPEG (il codice precedente li
-//    etichettava come JPEG senza convertirli: mismatch mime/byte reali,
-//    causa principale dell'OCR che "non vedeva bene" il documento)
+// 1) ri-codificarli correttamente come JPEG
 // 2) comprimerli sotto MAX_IMAGE_BASE64_BYTES mantenendo leggibilità
 type SharpModule = typeof import('sharp')
 let sharpFn: SharpModule['default'] | null = null
@@ -92,8 +91,6 @@ async function optimizeImageForOcr(pngBuffer: Buffer): Promise<Buffer> {
   let width: number | undefined // parte dalla risoluzione nativa
   let jpegBuffer = await sharp(pngBuffer).jpeg({ quality }).toBuffer()
 
-  // Riduci prima la qualità, poi se non basta anche le dimensioni,
-  // finché il base64 non sta sotto la soglia (o tocchiamo un minimo sensato)
   while (base64Size(jpegBuffer) > MAX_IMAGE_BASE64_BYTES && quality > 40) {
     quality -= 10
     jpegBuffer = await sharp(pngBuffer).jpeg({ quality }).toBuffer()
@@ -122,8 +119,6 @@ async function convertPdfToImages(pdfBuffer: Buffer): Promise<Buffer[]> {
   console.log('🔄 Conversione PDF in immagini...')
   try {
     const pdfToImg = await getPdfToImg()
-    // scale più alta = testo più nitido per l'OCR; la compressione a valle
-    // (optimizeImageForOcr) tiene comunque la dimensione sotto controllo
     const pdf = await pdfToImg(pdfBuffer, { scale: 2.5 })
     const rawImages: Buffer[] = []
     for await (const image of pdf) {
@@ -143,38 +138,6 @@ async function convertPdfToImages(pdfBuffer: Buffer): Promise<Buffer[]> {
     console.error('❌ Errore conversione PDF:', error)
     throw new Error('Impossibile convertire il PDF in immagini.')
   }
-}
-
-async function fetchWithRetry(
-  url: string,
-  options: RequestInit,
-  retries = 2,
-  timeoutMs = 45000
-): Promise<Response> {
-  for (let attempt = 0; attempt <= retries; attempt += 1) {
-    const controller = new AbortController()
-    const timeout = setTimeout(() => controller.abort(), timeoutMs)
-    try {
-      const response = await fetch(url, { ...options, signal: controller.signal })
-      clearTimeout(timeout)
-      if (response.ok || attempt === retries) {
-        return response
-      }
-      if (response.status >= 400 && response.status < 500 && response.status !== 429) {
-        return response
-      }
-      console.warn(`Fetch attempt ${attempt + 1} failed with status ${response.status}. Retrying...`)
-    } catch (error) {
-      clearTimeout(timeout)
-      const isAbort = error instanceof Error && error.name === 'AbortError'
-      if (attempt === retries) {
-        throw error
-      }
-      console.warn(`Fetch attempt ${attempt + 1} failed${isAbort ? ' (timeout)' : ''}. Retrying...`, error)
-      await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)))
-    }
-  }
-  throw new Error('fetchWithRetry failed unexpectedly')
 }
 
 // Semplice limitatore di concorrenza, per non sparare N richieste vision
@@ -201,57 +164,38 @@ export async function runWithConcurrency<T, R>(
 }
 
 // ============================================
-// OCR CON MODELLO VISION
+// OCR CON GEMINI (nativamente multimodale)
 // ============================================
 async function extractTextWithVision(imageBuffer: Buffer, pageNumber: number): Promise<string> {
   const base64Image = imageBuffer.toString('base64')
   console.log(`📖 OCR pagina ${pageNumber}... (${Math.round(base64Image.length / 1024)}KB base64)`)
 
+  if (!GEMINI_VISION_API_KEY) {
+    return `[Errore OCR pagina ${pageNumber}: GEMINI_VISION_API_KEY non configurata]`
+  }
+
   try {
-    const response = await fetchWithRetry(`${NVIDIA_BASE_URL}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${NVIDIA_VISION_API_KEY}`,
-        'Content-Type': 'application/json',
+    const parts: GeminiPart[] = [
+      {
+        text:
+          `You are an OCR engine. Extract ALL text from this document image (page ${pageNumber}) ` +
+          `exactly as it appears, preserving reading order (top to bottom, left to right, respecting ` +
+          `columns if present). Reproduce tables using Markdown table syntax. Preserve line breaks for ` +
+          `lists and paragraphs. Do NOT translate, summarize, or add commentary — output ONLY the ` +
+          `extracted text, nothing else. If the page is blank or has no readable text, return an empty string.`,
       },
-      body: JSON.stringify({
-        model: VISION_MODEL,
-        messages: [
-          {
-            role: 'user',
-            content: [
-              {
-                type: 'text',
-                text:
-                  `You are an OCR engine. Extract ALL text from this document image (page ${pageNumber}) ` +
-                  `exactly as it appears, preserving reading order (top to bottom, left to right, respecting ` +
-                  `columns if present). Reproduce tables using Markdown table syntax. Preserve line breaks for ` +
-                  `lists and paragraphs. Do NOT translate, summarize, or add commentary — output ONLY the ` +
-                  `extracted text, nothing else. If the page is blank or has no readable text, return an empty string.`,
-              },
-              {
-                type: 'image_url',
-                image_url: {
-                  url: `data:image/jpeg;base64,${base64Image}`,
-                },
-              },
-            ],
-          },
-        ],
-        temperature: 0.0,
-        top_p: 0.9,
-        max_tokens: 4096,
-      }),
+      { inlineData: { mimeType: 'image/jpeg', data: base64Image } },
+    ]
+
+    const text = await generateContent({
+      apiKey: GEMINI_VISION_API_KEY,
+      model: CHAT_MODEL,
+      parts,
+      temperature: 0.0,
+      topP: 0.9,
+      maxOutputTokens: 4096,
+      logLabel: 'pdf-ai-ocr',
     })
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.error(`❌ OCR error pagina ${pageNumber} (status ${response.status}):`, errorText)
-      return `[Errore OCR pagina ${pageNumber}: impossibile estrarre il testo]`
-    }
-
-    const data = await response.json()
-    const text = data.choices?.[0]?.message?.content || ''
     return text.trim()
   } catch (error) {
     // Non far cadere l'intero documento se una singola pagina fallisce
@@ -307,9 +251,6 @@ export async function parseDocumentWithNim(fileUrl: string): Promise<{ text: str
     try {
       const pdfData = await pdfParse(buffer)
       const text = (pdfData.text || '').replace(/\s+/g, ' ').trim()
-      // Soglia più robusta: normalizza sulla lunghezza per pagina, non solo
-      // sul totale, per non far fallire silenziosamente PDF lunghi ma con
-      // poco testo estratto per pagina (es. molte immagini + poco testo reale)
       const numPages = pdfData.numpages || 1
       const avgCharsPerPage = text.length / numPages
       if (text.length > 50 && avgCharsPerPage > 20) {
@@ -323,10 +264,10 @@ export async function parseDocumentWithNim(fileUrl: string): Promise<{ text: str
       console.log('📄 [3] pdf-parse fallito, provo OCR...', err)
     }
 
-    // 4. OCR con modello vision
-    console.log('📄 [4] Tentativo OCR con vision model...')
-    if (!NVIDIA_API_KEY) {
-      throw new Error('NVIDIA_API_KEY non configurata')
+    // 4. OCR con Gemini
+    console.log('📄 [4] Tentativo OCR...')
+    if (!GEMINI_VISION_API_KEY) {
+      throw new Error('GEMINI_VISION_API_KEY non configurata')
     }
 
     const images = await convertPdfToImages(buffer)
@@ -353,9 +294,6 @@ export async function parseDocumentWithNim(fileUrl: string): Promise<{ text: str
     }
 
     console.log(`✅ [4] OCR completato: ${result.text.length} caratteri, ${result.totalPages} pagine`)
-    // Metti in cache solo se non tutte le pagine sono fallite,
-    // altrimenti un errore temporaneo (es. rate limit) resterebbe in
-    // cache per un'ora anche dopo che l'API torna disponibile
     if (failedPages < pageTexts.length) {
       setCachedResponse(cacheKey, result)
     }
@@ -367,14 +305,12 @@ export async function parseDocumentWithNim(fileUrl: string): Promise<{ text: str
       text: 'Non è stato possibile estrarre il testo dal PDF. Verifica che il file non sia corrotto.',
       totalPages: 1,
     }
-    // Non mettere in cache i fallback: potrebbe essere un errore transitorio
-    // (rete, rate limit) e vogliamo ritentare alla prossima richiesta
     return fallback
   }
 }
 
 // ============================================
-// GENERATE CHAT COMPLETION (senza extra_body)
+// GENERATE CHAT COMPLETION
 // ============================================
 export async function generateChatCompletion(
   messages: Array<{ role: string; content: string }>,
@@ -384,7 +320,7 @@ export async function generateChatCompletion(
   const cached = getCachedResponse(cacheKey)
   if (cached) return cached
 
-  if (!NVIDIA_API_KEY) {
+  if (!GEMINI_API_KEY) {
     const fallback = generateFallbackReply(documentContext, messages)
     setCachedResponse(cacheKey, fallback)
     return fallback
@@ -395,33 +331,24 @@ export async function generateChatCompletion(
       ? `You are an AI assistant helping analyze documents. Here is the document context:\n\n${documentContext}\n\nAnswer the user's questions based on this document. Be concise and helpful.`
       : 'You are a helpful AI assistant.'
 
-    const response = await fetchWithRetry(`${NVIDIA_BASE_URL}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${NVIDIA_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: CHAT_MODEL,
-        messages: [{ role: 'system', content: systemPrompt }, ...messages],
-        temperature: 0.6,
-        top_p: 0.95,
-        max_tokens: 4096,
-        // Il modello è una variante "reasoning": di default genera prima
-        // un'intera traccia di ragionamento interna (fino a 16k token)
-        // prima della risposta vera. Per un riassunto o una risposta di
-        // chat non serve, e disattivarlo evita timeout inutili.
-        chat_template_kwargs: { enable_thinking: false },
-      }),
-    }, 2, 60000)
+    // Gemini usa role:"model" per il turno AI, non "assistant"
+    const contents = messages.map((m) => ({
+      role: m.role === 'assistant' ? ('model' as const) : ('user' as const),
+      parts: [{ text: m.content }],
+    }))
 
-    if (!response.ok) {
-      const errorText = await response.text()
-      throw new Error(`NVIDIA LLM error: ${response.status} - ${errorText}`)
-    }
-
-    const data = await response.json()
-    const result = data.choices?.[0]?.message?.content || 'No response generated'
+    const result = await generateContent({
+      apiKey: GEMINI_API_KEY,
+      model: CHAT_MODEL,
+      systemInstruction: systemPrompt,
+      contents,
+      temperature: 0.6,
+      topP: 0.95,
+      maxOutputTokens: 4096,
+      retries: 2,
+      timeoutMs: 70000,
+      logLabel: 'pdf-ai-chat',
+    })
 
     setCachedResponse(cacheKey, result)
     return result
@@ -445,16 +372,20 @@ function generateFallbackReply(documentContext?: string, messages?: Array<{ role
 // ============================================
 // GENERATE EMBEDDING
 // ============================================
-// Usa una API key separata (NVIDIA_EMBED_API_KEY) da quella di chat/OCR,
-// così le due quote/rate-limit non si intralciano a vicenda pur essendo
-// lo stesso provider (NVIDIA NIM).
+// La colonna vector() in document_chunks e' fissa a 2048 dim (creata per il
+// vecchio embedder NVIDIA nemotron-3-embed-1b, migrazione non tracciata nel
+// repo). gemini-embedding-001 di default restituisce 3072 dim: richiediamo
+// esplicitamente 2048 via outputDimensionality (troncamento MRL) per restare
+// compatibili senza toccare lo schema o re-indicizzare i chunk esistenti.
+const EMBED_DIMENSIONS = 2048
+
 export async function generateEmbedding(
   text: string,
   inputType: 'query' | 'passage' = 'passage'
 ): Promise<number[]> {
-  if (!NVIDIA_EMBED_API_KEY) {
-    console.warn('NVIDIA_EMBED_API_KEY non configurata, uso fallback casuale')
-    return Array(2048).fill(0).map(() => Math.random() - 0.5)
+  if (!GEMINI_EMBED_API_KEY) {
+    console.warn('GEMINI_EMBED_API_KEY non configurata, uso fallback casuale')
+    return Array(EMBED_DIMENSIONS).fill(0).map(() => Math.random() - 0.5)
   }
 
   const cacheKey = getCacheKey('embed', `${inputType}:${text.substring(0, 500)}`)
@@ -462,39 +393,12 @@ export async function generateEmbedding(
   if (cached) return cached
 
   try {
-    const response = await fetchWithRetry(`${NVIDIA_BASE_URL}/embeddings`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${NVIDIA_EMBED_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        input: [text],
-        model: EMBED_MODEL,
-        input_type: inputType,
-      }),
-    }, 2, 30000)
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      throw new Error(`NVIDIA embedding error: ${response.status} - ${errorText}`)
-    }
-
-    const data = await response.json()
-    const embedding = data.data?.[0]?.embedding
-
-    if (!Array.isArray(embedding)) {
-      throw new Error('Risposta embedding malformata')
-    }
-
+    const embedding = await embedContent(GEMINI_EMBED_API_KEY, EMBED_MODEL, text, EMBED_DIMENSIONS)
     setCachedResponse(cacheKey, embedding)
     return embedding
   } catch (error) {
     console.error('❌ Errore generazione embedding, uso fallback casuale:', error)
-    // Dimensione reale del modello (2048): il fallback deve avere la
-    // stessa lunghezza dei vettori veri, altrimenti rompe eventuali
-    // confronti/indici che assumono una dimensionalità fissa.
-    return Array(2048).fill(0).map(() => Math.random() - 0.5)
+    return Array(EMBED_DIMENSIONS).fill(0).map(() => Math.random() - 0.5)
   }
 }
 
@@ -519,45 +423,26 @@ export async function extractDeadlinesFromDocument(documentText: string): Promis
     }))
   }
 
-  if (!NVIDIA_API_KEY) {
+  if (!GEMINI_API_KEY) {
     const result = fallback()
     setCachedResponse(cacheKey, result)
     return result
   }
 
   try {
-    const response = await fetchWithRetry(`${NVIDIA_BASE_URL}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${NVIDIA_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: CHAT_MODEL,
-        messages: [
-          {
-            role: 'system',
-            content: 'Extract all deadlines and important dates from the document. Return ONLY a valid JSON array with "date" (in YYYY-MM-DD format) and "description" fields, and nothing else (no markdown fences, no commentary). Example: [{"date": "2024-12-25", "description": "Christmas deadline"}]',
-          },
-          {
-            role: 'user',
-            content: documentText.substring(0, 4000),
-          },
-        ],
-        temperature: 0.2,
-        max_tokens: 1024,
-        chat_template_kwargs: { enable_thinking: false },
-      }),
-    }, 2, 60000)
+    const rawContent = await generateContent({
+      apiKey: GEMINI_API_KEY,
+      model: CHAT_MODEL,
+      systemInstruction:
+        'Extract all deadlines and important dates from the document. Return ONLY a valid JSON array with "date" (in YYYY-MM-DD format) and "description" fields, and nothing else (no markdown fences, no commentary). Example: [{"date": "2024-12-25", "description": "Christmas deadline"}]',
+      parts: [{ text: documentText.substring(0, 4000) }],
+      temperature: 0.2,
+      maxOutputTokens: 1024,
+      retries: 2,
+      timeoutMs: 70000,
+      logLabel: 'pdf-ai-deadlines',
+    })
 
-    if (!response.ok) {
-      throw new Error(`NVIDIA LLM error: ${response.status}`)
-    }
-
-    const data = await response.json()
-    const rawContent = data.choices?.[0]?.message?.content || '[]'
-    // Il modello a volte avvolge il JSON in blocchi markdown nonostante le
-    // istruzioni: ripuliamo prima di parsare
     const content = rawContent.replace(/```json\s*|```/g, '').trim()
 
     try {
