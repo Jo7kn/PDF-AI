@@ -52,13 +52,13 @@ export async function sendDiscordAnnouncement(title: string, message: string, ta
         embeds: [
           {
             author: { name: SITE_NAME, icon_url: SITE_ICON_URL, url: SITE_URL },
-            title: trimmedTitle || '📢 Nuovo annuncio',
+            title: trimmedTitle || '📢 New announcement',
             url: SITE_URL,
             description: trimmedMessage,
             color: 0x22d3ee,
             thumbnail: { url: SITE_ICON_URL },
             timestamp: new Date().toISOString(),
-            footer: { text: `${SITE_NAME} · inviato da /admin`, icon_url: SITE_ICON_URL },
+            footer: { text: `${SITE_NAME} · sent from /admin`, icon_url: SITE_ICON_URL },
           },
         ],
       }),
