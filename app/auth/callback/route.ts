@@ -1,7 +1,7 @@
 ﻿import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { NextRequest } from 'next/server'
-import { ensureUserProfile } from '@/app/actions/auth'
+import { ensureUserProfile, linkReferral } from '@/app/actions/auth'
 
 function redirectWithError(requestUrl: URL, message: string) {
   const url = new URL('/login', requestUrl.origin)
@@ -55,6 +55,13 @@ export async function GET(request: NextRequest) {
     // esiste già (ignoreDuplicates), così un login non azzera mai
     // total_pages_used/active_projects di un utente esistente.
     await ensureUserProfile(supabase, user)
+
+    // Presente solo se il login Google è partito da /signup?ref=CODE (vedi
+    // getOAuthOptions) — sopravvive al giro OAuth completo nel redirectTo.
+    // linkReferral() è già idempotente (.is('referred_by', null)), quindi è
+    // sicuro chiamarla anche per un utente esistente che rifà login.
+    const ref = requestUrl.searchParams.get('ref')
+    if (ref) await linkReferral(user.id, ref)
 
     return NextResponse.redirect(new URL('/dashboard', requestUrl.origin))
 

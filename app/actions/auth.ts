@@ -33,6 +33,20 @@ export async function ensureUserProfile(supabase: any, user: any) {
   )
 }
 
+// Condivisa tra signUp() (form email/password) e app/auth/callback/route.ts
+// (login/signup Google): prima di questo fix, il ref code sopravviveva solo
+// nel form email/password — chi si registrava con "Continua con Google" da
+// un link di invito non veniva mai collegato a chi l'aveva invitato.
+export async function linkReferral(userId: string, refCode?: string | null) {
+  if (!refCode) return
+
+  const service = createServiceClient()
+  const { data: referrer } = await service.from('users').select('id').eq('referral_code', refCode.trim().toUpperCase()).single()
+  if (referrer && referrer.id !== userId) {
+    await service.from('users').update({ referred_by: referrer.id }).eq('id', userId).is('referred_by', null)
+  }
+}
+
 export async function signUp(email: string, password: string, fullName: string, refCode?: string) {
   const supabase = await createClient()
 
@@ -52,19 +66,7 @@ export async function signUp(email: string, password: string, fullName: string, 
 
   if (data.user) {
     await ensureUserProfile(supabase, data.user)
-
-    // Service client: bypassa RLS (serve leggere il referral_code di un
-    // altro utente) e non dipende da una sessione già stabilita, che a
-    // questo punto potrebbe non esserci ancora se la conferma email è
-    // richiesta. .is('referred_by', null) rende la scrittura idempotente e
-    // impedisce di sovrascrivere un referral già attribuito in precedenza.
-    if (refCode) {
-      const service = createServiceClient()
-      const { data: referrer } = await service.from('users').select('id').eq('referral_code', refCode.trim().toUpperCase()).single()
-      if (referrer && referrer.id !== data.user.id) {
-        await service.from('users').update({ referred_by: referrer.id }).eq('id', data.user.id).is('referred_by', null)
-      }
-    }
+    await linkReferral(data.user.id, refCode)
   }
 
   // data.session è null quando il progetto Supabase richiede la conferma

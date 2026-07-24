@@ -75,7 +75,7 @@ export default function SignupPage() {
       const supabase = createClient()
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: getOAuthOptions(window.location.origin),
+        options: getOAuthOptions(window.location.origin, refCode ? { ref: refCode } : undefined),
       })
       if (error) {
         setError(error.message)
