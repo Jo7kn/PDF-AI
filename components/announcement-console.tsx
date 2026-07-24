@@ -35,8 +35,17 @@ export function AnnouncementConsole({ className = 'mx-auto max-w-4xl px-4 sm:px-
 
   useEffect(() => {
     const load = async () => {
-      const data = await getAnnouncements(6)
-      setAnnouncements(data)
+      try {
+        const data = await getAnnouncements(6)
+        setAnnouncements(data)
+      } catch (err) {
+        // Senza questo, un rifiuto della server action (rete, action non
+        // raggiungibile) lasciava announcements a null per sempre — il
+        // riquadro restava bloccato su "Caricamento…" senza mai mostrare
+        // lo stato vuoto reale.
+        console.error('AnnouncementConsole: fetch fallito', err)
+        setAnnouncements([])
+      }
     }
     load()
     timer.current = setInterval(load, POLL_MS)
