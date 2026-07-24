@@ -2,14 +2,16 @@
 
 // components/admin/announcement-composer.tsx
 //
-// Form per mandare un annuncio al canale Discord dedicato (vedi
-// app/actions/discord-announce.ts). Ottimistico solo nel senso che disabilita
-// il form durante l'invio — niente stato locale dei messaggi già mandati,
-// la fonte di verità resta Discord stesso.
+// Form per pubblicare un annuncio: salvato in DB (mostrato nel riquadro
+// console della landing page, vedi components/announcement-console.tsx) e,
+// best-effort, postato anche sul canale Discord (vedi
+// app/actions/announcements.ts + discord-announce.ts). Ottimistico solo nel
+// senso che disabilita il form durante l'invio — niente stato locale dei
+// messaggi già mandati, la fonte di verità resta il DB.
 
 import { useState } from 'react'
 import { Send, Loader2, Check, AlertCircle } from 'lucide-react'
-import { sendDiscordAnnouncement } from '@/app/actions/discord-announce'
+import { postAnnouncement } from '@/app/actions/announcements'
 import { Button } from '@/components/ui/button'
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
@@ -21,6 +23,7 @@ const ERROR_MESSAGES: Record<string, string> = {
   'title-too-long': 'Titolo troppo lungo (max 256 caratteri).',
   'not-configured': 'DISCORD_BOT_TOKEN o DISCORD_ANNOUNCEMENTS_CHANNEL_ID non configurati.',
   network: 'Errore di rete, riprova.',
+  db: 'Salvataggio annuncio fallito, riprova.',
 }
 
 function errorLabel(code?: string): string {
@@ -33,15 +36,18 @@ export function AnnouncementComposer() {
   const [message, setMessage] = useState('')
   const [status, setStatus] = useState<Status>('idle')
   const [error, setError] = useState<string | undefined>()
+  const [discordWarning, setDiscordWarning] = useState<string | undefined>()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (status === 'loading' || !message.trim()) return
     setStatus('loading')
     setError(undefined)
-    const result = await sendDiscordAnnouncement(title, message)
+    setDiscordWarning(undefined)
+    const result = await postAnnouncement(title, message)
     if (result.success) {
       setStatus('success')
+      setDiscordWarning(result.discordError)
       setTitle('')
       setMessage('')
       setTimeout(() => setStatus('idle'), 3000)
@@ -73,7 +79,8 @@ export function AnnouncementComposer() {
         <div className="text-xs">
           {status === 'success' && (
             <span className="flex items-center gap-1.5 text-emerald-300">
-              <Check className="h-3.5 w-3.5" /> Annuncio inviato su Discord.
+              <Check className="h-3.5 w-3.5" />
+              {discordWarning ? 'Annuncio pubblicato sul sito (Discord non inviato).' : 'Annuncio pubblicato sul sito e su Discord.'}
             </span>
           )}
           {status === 'error' && (

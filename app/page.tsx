@@ -5,6 +5,7 @@ import { LandingHeader } from '@/components/landing-header'
 import { LandingFooter } from '@/components/landing-footer'
 import { PricingSection } from '@/components/pricing-section'
 import { ScrollReveal } from '@/components/scroll-reveal'
+import { AnnouncementConsole } from '@/components/announcement-console'
 import { SITE_URL, SITE_NAME } from '@/lib/seo'
 
 export default function Home({
@@ -143,6 +144,8 @@ export default function Home({
           </div>
         </div>
       </section>
+
+      <AnnouncementConsole />
 
       <section id="features" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <ScrollReveal className="mb-10 text-center">
