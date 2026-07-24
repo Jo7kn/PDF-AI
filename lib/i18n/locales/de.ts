@@ -542,6 +542,100 @@ const de: TranslationDict = {
     haveAccount: 'Du hast bereits ein Konto?',
     loginLink: 'Anmelden',
   },
+  terms: {
+    eyebrow: 'Allgemeine Geschäftsbedingungen',
+    title: 'Allgemeine Geschäftsbedingungen',
+    lastUpdated: 'Zuletzt aktualisiert: {date}',
+    s1Title: '1. Wer wir sind und Annahme dieser Bedingungen',
+    s1Body:
+      '{siteName} ist ein Online-Dienst, der eine Reihe von KI-gestützten Tools anbietet (Dokumenten-Chat, Texte, ' +
+      'Code, Bilder, Datenanalyse, Vertragsanalyse, Übersetzung und Dateikonvertierung), erreichbar unter ' +
+      '{domain}. Mit der Erstellung eines Kontos oder der Nutzung des Dienstes akzeptierst du diese Bedingungen in ' +
+      'vollem Umfang. Wenn du sie nicht akzeptierst, darfst du {siteName} nicht nutzen.',
+    s2Title: '2. Konto',
+    s2Body:
+      'Für die Nutzung von {siteName} ist ein Konto erforderlich, das per E-Mail und Passwort oder über Google-' +
+      'Login erstellt wird. Du bist für die Sicherheit deiner Zugangsdaten und alle über dein Konto durchgeführten ' +
+      'Aktivitäten verantwortlich. Du musst mindestens 16 Jahre alt sein, um dich zu registrieren. Die bei der ' +
+      'Registrierung angegebenen Informationen müssen korrekt sein; wir behalten uns das Recht vor, Konten mit ' +
+      'eindeutig falschen Angaben oder Konten, die zum Missbrauch des Dienstes erstellt wurden (z. B. Umgehung der ' +
+      'Free-Plan-Grenzen mit mehreren Konten), zu sperren.',
+    s3Title: '3. Tarife, Credits und Abrechnung',
+    s3Body1:
+      '{siteName} bietet drei Tarife: **Free** (kostenlos, 50 KI-Credits/Monat), **Pro** (kostenpflichtig, 1000 ' +
+      'KI-Credits/Monat) und **Team** (kostenpflichtig, 3000 KI-Credits/Monat, gemeinsame Projekte). Credits ' +
+      'werden bei der Nutzung der KI-Tools verbraucht und erneuern sich mit jedem Abrechnungszyklus; nicht ' +
+      'genutzte Credits werden nicht auf den nächsten Monat übertragen. Kostenpflichtige Tarife beinhalten zudem ' +
+      'ein Limit für aktive Seiten/Projekte, das auf der Seite [Preise](/pricing) aufgeführt ist.',
+    s3Body2:
+      'Zahlungen werden über Stripe abgewickelt; wir speichern keine Kartendaten. Abonnements verlängern sich bei ' +
+      'jeder Fälligkeit automatisch bis zur Kündigung. Du kannst die Verlängerung jederzeit im Bereich ' +
+      'Abrechnung im Dashboard kündigen: Du behältst den Zugriff auf den kostenpflichtigen Tarif bis zum Ende des ' +
+      'bereits bezahlten Zeitraums, danach wechselt das Konto zurück zum Free-Tarif. Wir bieten keine ' +
+      'Rückerstattungen für bereits begonnene Abrechnungszeiträume, außer wenn zwingendes Recht in deinem Land ' +
+      'dies vorschreibt.',
+    s4Title: '4. Zulässige Nutzung',
+    s4Intro: 'Mit der Nutzung von {siteName} verpflichtest du dich, Folgendes nicht zu tun:',
+    s4Item1: 'Illegale, verleumderische Inhalte hochladen oder erzeugen, oder Inhalte, die Urheberrechte Dritter oder personenbezogene Daten ohne Zustimmung verletzen;',
+    s4Item2: 'Den Dienst nutzen, um in großem Umfang Spam, Phishing, Malware oder irreführende Inhalte zu erzeugen;',
+    s4Item3: 'Versuchen, Credit-Limits, Zugriffskontrollen oder Sicherheitsmaßnahmen des Dienstes zu umgehen;',
+    s4Item4: 'Den Zugang zum Dienst ohne schriftliche Genehmigung weiterverkaufen oder weiterverbreiten;',
+    s4Item5: 'Bots oder automatisiertes Scraping verwenden, um Daten außerhalb der vorgesehenen APIs aus dem Dienst zu extrahieren.',
+    s4Outro: 'Ein Verstoß gegen diese Punkte kann zur Sperrung oder Schließung des Kontos führen, ohne Rückerstattung.',
+    s5Title: '5. KI-generierte Inhalte',
+    s5Body:
+      'Von den KI-Tools erzeugte Inhalte (Texte, Code, Bilder, Analysen, Übersetzungen) werden automatisch von ' +
+      'Sprachmodellen generiert und können Fehler, Ungenauigkeiten oder veraltete Informationen enthalten. Du bist ' +
+      'dafür verantwortlich, die Richtigkeit jeder Ausgabe vor der Nutzung zu prüfen, insbesondere bei wichtigen ' +
+      'Entscheidungen. Insbesondere dienen die von Contract AI erstellten Analysen ausschließlich ' +
+      'Informationszwecken und **stellen keine Rechtsberatung dar**: Für verbindliche Vertragsentscheidungen ' +
+      'wende dich an eine qualifizierte Fachperson.',
+    s6Title: '6. Eigentum an Inhalten',
+    s6Body:
+      'Die von dir hochgeladenen Dokumente bleiben dein Eigentum. Im Rahmen dessen, was die Anbieter der zugrunde ' +
+      'liegenden KI-Modelle zulassen, gehören dir die über {siteName} erzeugten Inhalte und du kannst sie frei ' +
+      'nutzen, auch für kommerzielle Zwecke. Wir erheben keinen Anspruch auf deine Dokumente oder erzeugten ' +
+      'Inhalte; wir behandeln sie gemäß unserer im nächsten Abschnitt beschriebenen Datenpraxis.',
+    s7Title: '7. Daten und Datenschutz',
+    s7Body:
+      'Hochgeladene Dokumente und deine Kontodaten werden auf der Supabase-Infrastruktur gespeichert und ' +
+      'ausschließlich zur Bereitstellung des Dienstes verwendet (Verarbeitung deiner Dokumente, Verlauf, ' +
+      'Abrechnung). Wir verkaufen deine Daten nicht an Dritte. Einige KI-Verarbeitungen werden an externe Anbieter ' +
+      'von Sprachmodellen (z. B. Google Gemini) weitergeleitet, ausschließlich um die angeforderte Antwort zu ' +
+      'erzeugen. Du kannst den Export oder die Löschung deiner Daten beantragen, indem du an ' +
+      '[{contactEmail}](mailto:{contactEmail}) schreibst.',
+    s8Title: '8. Verfügbarkeit des Dienstes',
+    s8Body:
+      'Wir bemühen uns, {siteName} verfügbar und funktionsfähig zu halten, garantieren jedoch keine 100%ige ' +
+      'Verfügbarkeit: Unterbrechungen können durch Wartung, technische Probleme oder die Nichtverfügbarkeit von ' +
+      'Drittanbietern, auf die wir uns stützen (Hosting, KI-Modelle, Zahlungen), auftreten. {siteName} befindet ' +
+      'sich in der Startphase: Einige Funktionen können mit kurzer Vorankündigung geändert, ausgesetzt oder ' +
+      'entfernt werden.',
+    s9Title: '9. Haftungsbeschränkung',
+    s9Body:
+      'Im gesetzlich maximal zulässigen Umfang wird {siteName} "wie besehen" ohne jegliche Gewährleistung ' +
+      'bereitgestellt. Wir haften nicht für indirekte Schäden, Datenverlust oder entgangenen Gewinn, die aus der ' +
+      'Nutzung des Dienstes oder dem Vertrauen auf KI-generierte Inhalte entstehen. Unsere Gesamthaftung dir ' +
+      'gegenüber ist aus jedwedem Grund in jedem Fall auf den Betrag begrenzt, den du in den letzten 12 Monaten ' +
+      'für den Dienst bezahlt hast.',
+    s10Title: '10. Sperrung und Schließung des Kontos',
+    s10Body:
+      'Du kannst dein Konto jederzeit über das Dashboard schließen. Wir können ein Konto, das gegen diese ' +
+      'Bedingungen verstößt, sperren oder schließen, in der Regel nach einem Kontaktversuch, außer bei schwerem ' +
+      'Missbrauch oder Sicherheitsrisiken für den Dienst, in welchem Fall die Sperrung sofort erfolgen kann.',
+    s11Title: '11. Änderungen dieser Bedingungen',
+    s11Body:
+      'Wir können diese Bedingungen im Laufe der Zeit aktualisieren, zum Beispiel um neue Funktionen oder ' +
+      'rechtliche Anforderungen widerzuspiegeln. Bei wesentlichen Änderungen aktualisieren wir das Datum oben auf ' +
+      'dieser Seite; die fortgesetzte Nutzung des Dienstes nach einer Änderung gilt als Annahme der neuen ' +
+      'Bedingungen.',
+    s12Title: '12. Anwendbares Recht',
+    s12Body:
+      'Diese Bedingungen unterliegen italienischem Recht. Für Streitigkeiten ist, sofern du als Verbraucher in ' +
+      'der EU ansässig bist, nach den geltenden Vorschriften der Verbrauchergerichtsstand zuständig.',
+    s13Title: '13. Kontakt',
+    s13Body: 'Bei Fragen zu diesen Bedingungen schreibe an [{contactEmail}](mailto:{contactEmail}).',
+  },
 }
 
 export default de

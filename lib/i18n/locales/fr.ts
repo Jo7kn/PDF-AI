@@ -542,6 +542,102 @@ const fr: TranslationDict = {
     haveAccount: 'Vous avez déjà un compte ?',
     loginLink: 'Se connecter',
   },
+  terms: {
+    eyebrow: 'Conditions générales',
+    title: "Conditions générales d'utilisation",
+    lastUpdated: 'Dernière mise à jour : {date}',
+    s1Title: '1. Qui sommes-nous et acceptation des conditions',
+    s1Body:
+      "{siteName} est un service en ligne proposant une suite d'outils basés sur l'intelligence artificielle " +
+      '(chat avec des documents, rédaction, code, images, analyse de données, analyse de contrats, traduction et ' +
+      'conversion de fichiers), accessible sur {domain}. En créant un compte ou en utilisant le service, vous ' +
+      'acceptez ces conditions dans leur intégralité. Si vous ne les acceptez pas, vous ne pouvez pas utiliser ' +
+      '{siteName}.',
+    s2Title: '2. Compte',
+    s2Body:
+      "Pour utiliser {siteName}, un compte est nécessaire, créé par email et mot de passe ou via une connexion " +
+      "Google. Vous êtes responsable de la sécurité de vos identifiants et de toute activité effectuée depuis " +
+      "votre compte. Vous devez avoir au moins 16 ans pour vous inscrire. Les informations fournies lors de " +
+      "l'inscription doivent être exactes ; nous nous réservons le droit de suspendre les comptes contenant des " +
+      "données manifestement fausses ou créés pour abuser du service (par ex. contourner les limites du plan " +
+      "Free avec plusieurs comptes).",
+    s3Title: '3. Formules, crédits et facturation',
+    s3Body1:
+      '{siteName} propose trois formules : **Free** (gratuite, 50 crédits IA/mois), **Pro** (payante, 1000 ' +
+      'crédits IA/mois) et **Team** (payante, 3000 crédits IA/mois, partage de projets). Les crédits sont ' +
+      "consommés lors de l'utilisation des outils IA et se renouvellent à chaque cycle de facturation ; les " +
+      "crédits non utilisés ne sont pas reportés d'un mois sur l'autre. Les formules payantes incluent également " +
+      "une limite de pages/projets actifs, indiquée sur la page [Tarifs](/pricing).",
+    s3Body2:
+      'Les paiements sont gérés par Stripe ; nous ne stockons pas les données de votre carte. Les abonnements se ' +
+      "renouvellent automatiquement à chaque échéance jusqu'à résiliation. Vous pouvez annuler le renouvellement " +
+      'à tout moment depuis la section Facturation du tableau de bord : vous conserverez l\'accès à la formule ' +
+      'payante jusqu\'à la fin de la période déjà payée, après quoi le compte repasse en formule Free. Nous ' +
+      "n'offrons pas de remboursement pour les périodes de facturation déjà entamées, sauf obligation légale " +
+      'impérative dans votre pays.',
+    s4Title: '4. Utilisation autorisée',
+    s4Intro: 'En utilisant {siteName}, vous acceptez de ne pas :',
+    s4Item1: "Télécharger ou générer des contenus illégaux, diffamatoires, ou portant atteinte aux droits d'auteur de tiers ou à des données personnelles sans consentement ;",
+    s4Item2: "Utiliser le service pour générer du spam, du phishing, des logiciels malveillants ou des contenus trompeurs à grande échelle ;",
+    s4Item3: "Tenter de contourner les limites de crédit, les contrôles d'accès ou les mesures de sécurité du service ;",
+    s4Item4: "Revendre ou redistribuer l'accès au service sans autorisation écrite ;",
+    s4Item5: "Utiliser des bots ou du scraping automatisé pour extraire des données du service en dehors des API prévues.",
+    s4Outro: "Le non-respect de ces points peut entraîner la suspension ou la fermeture du compte, sans remboursement.",
+    s5Title: "5. Contenus générés par l'intelligence artificielle",
+    s5Body:
+      'Les contenus produits par les outils IA (textes, code, images, analyses, traductions) sont générés ' +
+      'automatiquement par des modèles de langage et peuvent contenir des erreurs, des imprécisions ou des ' +
+      "informations obsolètes. Vous êtes responsable de vérifier l'exactitude de tout résultat avant de " +
+      "l'utiliser, en particulier pour des décisions importantes. En particulier, les analyses produites par " +
+      "Contract AI ont un but purement informatif et **ne constituent pas un conseil juridique** : pour des " +
+      'décisions contractuelles engageantes, consultez un professionnel qualifié.',
+    s6Title: '6. Propriété des contenus',
+    s6Body:
+      "Les documents que vous téléchargez restent votre propriété. Dans les limites accordées par les " +
+      "fournisseurs des modèles IA sous-jacents, les contenus que vous générez via {siteName} vous appartiennent " +
+      "et vous pouvez les utiliser librement, y compris à des fins commerciales. Nous ne revendiquons aucun droit " +
+      "sur vos documents ou les contenus générés ; nous les traitons conformément à notre gestion des données " +
+      'décrite au point suivant.',
+    s7Title: '7. Données et confidentialité',
+    s7Body:
+      'Les documents téléchargés et les données de votre compte sont stockés sur l\'infrastructure Supabase et ' +
+      "utilisés exclusivement pour vous fournir le service (traitement de vos documents, historique, " +
+      "facturation). Nous ne vendons pas vos données à des tiers. Certains traitements IA sont transmis à des " +
+      "fournisseurs tiers de modèles de langage (par ex. Google Gemini) dans le seul but de générer la réponse " +
+      "demandée. Vous pouvez demander l'export ou la suppression de vos données en écrivant à " +
+      '[{contactEmail}](mailto:{contactEmail}).',
+    s8Title: '8. Disponibilité du service',
+    s8Body:
+      "Nous nous efforçons de maintenir {siteName} disponible et fonctionnel, mais nous ne garantissons pas une " +
+      "disponibilité de 100 % : des interruptions peuvent survenir en raison de maintenance, de problèmes " +
+      "techniques ou de l'indisponibilité de fournisseurs tiers dont nous dépendons (hébergement, modèles IA, " +
+      "paiements). {siteName} est un projet en phase de lancement : certaines fonctionnalités peuvent être " +
+      "modifiées, suspendues ou supprimées avec un court préavis.",
+    s9Title: '9. Limitation de responsabilité',
+    s9Body:
+      'Dans les limites maximales permises par la loi, {siteName} est fourni "tel quel", sans garantie d\'aucune ' +
+      "sorte. Nous ne sommes pas responsables des dommages indirects, de la perte de données ou du manque à " +
+      "gagner résultant de l'utilisation du service ou de la confiance accordée à des contenus générés par IA. " +
+      'Notre responsabilité totale envers vous, quelle qu\'en soit la raison, est en tout état de cause limitée ' +
+      "au montant que vous avez payé pour le service au cours des 12 derniers mois.",
+    s10Title: '10. Suspension et fermeture du compte',
+    s10Body:
+      'Vous pouvez fermer votre compte à tout moment depuis le tableau de bord. Nous pouvons suspendre ou fermer ' +
+      'un compte qui enfreint ces conditions, généralement après une tentative de contact, sauf en cas d\'abus ' +
+      'grave ou de risque pour la sécurité du service, auquel cas la suspension peut être immédiate.',
+    s11Title: '11. Modifications des conditions',
+    s11Body:
+      "Nous pouvons mettre à jour ces conditions au fil du temps, par exemple pour refléter de nouvelles " +
+      "fonctionnalités ou exigences légales. En cas de modifications importantes, nous mettrons à jour la date en " +
+      "haut de cette page ; l'utilisation continue du service après une modification vaut acceptation des " +
+      'nouvelles conditions.',
+    s12Title: '12. Loi applicable',
+    s12Body:
+      'Ces conditions sont régies par le droit italien. Pour tout litige, le tribunal du consommateur est ' +
+      'compétent selon les règles applicables, si vous êtes un consommateur résidant dans l\'UE.',
+    s13Title: '13. Contact',
+    s13Body: 'Pour toute question sur ces conditions, écrivez à [{contactEmail}](mailto:{contactEmail}).',
+  },
 }
 
 export default fr

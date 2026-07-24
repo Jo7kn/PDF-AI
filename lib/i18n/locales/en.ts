@@ -542,6 +542,92 @@ const en: TranslationDict = {
     haveAccount: 'Already have an account?',
     loginLink: 'Sign in',
   },
+  terms: {
+    eyebrow: 'Terms and Conditions',
+    title: 'Terms and Conditions of Use',
+    lastUpdated: 'Last updated: {date}',
+    s1Title: '1. Who we are and acceptance of these terms',
+    s1Body:
+      '{siteName} is an online service offering a suite of AI-powered tools (document chat, writing, code, ' +
+      'images, data analysis, contract analysis, translation, and file conversion), available at {domain}. By ' +
+      'creating an account or using the service you accept these terms in full. If you do not accept them, you ' +
+      'may not use {siteName}.',
+    s2Title: '2. Account',
+    s2Body:
+      'Using {siteName} requires an account, created via email and password or through Google login. You are ' +
+      'responsible for the security of your credentials and for all activity carried out through your account. ' +
+      'You must be at least 16 years old to register. Information provided during registration must be accurate; ' +
+      'we reserve the right to suspend accounts with clearly false data or created to abuse the service (e.g. ' +
+      'circumventing the Free plan limits with multiple accounts).',
+    s3Title: '3. Plans, credits, and billing',
+    s3Body1:
+      '{siteName} offers three plans: **Free** (free, 50 AI credits/month), **Pro** (paid, 1000 AI credits/month) ' +
+      'and **Team** (paid, 3000 AI credits/month, project sharing). Credits are consumed by using the AI tools and ' +
+      'renew each billing cycle; unused credits do not roll over from one month to the next. Paid plans also ' +
+      'include a limit on active pages/projects, listed on the [Pricing](/pricing) page.',
+    s3Body2:
+      'Payments are handled by Stripe; we do not store your card details. Subscriptions renew automatically at ' +
+      'each billing period until cancelled. You can cancel renewal at any time from the Billing section of the ' +
+      'dashboard: you will keep access to the paid plan until the end of the period already paid for, after which ' +
+      'the account reverts to the Free plan. We do not offer refunds for billing periods already started, except ' +
+      'where required by mandatory law in your country.',
+    s4Title: '4. Acceptable use',
+    s4Intro: 'By using {siteName} you agree not to:',
+    s4Item1: 'Upload or generate content that is illegal, defamatory, or that infringes third-party copyright or personal data without consent;',
+    s4Item2: 'Use the service to generate spam, phishing, malware, or misleading content at scale;',
+    s4Item3: 'Attempt to circumvent credit limits, access controls, or the security measures of the service;',
+    s4Item4: 'Resell or redistribute access to the service without written authorization;',
+    s4Item5: 'Use bots or automated scraping to extract data from the service outside of the provided APIs.',
+    s4Outro: 'Violating these points may lead to suspension or closure of the account, without refund.',
+    s5Title: '5. AI-generated content',
+    s5Body:
+      'Content produced by the AI tools (text, code, images, analysis, translations) is generated automatically ' +
+      'by language models and may contain errors, inaccuracies, or outdated information. You are responsible for ' +
+      'verifying the accuracy of any output before using it, especially for important decisions. In particular, ' +
+      'analysis produced by Contract AI is for informational purposes only and **does not constitute legal ' +
+      'advice**: for binding contractual decisions, consult a qualified professional.',
+    s6Title: '6. Ownership of content',
+    s6Body:
+      'Documents you upload remain your property. Within the limits granted by the underlying AI model providers, ' +
+      'content you generate through {siteName} is yours and you may use it freely, including for commercial ' +
+      'purposes. We do not claim any rights over your documents or generated content; we handle them according to ' +
+      'the data practices described in the next section.',
+    s7Title: '7. Data and privacy',
+    s7Body:
+      'Uploaded documents and your account data are stored on Supabase infrastructure and used exclusively to ' +
+      'provide you the service (processing your documents, history, billing). We do not sell your data to third ' +
+      'parties. Some AI processing is forwarded to third-party language model providers (e.g. Google Gemini) ' +
+      'solely to generate the requested response. You can request the export or deletion of your data by writing ' +
+      'to [{contactEmail}](mailto:{contactEmail}).',
+    s8Title: '8. Service availability',
+    s8Body:
+      'We work to keep {siteName} available and functioning, but we do not guarantee 100% uptime: interruptions ' +
+      'may occur due to maintenance, technical issues, or unavailability of third-party providers we rely on ' +
+      '(hosting, AI models, payments). {siteName} is a project in its launch phase: some features may be changed, ' +
+      'suspended, or removed with short notice.',
+    s9Title: '9. Limitation of liability',
+    s9Body:
+      'To the maximum extent permitted by law, {siteName} is provided "as is", without warranties of any kind. We ' +
+      'are not liable for indirect damages, data loss, or lost profits arising from use of the service or ' +
+      'reliance on AI-generated content. Our total liability toward you, for any reason, is in any case limited ' +
+      'to the amount you paid for the service in the last 12 months.',
+    s10Title: '10. Account suspension and closure',
+    s10Body:
+      'You can close your account at any time from the dashboard. We may suspend or close an account that ' +
+      'violates these terms, generally after attempting to contact you, except in cases of serious abuse or risk ' +
+      'to the security of the service, in which case suspension may be immediate.',
+    s11Title: '11. Changes to these terms',
+    s11Body:
+      'We may update these terms over time, for example to reflect new features or legal requirements. In case of ' +
+      'material changes we will update the date at the top of this page; continued use of the service after a ' +
+      'change constitutes acceptance of the new terms.',
+    s12Title: '12. Governing law',
+    s12Body:
+      'These terms are governed by Italian law. For any dispute, the consumer forum has jurisdiction under ' +
+      'applicable rules, if you are a consumer resident in the EU.',
+    s13Title: '13. Contact',
+    s13Body: 'For questions about these terms, write to [{contactEmail}](mailto:{contactEmail}).',
+  },
 }
 
 export default en

@@ -542,6 +542,95 @@ const es: TranslationDict = {
     haveAccount: '¿Ya tienes una cuenta?',
     loginLink: 'Inicia sesión',
   },
+  terms: {
+    eyebrow: 'Términos y condiciones',
+    title: 'Términos y condiciones de uso',
+    lastUpdated: 'Última actualización: {date}',
+    s1Title: '1. Quiénes somos y aceptación de los términos',
+    s1Body:
+      '{siteName} es un servicio online que ofrece un conjunto de herramientas basadas en inteligencia artificial ' +
+      '(chat con documentos, escritura, código, imágenes, análisis de datos, análisis de contratos, traducción y ' +
+      'conversión de archivos), disponible en {domain}. Al crear una cuenta o usar el servicio, aceptas estos ' +
+      'términos en su totalidad. Si no los aceptas, no puedes usar {siteName}.',
+    s2Title: '2. Cuenta',
+    s2Body:
+      'Para usar {siteName} necesitas una cuenta, creada mediante email y contraseña o con inicio de sesión de ' +
+      'Google. Eres responsable de la seguridad de tus credenciales y de toda la actividad realizada desde tu ' +
+      'cuenta. Debes tener al menos 16 años para registrarte. La información proporcionada al registrarte debe ser ' +
+      'precisa; nos reservamos el derecho de suspender cuentas con datos claramente falsos o creadas para abusar ' +
+      'del servicio (p. ej. eludir los límites del plan Free con varias cuentas).',
+    s3Title: '3. Planes, créditos y facturación',
+    s3Body1:
+      '{siteName} ofrece tres planes: **Free** (gratuito, 50 créditos AI al mes), **Pro** (de pago, 1000 créditos ' +
+      'AI al mes) y **Team** (de pago, 3000 créditos AI al mes, con proyectos compartidos). Los créditos se ' +
+      'consumen al usar las herramientas AI y se renuevan en cada ciclo de facturación; los créditos no usados no ' +
+      'se acumulan de un mes a otro. Los planes de pago incluyen además un límite de páginas/proyectos activos, ' +
+      'indicado en la página de [Precios](/pricing).',
+    s3Body2:
+      'Los pagos se gestionan a través de Stripe; no almacenamos los datos de tu tarjeta. Las suscripciones se ' +
+      'renuevan automáticamente en cada vencimiento hasta que se cancelen. Puedes cancelar la renovación en ' +
+      'cualquier momento desde la sección Facturación del panel: seguirás teniendo acceso al plan de pago hasta el ' +
+      'final del periodo ya pagado, tras lo cual la cuenta vuelve al plan Free. No ofrecemos reembolsos por ' +
+      'periodos de facturación ya iniciados, salvo obligación legal inderogable en tu país.',
+    s4Title: '4. Uso permitido',
+    s4Intro: 'Al usar {siteName} aceptas no:',
+    s4Item1: 'Subir o generar contenido ilegal, difamatorio, o que infrinja derechos de autor de terceros o datos personales sin consentimiento;',
+    s4Item2: 'Usar el servicio para generar spam, phishing, malware o contenido engañoso a gran escala;',
+    s4Item3: 'Intentar eludir los límites de crédito, los controles de acceso o las medidas de seguridad del servicio;',
+    s4Item4: 'Revender o redistribuir el acceso al servicio sin autorización escrita;',
+    s4Item5: 'Usar bots o scraping automatizado para extraer datos del servicio fuera de las API previstas.',
+    s4Outro: 'El incumplimiento de estos puntos puede conllevar la suspensión o cierre de la cuenta, sin reembolso.',
+    s5Title: '5. Contenido generado por inteligencia artificial',
+    s5Body:
+      'El contenido producido por las herramientas AI (textos, código, imágenes, análisis, traducciones) se genera ' +
+      'automáticamente mediante modelos de lenguaje y puede contener errores, imprecisiones o información ' +
+      'desactualizada. Eres responsable de verificar la exactitud de cualquier resultado antes de usarlo, ' +
+      'especialmente para decisiones importantes. En particular, los análisis producidos por Contract AI tienen ' +
+      'fines puramente informativos y **no constituyen asesoramiento legal**: para decisiones contractuales ' +
+      'vinculantes, consulta a un profesional cualificado.',
+    s6Title: '6. Propiedad del contenido',
+    s6Body:
+      'Los documentos que subes siguen siendo de tu propiedad. Dentro de los límites concedidos por los ' +
+      'proveedores de los modelos AI subyacentes, el contenido que generas a través de {siteName} es tuyo y puedes ' +
+      'usarlo libremente, incluso con fines comerciales. No reclamamos ningún derecho sobre tus documentos o el ' +
+      'contenido generado; los tratamos según nuestra gestión de datos descrita en el punto siguiente.',
+    s7Title: '7. Datos y privacidad',
+    s7Body:
+      'Los documentos subidos y los datos de tu cuenta se almacenan en la infraestructura de Supabase y se usan ' +
+      'exclusivamente para prestarte el servicio (procesamiento de tus documentos, historial, facturación). No ' +
+      'vendemos tus datos a terceros. Algunos procesamientos AI se reenvían a proveedores externos de modelos de ' +
+      'lenguaje (p. ej. Google Gemini) con el único fin de generar la respuesta solicitada. Puedes solicitar la ' +
+      'exportación o eliminación de tus datos escribiendo a [{contactEmail}](mailto:{contactEmail}).',
+    s8Title: '8. Disponibilidad del servicio',
+    s8Body:
+      'Nos esforzamos por mantener {siteName} disponible y en funcionamiento, pero no garantizamos un tiempo de ' +
+      'actividad del 100%: pueden producirse interrupciones por mantenimiento, problemas técnicos o indisponibilidad ' +
+      'de proveedores externos de los que dependemos (hosting, modelos AI, pagos). {siteName} es un proyecto en ' +
+      'fase de lanzamiento: algunas funciones pueden modificarse, suspenderse o eliminarse con poco preaviso.',
+    s9Title: '9. Limitación de responsabilidad',
+    s9Body:
+      'En la medida máxima permitida por la ley, {siteName} se ofrece "tal cual", sin garantías de ningún tipo. No ' +
+      'somos responsables de daños indirectos, pérdida de datos o lucro cesante derivados del uso del servicio o ' +
+      'de la confianza depositada en contenido generado por IA. Nuestra responsabilidad total hacia ti, por ' +
+      'cualquier motivo, se limita en todo caso al importe que hayas pagado por el servicio en los últimos 12 ' +
+      'meses.',
+    s10Title: '10. Suspensión y cierre de la cuenta',
+    s10Body:
+      'Puedes cerrar tu cuenta en cualquier momento desde el panel. Podemos suspender o cerrar una cuenta que ' +
+      'incumpla estos términos, generalmente tras intentar contactarte, salvo en casos de abuso grave o riesgo ' +
+      'para la seguridad del servicio, en cuyo caso la suspensión puede ser inmediata.',
+    s11Title: '11. Cambios en los términos',
+    s11Body:
+      'Podemos actualizar estos términos con el tiempo, por ejemplo para reflejar nuevas funciones o requisitos ' +
+      'legales. En caso de cambios relevantes, actualizaremos la fecha en la parte superior de esta página; el uso ' +
+      'continuado del servicio tras un cambio constituye la aceptación de los nuevos términos.',
+    s12Title: '12. Ley aplicable',
+    s12Body:
+      'Estos términos se rigen por la legislación italiana. Para cualquier controversia, es competente el fuero ' +
+      'del consumidor según las normas aplicables, si eres un consumidor residente en la UE.',
+    s13Title: '13. Contacto',
+    s13Body: 'Para preguntas sobre estos términos, escribe a [{contactEmail}](mailto:{contactEmail}).',
+  },
 }
 
 export default es
