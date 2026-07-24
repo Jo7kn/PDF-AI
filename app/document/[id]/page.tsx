@@ -5,10 +5,12 @@ import Link from 'next/link'
 import {
   ArrowLeft, Send, FileText, Calendar, Loader2, User, Bot,
   AlertCircle, Clock, RotateCcw, CalendarDays, Link2, Check,
-  Users, X, Trash2, Eye, Copy
+  Users, X, Trash2, Eye, Sparkles
 } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
+import { Skeleton } from '@/components/skeleton'
+import { CopyIconSwap } from '@/components/animations/copy-icon-swap'
 import { getDocument } from '@/app/actions/documents'
 import { getMessages } from '@/app/actions/messages'
 import { chatWithDocument, processDocument } from '@/app/actions/processing'
@@ -218,8 +220,14 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
         <div className="grid gap-8 xl:grid-cols-[0.95fr_1.05fr]">
           <aside className="space-y-6">
             {loadingDoc ? (
-              <div className="flex items-center justify-center rounded-3xl border border-white/10 bg-slate-900/80 p-10 shadow-xl shadow-black/20">
-                <Loader2 className="h-8 w-8 animate-spin-fast text-cyan-300" />
+              <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+                <div className="flex items-start gap-3">
+                  <Skeleton className="h-12 w-12 flex-shrink-0 rounded-2xl" />
+                  <div className="min-w-0 flex-1 space-y-2 pt-1">
+                    <Skeleton className="h-4 w-1/2" />
+                    <Skeleton className="h-3 w-1/3" />
+                  </div>
+                </div>
               </div>
             ) : docError ? (
               <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
@@ -269,14 +277,14 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
                 )}
 
                 {isProcessing && (
-                  <div className="mb-4 flex items-center gap-2 rounded-xl border border-cyan-400/20 bg-cyan-400/10 p-3 text-sm text-cyan-200">
+                  <div className="animate-fade-in-up mb-4 flex items-center gap-2 rounded-xl border border-cyan-400/20 bg-cyan-400/10 p-3 text-sm text-cyan-200">
                     <Loader2 className="h-4 w-4 flex-shrink-0 animate-spin-fast" />
                     <span>Documento in elaborazione, un momento...</span>
                   </div>
                 )}
 
                 {hasFailed && isOwner && (
-                  <div className="mb-4 space-y-3">
+                  <div className="animate-fade-in-up mb-4 space-y-3">
                     <div className="flex items-center gap-2 rounded-xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-200">
                       <AlertCircle className="h-4 w-4 flex-shrink-0" />
                       <span>{doc?.error_message || 'Elaborazione fallita.'}</span>
@@ -329,16 +337,18 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
                 <button
                   onClick={() => sendMessage('Fammi un riassunto dettagliato del documento, punto per punto.')}
                   disabled={isProcessing || loading}
-                  className="w-full rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 text-left text-sm text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+                  className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 text-left text-sm text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
                 >
-                  Riassumi il documento
+                  <span>Riassumi il documento</span>
+                  <Sparkles className="h-4 w-4 flex-shrink-0" />
                 </button>
                 <button
                   onClick={() => sendMessage('Elenca tutte le scadenze e le date importanti presenti nel documento.')}
                   disabled={isProcessing || loading}
-                  className="w-full rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 text-left text-sm text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+                  className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 text-left text-sm text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
                 >
-                  Estrai tutte le scadenze
+                  <span>Estrai tutte le scadenze</span>
+                  <Calendar className="h-4 w-4 flex-shrink-0" />
                 </button>
                 <button
                   onClick={handleExportCalendar}
@@ -363,7 +373,9 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
             <div className="flex h-[calc(100vh-200px)] flex-col">
               <div className="flex-1 space-y-4 overflow-y-auto p-6">
                 {messages.map((message) => (
-                  <MessageBubble key={message.id} message={message} />
+                  <div key={message.id} className="animate-fade-in-up">
+                    <MessageBubble message={message} />
+                  </div>
                 ))}
                 {loading && (
                   <div className="flex items-center gap-3 text-cyan-300">
@@ -419,6 +431,20 @@ function ShareModal({ documentId, onClose }: { documentId: string; onClose: () =
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  // Ingresso/uscita animati, stesso pattern di GlobalSearchModal
+  // (dashboard/files/page.tsx): senza show=true al mount la transizione
+  // non ha uno stato "da" da cui partire e scatta istantanea.
+  const [show, setShow] = useState(false)
+
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setShow(true))
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
+  const handleClose = () => {
+    setShow(false)
+    setTimeout(onClose, 150)
+  }
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -461,9 +487,16 @@ function ShareModal({ documentId, onClose }: { documentId: string; onClose: () =
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 p-4 pt-24 backdrop-blur-sm" onClick={onClose}>
+    <div
+      className={`fixed inset-0 z-50 flex items-start justify-center bg-black/60 p-4 pt-24 backdrop-blur-sm transition-opacity duration-200 ease-out ${
+        show ? 'opacity-100' : 'opacity-0'
+      }`}
+      onClick={handleClose}
+    >
       <div
-        className="w-full max-w-md rounded-3xl border border-white/10 bg-slate-900 p-6 shadow-2xl"
+        className={`w-full max-w-md origin-center rounded-3xl border border-white/10 bg-slate-900 p-6 shadow-2xl transition-[opacity,transform] duration-200 ease-out-strong ${
+          show ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+        }`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-center justify-between">
@@ -471,7 +504,7 @@ function ShareModal({ documentId, onClose }: { documentId: string; onClose: () =
             <Users className="h-5 w-5 text-cyan-300" />
             Condividi documento
           </h3>
-          <button onClick={onClose} className="text-slate-400 transition-colors duration-150 ease-out hover:text-white">
+          <button onClick={handleClose} className="text-slate-400 transition-colors duration-150 ease-out hover:text-white active:scale-90">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -536,7 +569,7 @@ function ShareModal({ documentId, onClose }: { documentId: string; onClose: () =
         )}
 
         <p className="mt-4 text-xs text-slate-500">
-          Nota: la persona deve avere già un account su PDF AI con questa email.
+          Nota: la persona deve avere già un account su AI Toolbox con questa email.
         </p>
       </div>
     </div>
@@ -580,10 +613,10 @@ function MessageBubble({ message }: { message: any }) {
         {!isUser && (
           <button
             onClick={handleCopy}
-            className="absolute -right-10 top-2 rounded-lg bg-white/5 p-1.5 text-slate-400 opacity-0 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white group-hover:opacity-100"
+            className="absolute -right-9 top-2 rounded-lg bg-white/5 p-1.5 text-slate-400 opacity-0 transition-[opacity,background-color,color] duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-90 group-hover:opacity-100"
             title="Copia testo"
           >
-            {copied ? <Check className="h-4 w-4 text-cyan-300" /> : <Copy className="h-4 w-4" />}
+            <CopyIconSwap copied={copied} className="h-4 w-4" />
           </button>
         )}
 

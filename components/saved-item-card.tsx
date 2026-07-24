@@ -53,7 +53,7 @@ export function SavedItemCard({
   }
 
   return (
-    <div className="group rounded-2xl border border-white/10 bg-white/5 p-4 shadow-black/10 transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out-strong hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/10 hover:shadow-xl">
+    <div className="group rounded-2xl border border-white/10 bg-white/5 p-4 shadow-black/10 transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out-strong hover:-translate-y-0.5 hover:border-cyan-400/30 hover:bg-white/10 hover:shadow-2xl hover:shadow-cyan-500/10">
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div className="flex flex-1 items-start gap-4">
           {item.content_type === 'image' ? (

@@ -375,7 +375,7 @@ function SignupsChart({ data }: { data: Array<{ date: string; count: number }> }
   const total = data.reduce((sum, d) => sum + d.count, 0)
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-5">
+    <div className="rounded-2xl border border-white/10 bg-slate-900/80 p-5">
       <div className="mb-4 flex items-center justify-between">
         <p className="text-sm font-semibold text-white">Nuovi iscritti (14gg)</p>
         <p className="text-xs text-slate-500">{total} totali</p>
@@ -418,7 +418,7 @@ function TierChart({ usersByTier }: { usersByTier: { free: number; pro: number; 
   const max = Math.max(1, ...rows.map((r) => r.value))
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-5">
+    <div className="rounded-2xl border border-white/10 bg-slate-900/80 p-5">
       <p className="mb-4 text-sm font-semibold text-white">Utenti per piano</p>
       <div className="space-y-3">
         {rows.map((r) => (
@@ -457,7 +457,7 @@ function StatCard({
   accent?: keyof typeof ACCENTS
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-slate-900/70 p-5 transition-colors duration-150 ease-out hover:border-white/20">
+    <div className="rounded-2xl border border-white/10 bg-slate-900/80 p-5 transition-colors duration-150 ease-out hover:border-white/20">
       {Icon && (
         <div className={`mb-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 ${accent ? ACCENTS[accent] : 'text-cyan-300'}`}>
           <Icon className="h-4 w-4" />

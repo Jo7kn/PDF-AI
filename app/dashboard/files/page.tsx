@@ -25,6 +25,7 @@ import {
 } from 'lucide-react'
 import { DocumentCard } from '@/components/document-card'
 import { SavedItemCard, type SavedItem } from '@/components/saved-item-card'
+import { SkeletonRow } from '@/components/skeleton'
 import { createDocument } from '@/app/actions/documents'
 import { askAcrossDocuments } from '@/app/actions/search'
 import { getSharedWithMeDocuments } from '@/app/actions/sharing'
@@ -82,6 +83,7 @@ function PdfFilesView() {
   const [uploadProgress, setUploadProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
   const [documents, setDocuments] = useState<any[]>([])
+  const [loadingDocs, setLoadingDocs] = useState(true)
   const [sharedDocuments, setSharedDocuments] = useState<any[]>([])
   const [file, setFile] = useState<File | null>(null)
   const [searchOpen, setSearchOpen] = useState(false)
@@ -119,6 +121,7 @@ function PdfFilesView() {
   }
 
   const loadDocuments = async () => {
+    setLoadingDocs(true)
     try {
       const { getDocuments } = await import('@/app/actions/documents')
       const result = await getDocuments({
@@ -135,6 +138,8 @@ function PdfFilesView() {
       }
     } catch (err) {
       setError(t('filesPage.errorLoadDocuments'))
+    } finally {
+      setLoadingDocs(false)
     }
   }
 
@@ -525,22 +530,32 @@ function PdfFilesView() {
             </div>
           </div>
 
-          <div className="space-y-4">
-            {documents.map((doc, index) => (
-              <div key={doc.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(index, 8) * 40}ms` }}>
-                <DocumentCard
-                  document={doc}
-                  folders={folders}
-                  onToggleFavorite={handleToggleFavorite}
-                  onMoveToFolder={handleMoveToFolder}
-                  onAddTag={handleAddTag}
-                  onRemoveTag={handleRemoveTag}
-                />
-              </div>
-            ))}
-          </div>
+          {loadingDocs && (
+            <div className="space-y-4">
+              <SkeletonRow />
+              <SkeletonRow />
+              <SkeletonRow />
+            </div>
+          )}
 
-          {documents.length === 0 && (
+          {!loadingDocs && (
+            <div className="space-y-4">
+              {documents.map((doc, index) => (
+                <div key={doc.id} className="animate-fade-in-up" style={{ animationDelay: `${Math.min(index, 8) * 40}ms` }}>
+                  <DocumentCard
+                    document={doc}
+                    folders={folders}
+                    onToggleFavorite={handleToggleFavorite}
+                    onMoveToFolder={handleMoveToFolder}
+                    onAddTag={handleAddTag}
+                    onRemoveTag={handleRemoveTag}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {!loadingDocs && documents.length === 0 && (
             <div className="py-12 text-center">
               <FileText className="mx-auto mb-4 h-16 w-16 text-slate-600" />
               <p className="text-slate-400">{t('filesPage.noDocuments')}</p>
@@ -743,7 +758,13 @@ function SavedItemsSection() {
     <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
       <h2 className="mb-6 text-xl font-semibold text-white">{t('filesPage.savedItemsTitle')}</h2>
 
-      {loading && <p className="text-sm text-slate-500">{t('common.loading')}</p>}
+      {loading && (
+        <div className="space-y-3">
+          <SkeletonRow />
+          <SkeletonRow />
+          <SkeletonRow />
+        </div>
+      )}
 
       {!loading && items.length === 0 && (
         <div className="py-12 text-center">
