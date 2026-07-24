@@ -7,7 +7,7 @@
 
 import { fetchWithRetry } from './fetch-with-retry'
 
-const NVIDIA_CODE_API_KEY = process.env.NVIDIA_CODE_API_KEY || process.env.NVIDIA_API_KEY
+const NVIDIA_CODE_API_KEY = process.env.NVIDIA_CODE_API_KEY 
 const NVIDIA_BASE_URL = process.env.NVIDIA_NIM_BASE_URL || 'https://integrate.api.nvidia.com/v1'
 
 const CODE_MODEL = 'meta/llama-3.3-70b-instruct'
