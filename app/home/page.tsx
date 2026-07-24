@@ -90,7 +90,7 @@ export default function HomePage() {
 
           <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {availableTools.map((tool) => (
-              <ToolCard key={tool.slug} tool={tool} userTier={userTier} />
+              <ToolCard key={tool.slug} tool={tool} userTier={userTier} flagEnabled={flags[tool.slug]} />
             ))}
           </div>
         </section>

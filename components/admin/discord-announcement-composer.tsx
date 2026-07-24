@@ -1,15 +1,17 @@
 'use client'
 
-// components/admin/announcement-composer.tsx
+// components/admin/discord-announcement-composer.tsx
 //
-// Form per pubblicare un annuncio sul sito (riquadro console su landing/home,
-// vedi components/announcement-console.tsx + app/actions/announcements.ts).
-// Canale indipendente da Discord (vedi discord-announcement-composer.tsx):
-// l'admin sceglie separatamente cosa mandare dove.
+// Form per postare un annuncio nel canale Discord dedicato (vedi
+// app/actions/discord-announce.ts). Canale indipendente dal sito (vedi
+// announcement-composer.tsx): l'admin sceglie separatamente cosa mandare
+// dove. "Tagga tutti" antepone @everyone al messaggio — richiede che il bot
+// abbia il permesso "Mention Everyone" nel canale Discord, altrimenti Discord
+// lo accetta ma non notifica nessuno.
 
 import { useState } from 'react'
-import { Send, Loader2, Check, AlertCircle } from 'lucide-react'
-import { postAnnouncement } from '@/app/actions/announcements'
+import { Send, Loader2, Check, AlertCircle, AtSign } from 'lucide-react'
+import { sendDiscordAnnouncement } from '@/app/actions/discord-announce'
 import { Button } from '@/components/ui/button'
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
@@ -19,17 +21,19 @@ const ERROR_MESSAGES: Record<string, string> = {
   empty: 'Scrivi un messaggio prima di inviare.',
   'too-long': 'Messaggio troppo lungo (max 4096 caratteri).',
   'title-too-long': 'Titolo troppo lungo (max 256 caratteri).',
-  db: 'Salvataggio annuncio fallito, riprova.',
+  'not-configured': 'DISCORD_BOT_TOKEN o DISCORD_ANNOUNCEMENTS_CHANNEL_ID non configurati.',
+  network: 'Errore di rete, riprova.',
 }
 
 function errorLabel(code?: string): string {
   if (!code) return 'Invio fallito, riprova.'
-  return ERROR_MESSAGES[code] || 'Invio fallito, riprova.'
+  return ERROR_MESSAGES[code] || (code.startsWith('discord-') ? `Discord ha rifiutato il messaggio (${code}).` : 'Invio fallito, riprova.')
 }
 
-export function AnnouncementComposer() {
+export function DiscordAnnouncementComposer() {
   const [title, setTitle] = useState('')
   const [message, setMessage] = useState('')
+  const [tagEveryone, setTagEveryone] = useState(false)
   const [status, setStatus] = useState<Status>('idle')
   const [error, setError] = useState<string | undefined>()
 
@@ -38,11 +42,12 @@ export function AnnouncementComposer() {
     if (status === 'loading' || !message.trim()) return
     setStatus('loading')
     setError(undefined)
-    const result = await postAnnouncement(title, message)
+    const result = await sendDiscordAnnouncement(title, message, tagEveryone)
     if (result.success) {
       setStatus('success')
       setTitle('')
       setMessage('')
+      setTagEveryone(false)
       setTimeout(() => setStatus('idle'), 3000)
     } else {
       setStatus('error')
@@ -63,16 +68,26 @@ export function AnnouncementComposer() {
       <textarea
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        placeholder="Scrivi l'annuncio da mostrare nel riquadro console del sito..."
+        placeholder="Scrivi l'annuncio da postare nel canale Discord..."
         rows={4}
         maxLength={4096}
         className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-cyan-400/50 focus:outline-none"
       />
+      <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-300">
+        <input
+          type="checkbox"
+          checked={tagEveryone}
+          onChange={(e) => setTagEveryone(e.target.checked)}
+          className="h-4 w-4 rounded border-white/20 bg-white/5 text-cyan-400 focus:ring-cyan-400/50 focus:ring-offset-0"
+        />
+        <AtSign className="h-3.5 w-3.5 text-slate-400" />
+        Tagga tutti (@everyone)
+      </label>
       <div className="flex items-center justify-between gap-3">
         <div className="text-xs">
           {status === 'success' && (
             <span className="flex items-center gap-1.5 text-emerald-300">
-              <Check className="h-3.5 w-3.5" /> Annuncio pubblicato sul sito.
+              <Check className="h-3.5 w-3.5" /> Annuncio inviato su Discord.
             </span>
           )}
           {status === 'error' && (
@@ -84,7 +99,7 @@ export function AnnouncementComposer() {
         </div>
         <Button type="submit" className="flex-shrink-0 gap-2" disabled={status === 'loading' || !message.trim()}>
           {status === 'loading' ? <Loader2 className="h-4 w-4 animate-spin-fast" /> : <Send className="h-4 w-4" />}
-          Pubblica sul sito
+          Invia su Discord
         </Button>
       </div>
     </form>

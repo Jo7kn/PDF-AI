@@ -15,6 +15,7 @@ import {
   ArrowLeft,
   UserPlus,
   Gift,
+  Terminal,
   type LucideIcon,
 } from 'lucide-react'
 import {
@@ -29,6 +30,7 @@ import {
 import { getAllFeatureFlags } from '@/lib/feature-flags'
 import { FeatureFlagToggle } from '@/components/admin/feature-flag-toggle'
 import { AnnouncementComposer } from '@/components/admin/announcement-composer'
+import { DiscordAnnouncementComposer } from '@/components/admin/discord-announcement-composer'
 import { CreditAdjuster } from '@/components/admin/credit-adjuster'
 import { ExportWaitlistButton } from '@/components/admin/export-waitlist-button'
 import { ConsoleLog } from '@/components/admin/console-log'
@@ -206,13 +208,19 @@ export default async function AdminPage() {
         </section>
 
         <section id="comunicazioni" className="scroll-mt-24">
-          <SectionHeader icon={Megaphone} title="Comunicazioni" description="Annunci su Discord e correzioni manuali del saldo crediti." />
+          <SectionHeader icon={Megaphone} title="Comunicazioni" description="Annunci sul sito, su Discord e correzioni manuali del saldo crediti." />
           <div className="grid gap-4 lg:grid-cols-2">
             <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6">
               <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-white">
-                <Megaphone className="h-4 w-4 text-cyan-300" /> Annuncio su Discord
+                <Terminal className="h-4 w-4 text-cyan-300" /> Annuncio sul sito
               </div>
               <AnnouncementComposer />
+            </div>
+            <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6">
+              <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-white">
+                <Megaphone className="h-4 w-4 text-indigo-300" /> Annuncio su Discord
+              </div>
+              <DiscordAnnouncementComposer />
             </div>
             <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6">
               <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-white">

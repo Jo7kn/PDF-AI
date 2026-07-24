@@ -22,7 +22,7 @@ export interface AnnouncementResult {
   error?: string
 }
 
-export async function sendDiscordAnnouncement(title: string, message: string): Promise<AnnouncementResult> {
+export async function sendDiscordAnnouncement(title: string, message: string, tagEveryone = false): Promise<AnnouncementResult> {
   if (!(await isCurrentUserAdmin())) return { success: false, error: 'unauthorized' }
 
   const trimmedTitle = title.trim()
@@ -43,6 +43,12 @@ export async function sendDiscordAnnouncement(title: string, message: string): P
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        // Discord non notifica i mention scritti dentro un embed (description/
+        // title): @everyone deve stare nel "content" del messaggio, con
+        // allowed_mentions che lo autorizza esplicitamente — altrimenti Discord
+        // lo sopprime silenziosamente di default.
+        content: tagEveryone ? '@everyone' : undefined,
+        allowed_mentions: { parse: tagEveryone ? ['everyone'] : [] },
         embeds: [
           {
             author: { name: SITE_NAME, icon_url: SITE_ICON_URL, url: SITE_URL },
