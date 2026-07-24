@@ -6,6 +6,7 @@ import { Sparkles, ArrowRight, Layers, Wallet, ShieldCheck, LayoutGrid } from 'l
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
 import { ToolCard } from '@/components/tool-card'
+import { AnnouncementConsole } from '@/components/announcement-console'
 import { AI_TOOLS } from '@/lib/tools'
 import { getCurrentUserProfile } from '@/app/actions/auth'
 import { getPublicFeatureFlags } from '@/app/actions/feature-flags'
@@ -67,6 +68,8 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        <AnnouncementConsole className="mx-auto mb-10 max-w-4xl" />
 
         <section className="mb-10 grid gap-4 sm:grid-cols-3">
           <InfoCard icon={Layers} title={t('home.infoModularTitle')} description={t('home.infoModularDesc')} />

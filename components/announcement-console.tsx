@@ -27,7 +27,7 @@ function formatTimestamp(iso: string): string {
   })
 }
 
-export function AnnouncementConsole() {
+export function AnnouncementConsole({ className = 'mx-auto max-w-4xl px-4 sm:px-6 lg:px-8' }: { className?: string }) {
   const [announcements, setAnnouncements] = useState<Announcement[] | null>(null)
   const timer = useRef<ReturnType<typeof setInterval> | null>(null)
 
@@ -44,7 +44,7 @@ export function AnnouncementConsole() {
   }, [])
 
   return (
-    <section className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+    <section className={className}>
       <ScrollReveal>
         <div className="overflow-hidden rounded-3xl border border-white/10 bg-slate-900/80 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
           {/* Barra titolo in stile finestra terminale */}

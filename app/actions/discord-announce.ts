@@ -9,8 +9,12 @@
 'use server'
 
 import { isCurrentUserAdmin } from '@/lib/admin'
+import { SITE_URL, SITE_NAME } from '@/lib/seo'
 
 const DISCORD_API = 'https://discord.com/api/v10'
+// PNG, non icon.svg: il fetcher di embed di Discord non renderizza SVG in
+// modo affidabile per author/thumbnail icons.
+const SITE_ICON_URL = `${SITE_URL}/apple-icon.png`
 const MAX_MESSAGE_LENGTH = 4096 // limite embed description Discord (non 2000, quello è per content semplice)
 
 export interface AnnouncementResult {
@@ -41,11 +45,14 @@ export async function sendDiscordAnnouncement(title: string, message: string): P
       body: JSON.stringify({
         embeds: [
           {
-            title: trimmedTitle || '📢 Annuncio AI Toolbox',
+            author: { name: SITE_NAME, icon_url: SITE_ICON_URL, url: SITE_URL },
+            title: trimmedTitle || '📢 Nuovo annuncio',
+            url: SITE_URL,
             description: trimmedMessage,
             color: 0x22d3ee,
+            thumbnail: { url: SITE_ICON_URL },
             timestamp: new Date().toISOString(),
-            footer: { text: 'AI Toolbox · inviato da /admin' },
+            footer: { text: `${SITE_NAME} · inviato da /admin`, icon_url: SITE_ICON_URL },
           },
         ],
       }),
