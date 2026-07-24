@@ -610,6 +610,11 @@ const zh: TranslationDict = {
     s13Title: '13. 联系方式',
     s13Body: '如对本条款有任何疑问，请发邮件至 [{contactEmail}](mailto:{contactEmail})。',
   },
+  announcementConsole: {
+    loading: '正在加载公告…',
+    empty: '暂无公告，敬请期待',
+    live: '实时',
+  },
 }
 
 export default zh

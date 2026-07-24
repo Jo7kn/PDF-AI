@@ -639,6 +639,11 @@ const it = {
     s13Title: '13. Contatti',
     s13Body: 'Per domande su questi termini scrivi a [{contactEmail}](mailto:{contactEmail}).',
   },
+  announcementConsole: {
+    loading: 'Caricamento annunci…',
+    empty: 'Nessun annuncio ancora. Resta sintonizzato',
+    live: 'live',
+  },
 }
 
 export type TranslationDict = typeof it

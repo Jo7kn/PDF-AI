@@ -15,21 +15,23 @@ import { useEffect, useRef, useState } from 'react'
 import { Terminal } from 'lucide-react'
 import { getAnnouncements, type Announcement } from '@/app/actions/announcements'
 import { ScrollReveal } from '@/components/scroll-reveal'
+import { useLocale } from '@/lib/i18n/locale-context'
+import { LOCALE_DATE_TAG } from '@/lib/i18n/translations'
 
 const POLL_MS = 45000
 
-function formatTimestamp(iso: string): string {
-  return new Date(iso).toLocaleString('it-IT', {
-    day: '2-digit',
-    month: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
-
 export function AnnouncementConsole({ className = 'mx-auto max-w-4xl px-4 sm:px-6 lg:px-8' }: { className?: string }) {
+  const { t, locale } = useLocale()
   const [announcements, setAnnouncements] = useState<Announcement[] | null>(null)
   const timer = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  const formatTimestamp = (iso: string): string =>
+    new Date(iso).toLocaleString(LOCALE_DATE_TAG[locale], {
+      day: '2-digit',
+      month: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
 
   useEffect(() => {
     const load = async () => {
@@ -60,18 +62,18 @@ export function AnnouncementConsole({ className = 'mx-auto max-w-4xl px-4 sm:px-
             </div>
             <span className="ml-auto flex items-center gap-1.5 text-xs text-slate-500">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
-              live
+              {t('announcementConsole.live')}
             </span>
           </div>
 
           {/* Corpo log */}
           <div className="max-h-80 overflow-y-auto p-5 font-mono text-sm leading-relaxed">
             {announcements === null ? (
-              <p className="text-slate-600">Caricamento annunci…</p>
+              <p className="text-slate-600">{t('announcementConsole.loading')}</p>
             ) : announcements.length === 0 ? (
               <p className="flex items-center gap-2 text-slate-500">
                 <span className="text-cyan-400">❯</span>
-                Nessun annuncio ancora. Resta sintonizzato
+                {t('announcementConsole.empty')}
                 <span className="inline-block h-4 w-[7px] animate-pulse bg-cyan-300/80" />
               </p>
             ) : (

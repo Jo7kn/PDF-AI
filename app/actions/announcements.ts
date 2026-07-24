@@ -14,6 +14,7 @@
 
 import { isCurrentUserAdmin } from '@/lib/admin'
 import { createServiceClient } from '@/lib/supabase/service'
+import { createClient } from '@/lib/supabase/server'
 
 const MAX_MESSAGE_LENGTH = 4096
 const MAX_TITLE_LENGTH = 256
@@ -39,10 +40,16 @@ export async function postAnnouncement(title: string, message: string): Promise<
   if (trimmedMessage.length > MAX_MESSAGE_LENGTH) return { success: false, error: 'too-long' }
   if (trimmedTitle.length > MAX_TITLE_LENGTH) return { success: false, error: 'title-too-long' }
 
+  // isCurrentUserAdmin() già ha verificato la sessione — riletta qui solo per
+  // l'id, non per il controllo di autorizzazione (già passato sopra).
+  const sessionClient = await createClient()
+  const { data: { user } } = await sessionClient.auth.getUser()
+
   const supabase = createServiceClient()
   const { error } = await supabase.from('announcements').insert({
     title: trimmedTitle || null,
     message: trimmedMessage,
+    created_by: user?.id ?? null,
   })
 
   if (error) {

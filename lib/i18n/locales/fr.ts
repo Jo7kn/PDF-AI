@@ -638,6 +638,11 @@ const fr: TranslationDict = {
     s13Title: '13. Contact',
     s13Body: 'Pour toute question sur ces conditions, écrivez à [{contactEmail}](mailto:{contactEmail}).',
   },
+  announcementConsole: {
+    loading: 'Chargement des annonces…',
+    empty: 'Aucune annonce pour le moment. Restez à l\'écoute',
+    live: 'live',
+  },
 }
 
 export default fr

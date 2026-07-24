@@ -631,6 +631,11 @@ const es: TranslationDict = {
     s13Title: '13. Contacto',
     s13Body: 'Para preguntas sobre estos términos, escribe a [{contactEmail}](mailto:{contactEmail}).',
   },
+  announcementConsole: {
+    loading: 'Cargando anuncios…',
+    empty: 'Aún no hay anuncios. Mantente atento',
+    live: 'live',
+  },
 }
 
 export default es

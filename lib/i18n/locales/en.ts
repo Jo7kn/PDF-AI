@@ -628,6 +628,11 @@ const en: TranslationDict = {
     s13Title: '13. Contact',
     s13Body: 'For questions about these terms, write to [{contactEmail}](mailto:{contactEmail}).',
   },
+  announcementConsole: {
+    loading: 'Loading announcements…',
+    empty: 'No announcements yet. Stay tuned',
+    live: 'live',
+  },
 }
 
 export default en

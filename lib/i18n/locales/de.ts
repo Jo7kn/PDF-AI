@@ -636,6 +636,11 @@ const de: TranslationDict = {
     s13Title: '13. Kontakt',
     s13Body: 'Bei Fragen zu diesen Bedingungen schreibe an [{contactEmail}](mailto:{contactEmail}).',
   },
+  announcementConsole: {
+    loading: 'Ankündigungen werden geladen…',
+    empty: 'Noch keine Ankündigungen. Bleib dran',
+    live: 'live',
+  },
 }
 
 export default de
