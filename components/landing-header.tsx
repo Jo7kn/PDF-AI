@@ -10,12 +10,18 @@ import Link from 'next/link'
 import { Sparkles } from 'lucide-react'
 import { useLocale } from '@/lib/i18n/locale-context'
 import { LanguageSwitcher } from '@/components/app-header'
+import { MobileNavMenu } from '@/components/mobile-nav-menu'
 
 export function LandingHeader() {
   const { t } = useLocale()
 
+  const navItems = [
+    { href: '#features', label: t('nav.features') },
+    { href: '#pricing', label: t('nav.pricing') },
+  ]
+
   return (
-    <header className="border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
+    <header className="relative border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-violet-500 shadow-lg shadow-cyan-500/20">
@@ -42,7 +48,17 @@ export function LandingHeader() {
           </Link>
         </nav>
 
-        <LanguageSwitcher />
+        <div className="flex items-center gap-3">
+          <LanguageSwitcher />
+          <MobileNavMenu navItems={navItems}>
+            <Link href="/login" className="rounded-full border border-white/10 px-4 py-2.5 text-center text-sm font-medium text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white">
+              {t('nav.login')}
+            </Link>
+            <Link href="/signup" className="rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-4 py-2.5 text-center text-sm font-semibold text-white transition-opacity duration-150 ease-out hover:opacity-90">
+              {t('nav.signup')}
+            </Link>
+          </MobileNavMenu>
+        </div>
       </div>
     </header>
   )

@@ -10,7 +10,7 @@
 // whileInView con viewport once:true anima solo alla prima apparizione
 // reale nel viewport, non ad ogni mount.
 
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 
 const EASE_OUT_STRONG = [0.23, 1, 0.32, 1] as const
 
@@ -23,13 +23,17 @@ export function ScrollReveal({
   delay?: number
   className?: string
 }) {
+  // prefers-reduced-motion: niente movimento (y), l'opacity resta — aiuta
+  // comunque la leggibilità di un'apparizione senza causare motion sickness.
+  const shouldReduceMotion = useReducedMotion()
+
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 8 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.26, ease: EASE_OUT_STRONG, delay }}
+      transition={{ duration: shouldReduceMotion ? 0.15 : 0.26, ease: EASE_OUT_STRONG, delay }}
     >
       {children}
     </motion.div>
