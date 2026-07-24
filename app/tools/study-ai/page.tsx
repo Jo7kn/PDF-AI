@@ -11,11 +11,14 @@ import {
   RotateCcw,
   Check,
   X,
+  Sparkles,
 } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
 import { FaqSection } from '@/components/faq-section'
 import { SaveButton } from '@/components/save-button'
+import { AiLoadingState } from '@/components/ai-loading-state'
+import { CopyIconSwap } from '@/components/animations/copy-icon-swap'
 import { runStudyFlashcards, runStudyQuiz, runStudyTutor, runStudyPlan } from '@/app/actions/study-ai'
 import type { Flashcard, QuizQuestion } from '@/lib/nvidia/study'
 import { useLocale } from '@/lib/i18n/locale-context'
@@ -34,6 +37,17 @@ export default function StudyAiPage() {
   const [quiz, setQuiz] = useState<QuizQuestion[] | null>(null)
   const [answer, setAnswer] = useState<string | null>(null)
   const [plan, setPlan] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error('Copia fallita:', err)
+    }
+  }
 
   const MODES: Array<{ key: StudyMode; label: string; icon: typeof GraduationCap; placeholder: string }> = [
     { key: 'flashcards', label: t('studyAiPage.modeFlashcards'), icon: ClipboardList, placeholder: t('studyAiPage.placeholderFlashcards') },
@@ -107,7 +121,7 @@ export default function StudyAiPage() {
           ))}
         </div>
 
-        <section className="mb-6 rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+        <section className="mb-6 rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-amber-500/10 backdrop-blur-xl">
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -142,22 +156,44 @@ export default function StudyAiPage() {
           </button>
         </section>
 
-        {flashcards && (
-          <div className="space-y-3">
-            <div className="flex justify-end">
+        {loading && (
+          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-amber-500/10 backdrop-blur-xl">
+            <AiLoadingState />
+          </section>
+        )}
+
+        {!loading && !flashcards && !quiz && !answer && !plan && !error && (
+          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-amber-500/10 backdrop-blur-xl">
+            <div className="flex h-40 flex-col items-center justify-center gap-3 text-slate-600">
+              <Sparkles className="h-10 w-10" />
+              <p className="text-sm">{t('common.resultPlaceholder')}</p>
+            </div>
+          </section>
+        )}
+
+        {!loading && flashcards && (
+          <div className="animate-fade-in-up space-y-3">
+            <div className="flex justify-end gap-2">
               <SaveButton
                 tool="study-ai"
                 title={`Study AI · ${t('studyAiPage.modeFlashcards')} (${input.slice(0, 40)})`}
                 content={flashcards.map((c) => `${t('studyAiPage.question')}: ${c.question}\n${t('studyAiPage.answer')}: ${c.answer}`).join('\n\n')}
                 metadata={{ action: 'flashcards', count: flashcards.length }}
               />
+              <button
+                onClick={() => handleCopy(flashcards.map((c) => `${t('studyAiPage.question')}: ${c.question}\n${t('studyAiPage.answer')}: ${c.answer}`).join('\n\n'))}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.95]"
+              >
+                <CopyIconSwap copied={copied} />
+                {copied ? t('common.copied') : t('common.copy')}
+              </button>
             </div>
             <FlashcardsView cards={flashcards} />
           </div>
         )}
-        {quiz && (
-          <div className="space-y-3">
-            <div className="flex justify-end">
+        {!loading && quiz && (
+          <div className="animate-fade-in-up space-y-3">
+            <div className="flex justify-end gap-2">
               <SaveButton
                 tool="study-ai"
                 title={`Study AI · ${t('studyAiPage.modeQuiz')} (${input.slice(0, 40)})`}
@@ -166,22 +202,45 @@ export default function StudyAiPage() {
                   .join('\n\n')}
                 metadata={{ action: 'quiz', count: quiz.length }}
               />
+              <button
+                onClick={() => handleCopy(quiz
+                  .map((q, i) => `${i + 1}. ${q.question}\n${q.options.map((o, j) => `   ${String.fromCharCode(65 + j)}. ${o}`).join('\n')}\n${t('studyAiPage.correctAnswer')}: ${q.options[q.correctIndex]}\n${q.explanation}`)
+                  .join('\n\n'))}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.95]"
+              >
+                <CopyIconSwap copied={copied} />
+                {copied ? t('common.copied') : t('common.copy')}
+              </button>
             </div>
             <QuizView questions={quiz} />
           </div>
         )}
-        {answer && (
-          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
-            <div className="mb-3 flex justify-end">
+        {!loading && answer && (
+          <section className="animate-fade-in-up rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-amber-500/10 backdrop-blur-xl">
+            <div className="mb-3 flex justify-end gap-2">
               <SaveButton tool="study-ai" title={`Study AI · ${t('studyAiPage.modeTutor')} (${input.slice(0, 40)})`} content={answer} metadata={{ action: 'tutor' }} />
+              <button
+                onClick={() => handleCopy(answer)}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.95]"
+              >
+                <CopyIconSwap copied={copied} />
+                {copied ? t('common.copied') : t('common.copy')}
+              </button>
             </div>
             <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-100">{answer}</div>
           </section>
         )}
-        {plan && (
-          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
-            <div className="mb-3 flex justify-end">
+        {!loading && plan && (
+          <section className="animate-fade-in-up rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-amber-500/10 backdrop-blur-xl">
+            <div className="mb-3 flex justify-end gap-2">
               <SaveButton tool="study-ai" title={`Study AI · ${t('studyAiPage.modePlan')} (${input.slice(0, 40)})`} content={plan} metadata={{ action: 'plan' }} />
+              <button
+                onClick={() => handleCopy(plan)}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.95]"
+              >
+                <CopyIconSwap copied={copied} />
+                {copied ? t('common.copied') : t('common.copy')}
+              </button>
             </div>
             <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-100">{plan}</div>
           </section>
@@ -214,7 +273,7 @@ function FlashcardsView({ cards }: { cards: Flashcard[] }) {
         <button
           key={i}
           onClick={() => toggle(i)}
-          className="min-h-[9rem] rounded-2xl border border-white/10 bg-slate-900/80 p-5 text-left shadow-xl shadow-black/20 transition-colors duration-150 ease-out hover:border-amber-400/30"
+          className="min-h-[9rem] rounded-2xl border border-white/10 bg-slate-900/80 p-5 text-left shadow-xl shadow-black/20 backdrop-blur-xl transition-[border-color,transform] duration-150 ease-out-strong hover:border-amber-400/30 active:scale-[0.98]"
         >
           <p className="mb-2 text-xs font-medium uppercase tracking-wide text-amber-300">
             {flipped.has(i) ? t('studyAiPage.answer') : t('studyAiPage.question')} · {i + 1}/{cards.length}
@@ -249,7 +308,7 @@ function QuizView({ questions }: { questions: QuizQuestion[] }) {
         const userAnswer = selected[qi]
         const isAnswered = userAnswer !== undefined
         return (
-          <div key={qi} className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+          <div key={qi} className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-amber-500/10 backdrop-blur-xl">
             <p className="mb-4 font-medium text-white">{qi + 1}. {q.question}</p>
             <div className="space-y-2">
               {q.options.map((opt, oi) => {
@@ -264,7 +323,7 @@ function QuizView({ questions }: { questions: QuizQuestion[] }) {
                     key={oi}
                     onClick={() => select(qi, oi)}
                     disabled={isAnswered}
-                    className={`flex w-full items-center justify-between rounded-xl border px-4 py-2.5 text-left text-sm transition-colors duration-150 ease-out ${style} disabled:cursor-default`}
+                    className={`flex w-full items-center justify-between rounded-xl border px-4 py-2.5 text-left text-sm transition-[background-color,border-color,transform] duration-150 ease-out-strong active:scale-[0.98] disabled:active:scale-100 ${style} disabled:cursor-default`}
                   >
                     <span>{opt}</span>
                     {isAnswered && isCorrect && <Check className="h-4 w-4 flex-shrink-0" />}

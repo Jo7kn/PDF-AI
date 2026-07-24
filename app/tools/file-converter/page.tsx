@@ -13,12 +13,11 @@ import {
   Loader2,
   AlertCircle,
   ArrowRight,
-  Copy,
-  Check,
 } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
 import { AiLoadingState } from '@/components/ai-loading-state'
+import { CopyIconSwap } from '@/components/animations/copy-icon-swap'
 import { FaqSection } from '@/components/faq-section'
 import { SaveButton } from '@/components/save-button'
 import { runTextConversion, convertPdfToText, convertImageFormat, type ImageOutputFormat } from '@/app/actions/file-converter'
@@ -116,7 +115,7 @@ function TextConverter() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+      <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
         <div className="mb-4 flex flex-wrap items-center gap-3">
           <FormatSelect value={from} onChange={setFrom} />
           <ArrowRight className="h-4 w-4 text-slate-500" />
@@ -145,14 +144,14 @@ function TextConverter() {
         </button>
       </section>
 
-      <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+      <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-white">{t('common.result')}</h2>
           {output && (
             <div className="flex items-center gap-2">
               <SaveButton tool="file-converter" title={`Conversione ${from} → ${to}`} content={output} metadata={{ from, to }} />
-              <button onClick={handleCopy} className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white">
-                {copied ? <Check className="h-3.5 w-3.5 text-lime-300" /> : <Copy className="h-3.5 w-3.5" />}
+              <button onClick={handleCopy} className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.95]">
+                <CopyIconSwap copied={copied} />
                 {copied ? t('common.copied') : t('common.copy')}
               </button>
             </div>
@@ -166,7 +165,7 @@ function TextConverter() {
           </div>
         )}
         {!loading && output && (
-          <pre className="max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-slate-950/60 p-4 font-mono text-sm text-slate-100">{output}</pre>
+          <pre className="animate-fade-in-up max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-slate-950/60 p-4 font-mono text-sm text-slate-100">{output}</pre>
         )}
       </section>
     </div>
@@ -222,17 +221,17 @@ function CsvJsonConverter() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+      <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
         <div className="mb-4 flex gap-2">
           <button
             onClick={() => { setDirection('csv-to-json'); setInput(''); setOutput(null); setError(null) }}
-            className={`rounded-full border px-4 py-2 text-sm transition-colors duration-150 ease-out ${direction === 'csv-to-json' ? 'border-lime-400/40 bg-lime-400/15 text-lime-200' : 'border-white/10 bg-white/5 text-slate-300'}`}
+            className={`rounded-full border px-4 py-2 text-sm transition-colors duration-150 ease-out active:scale-[0.97] ${direction === 'csv-to-json' ? 'border-lime-400/40 bg-lime-400/15 text-lime-200' : 'border-white/10 bg-white/5 text-slate-300'}`}
           >
             CSV → JSON
           </button>
           <button
             onClick={() => { setDirection('json-to-csv'); setInput(''); setOutput(null); setError(null) }}
-            className={`rounded-full border px-4 py-2 text-sm transition-colors duration-150 ease-out ${direction === 'json-to-csv' ? 'border-lime-400/40 bg-lime-400/15 text-lime-200' : 'border-white/10 bg-white/5 text-slate-300'}`}
+            className={`rounded-full border px-4 py-2 text-sm transition-colors duration-150 ease-out active:scale-[0.97] ${direction === 'json-to-csv' ? 'border-lime-400/40 bg-lime-400/15 text-lime-200' : 'border-white/10 bg-white/5 text-slate-300'}`}
           >
             JSON → CSV
           </button>
@@ -260,14 +259,14 @@ function CsvJsonConverter() {
         </button>
       </section>
 
-      <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+      <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-white">{t('common.result')}</h2>
           {output && (
             <div className="flex items-center gap-2">
               <SaveButton tool="file-converter" title={direction === 'csv-to-json' ? 'CSV → JSON' : 'JSON → CSV'} content={output} metadata={{ direction }} />
-              <button onClick={handleCopy} className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white">
-                {copied ? <Check className="h-3.5 w-3.5 text-lime-300" /> : <Copy className="h-3.5 w-3.5" />}
+              <button onClick={handleCopy} className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.95]">
+                <CopyIconSwap copied={copied} />
                 {copied ? t('common.copied') : t('common.copy')}
               </button>
             </div>
@@ -280,7 +279,7 @@ function CsvJsonConverter() {
           </div>
         )}
         {output && (
-          <pre className="max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-slate-950/60 p-4 font-mono text-sm text-slate-100">{output}</pre>
+          <pre className="animate-fade-in-up max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-slate-950/60 p-4 font-mono text-sm text-slate-100">{output}</pre>
         )}
       </section>
     </div>
@@ -328,7 +327,7 @@ function PdfToTextConverter() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+      <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
         <div
           className="cursor-pointer rounded-2xl border-2 border-dashed border-white/15 bg-white/5 p-8 text-center transition-colors duration-150 ease-out hover:border-lime-400/40"
           onClick={() => document.getElementById('pdf-input')?.click()}
@@ -355,14 +354,14 @@ function PdfToTextConverter() {
         </button>
       </section>
 
-      <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+      <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-white">{t('fileConverterPage.extractedTextTitle')}</h2>
           {output && (
             <div className="flex items-center gap-2">
               <SaveButton tool="file-converter" title={`PDF → Testo · ${file?.name || ''}`} content={output} metadata={{ from: 'pdf', to: 'text' }} />
-              <button onClick={handleCopy} className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white">
-                {copied ? <Check className="h-3.5 w-3.5 text-lime-300" /> : <Copy className="h-3.5 w-3.5" />}
+              <button onClick={handleCopy} className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.95]">
+                <CopyIconSwap copied={copied} />
                 {copied ? t('common.copied') : t('common.copy')}
               </button>
             </div>
@@ -376,7 +375,7 @@ function PdfToTextConverter() {
         )}
         {loading && <AiLoadingState />}
         {output && (
-          <pre className="max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm text-slate-100">{output}</pre>
+          <pre className="animate-fade-in-up max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm text-slate-100">{output}</pre>
         )}
       </section>
     </div>
@@ -417,7 +416,7 @@ function ImageConverter() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+      <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
         <div
           className="cursor-pointer rounded-2xl border-2 border-dashed border-white/15 bg-white/5 p-8 text-center transition-colors duration-150 ease-out hover:border-lime-400/40"
           onClick={() => document.getElementById('image-input')?.click()}
@@ -459,7 +458,7 @@ function ImageConverter() {
         </button>
       </section>
 
-      <section className="flex flex-col rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+      <section className="flex flex-col rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-white">{t('common.result')}</h2>
           {resultUrl && (
@@ -477,7 +476,7 @@ function ImageConverter() {
           )}
         </div>
         <div className="flex flex-1 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-slate-950/60">
-          {loading && <Loader2 className="h-8 w-8 animate-spin-fast text-slate-500" />}
+          {loading && <AiLoadingState className="p-8" />}
           {!loading && !resultUrl && (
             <div className="flex flex-col items-center gap-3 p-8 text-slate-600">
               <ImageIcon className="h-10 w-10" />
@@ -486,7 +485,7 @@ function ImageConverter() {
           )}
           {!loading && resultUrl && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={resultUrl} alt="Convertita" className="max-h-[32rem] w-full object-contain" />
+            <img src={resultUrl} alt="Convertita" className="animate-fade-in-up max-h-[32rem] w-full object-contain" />
           )}
         </div>
       </section>

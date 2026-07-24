@@ -15,6 +15,8 @@ import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
 import { FaqSection } from '@/components/faq-section'
 import { SaveButton } from '@/components/save-button'
+import { AiLoadingState } from '@/components/ai-loading-state'
+import { CopyIconSwap } from '@/components/animations/copy-icon-swap'
 import { runDataInsights } from '@/app/actions/data-ai'
 import { parseCsv, isNumericColumn, type ParsedCsv } from '@/lib/csv'
 import { useLocale } from '@/lib/i18n/locale-context'
@@ -31,6 +33,18 @@ export default function DataAiPage() {
   const [loadingInsights, setLoadingInsights] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [fileError, setFileError] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = async () => {
+    if (!insights) return
+    try {
+      await navigator.clipboard.writeText(insights)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error('Copia fallita:', err)
+    }
+  }
 
   const numericColumns = useMemo(() => {
     if (!parsed) return []
@@ -148,7 +162,7 @@ export default function DataAiPage() {
         <h1 className="mb-4 text-xl font-semibold text-white sm:text-2xl">Data AI: analizza CSV ed Excel con l’AI</h1>
         <TierGate gradient="from-sky-400 to-blue-500">
         {!parsed && (
-          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-sky-500/10 backdrop-blur-xl">
             <div
               className="cursor-pointer rounded-2xl border-2 border-dashed border-white/15 bg-white/5 p-8 text-center transition-colors duration-150 ease-out hover:border-sky-400/40"
               onClick={() => document.getElementById('csv-input')?.click()}
@@ -191,7 +205,7 @@ export default function DataAiPage() {
               </button>
             </div>
 
-            <section className="mb-6 rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+            <section className="mb-6 rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-sky-500/10 backdrop-blur-xl">
               <div className="mb-4 flex flex-wrap items-center gap-3">
                 <div className="flex items-center gap-2 text-white">
                   <BarChart3 className="h-5 w-5 text-sky-300" />
@@ -231,7 +245,7 @@ export default function DataAiPage() {
               )}
             </section>
 
-            <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+            <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-sky-500/10 backdrop-blur-xl">
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-white">{t('dataAiPage.insightsTitle')}</h2>
                 <button
@@ -251,17 +265,26 @@ export default function DataAiPage() {
                 </div>
               )}
 
+              {loadingInsights && <AiLoadingState className="h-40" />}
+
               {!insights && !loadingInsights && (
                 <p className="text-sm text-slate-500">{t('dataAiPage.insightsEmpty')}</p>
               )}
 
-              {insights && (
-                <>
-                  <div className="mb-3 flex justify-end">
+              {!loadingInsights && insights && (
+                <div className="animate-fade-in-up">
+                  <div className="mb-3 flex justify-end gap-2">
                     <SaveButton tool="data-ai" title={t('dataAiPage.insightsSavedTitle')} content={insights} />
+                    <button
+                      onClick={handleCopy}
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.95]"
+                    >
+                      <CopyIconSwap copied={copied} />
+                      {copied ? t('common.copied') : t('common.copy')}
+                    </button>
                   </div>
                   <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-100">{insights}</div>
-                </>
+                </div>
               )}
             </section>
           </>
@@ -277,7 +300,7 @@ export default function DataAiPage() {
 
 function StatTile({ icon: Icon, label, value }: { icon: typeof Rows3; label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-slate-900/80 px-5 py-4 shadow-xl shadow-black/20">
+    <div className="rounded-2xl border border-white/10 bg-slate-900/80 px-5 py-4 shadow-xl shadow-black/20 backdrop-blur-xl transition-colors duration-150 ease-out hover:border-white/20">
       <div className="mb-1 flex items-center gap-2 text-slate-400">
         <Icon className="h-4 w-4" />
         <span className="text-xs">{label}</span>
@@ -314,7 +337,7 @@ function BarChart({ data, locale }: { data: { label: string; value: number }[]; 
                   <span className="mb-1 text-xs font-medium text-slate-300">{d.value.toLocaleString(LOCALE_DATE_TAG[locale])}</span>
                 )}
                 {hovered === i && i !== maxIndex && (
-                  <span className="absolute -top-6 rounded-md bg-slate-800 px-2 py-1 text-xs text-white shadow-lg">
+                  <span className="animate-fade-in-up absolute -top-6 rounded-md bg-slate-800 px-2 py-1 text-xs text-white shadow-lg">
                     {d.value.toLocaleString(LOCALE_DATE_TAG[locale])}
                   </span>
                 )}

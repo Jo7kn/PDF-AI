@@ -11,6 +11,7 @@
 
 import { useEffect, useState } from 'react'
 import { Loader2 } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useLocale } from '@/lib/i18n/locale-context'
 
 const STAGE_KEYS = ['aiLoading.stage1', 'aiLoading.stage2', 'aiLoading.stage3', 'aiLoading.stage4'] as const
@@ -29,7 +30,22 @@ export function AiLoadingState({ className = 'h-64' }: { className?: string }) {
   return (
     <div className={`flex flex-col items-center justify-center gap-3 text-slate-500 ${className}`}>
       <Loader2 className="h-8 w-8 animate-spin-fast" />
-      <p className="text-sm transition-opacity duration-300 ease-out">{t(STAGE_KEYS[stage])}</p>
+      {/* transition-opacity da solo non bastava: `stage` cambia via
+          re-render, nessun valore di opacity veniva mai toggled — il
+          messaggio scattava invece di dissolversi. AnimatePresence anima
+          davvero l'entrata/uscita di ogni stadio. */}
+      <AnimatePresence mode="wait">
+        <motion.p
+          key={stage}
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+          className="text-sm"
+        >
+          {t(STAGE_KEYS[stage])}
+        </motion.p>
+      </AnimatePresence>
     </div>
   )
 }

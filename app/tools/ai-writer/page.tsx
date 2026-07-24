@@ -11,14 +11,13 @@ import {
   Repeat,
   Loader2,
   AlertCircle,
-  Copy,
-  Check,
 } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
 import { FaqSection } from '@/components/faq-section'
 import { SaveButton } from '@/components/save-button'
 import { AiLoadingState } from '@/components/ai-loading-state'
+import { CopyIconSwap } from '@/components/animations/copy-icon-swap'
 import { runAiWriter } from '@/app/actions/ai-writer'
 import type { WriterAction } from '@/lib/nvidia/writer'
 import { useLocale } from '@/lib/i18n/locale-context'
@@ -119,7 +118,7 @@ export default function AiWriterPage() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-fuchsia-500/10 backdrop-blur-xl">
             {(activeMode.showTone || activeMode.showLength) && (
               <div className="mb-4 flex flex-wrap items-center gap-3">
                 {activeMode.showTone && (
@@ -175,7 +174,7 @@ export default function AiWriterPage() {
             </button>
           </section>
 
-          <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+          <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-fuchsia-500/10 backdrop-blur-xl">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-white">{t('common.result')}</h2>
               {output && (
@@ -188,9 +187,9 @@ export default function AiWriterPage() {
                   />
                   <button
                     onClick={handleCopy}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.95]"
                   >
-                    {copied ? <Check className="h-3.5 w-3.5 text-fuchsia-300" /> : <Copy className="h-3.5 w-3.5" />}
+                    <CopyIconSwap copied={copied} />
                     {copied ? t('common.copied') : t('common.copy')}
                   </button>
                 </div>
@@ -209,7 +208,7 @@ export default function AiWriterPage() {
             )}
 
             {!loading && output && (
-              <div className="max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm leading-relaxed text-slate-100">
+              <div className="animate-fade-in-up max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm leading-relaxed text-slate-100">
                 {output}
               </div>
             )}

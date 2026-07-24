@@ -66,7 +66,7 @@ export default function ImageAiPage() {
         <h1 className="mb-4 text-xl font-semibold text-white sm:text-2xl">Image AI: genera e modifica immagini con l’AI</h1>
         <TierGate gradient="from-orange-400 to-rose-500">
         <div className="grid gap-6 lg:grid-cols-2">
-          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-orange-500/10 backdrop-blur-xl">
             <label className="mb-2 block text-sm font-medium text-slate-300">{t('imageAiPage.describeLabel')}</label>
             <textarea
               value={prompt}
@@ -128,7 +128,7 @@ export default function ImageAiPage() {
             </button>
           </section>
 
-          <section className="flex flex-col rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+          <section className="flex flex-col rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-orange-500/10 backdrop-blur-xl">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-white">{t('common.result')}</h2>
               {imageUrl && (
@@ -166,7 +166,7 @@ export default function ImageAiPage() {
 
               {!loading && imageUrl && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={imageUrl} alt={prompt} className="max-h-[32rem] w-full object-contain" />
+                <img src={imageUrl} alt={prompt} className="animate-fade-in-up max-h-[32rem] w-full object-contain" />
               )}
             </div>
           </section>

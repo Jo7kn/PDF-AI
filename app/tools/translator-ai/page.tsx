@@ -7,14 +7,13 @@ import {
   ArrowLeftRight,
   Loader2,
   AlertCircle,
-  Copy,
-  Check,
 } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
 import { FaqSection } from '@/components/faq-section'
 import { SaveButton } from '@/components/save-button'
 import { AiLoadingState } from '@/components/ai-loading-state'
+import { CopyIconSwap } from '@/components/animations/copy-icon-swap'
 import { runTranslatorAi } from '@/app/actions/translator-ai'
 import { useLocale } from '@/lib/i18n/locale-context'
 
@@ -87,13 +86,13 @@ export default function TranslatorAiPage() {
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
         <h1 className="mb-4 text-xl font-semibold text-white sm:text-2xl">Translator AI: traduci documenti mantenendo il formato</h1>
-        <div className="mb-6 flex flex-wrap items-center justify-center gap-3">
+        <div className="mb-6 flex flex-wrap items-center justify-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-3">
           <LanguageSelect value={sourceLanguage} onChange={setSourceLanguage} options={[AUTO_DETECT, ...LANGUAGES]} />
           <button
             onClick={handleSwap}
             disabled={sourceLanguage === AUTO_DETECT}
             title={t('translatorAiPage.swapTitle')}
-            className="rounded-full border border-white/10 bg-white/5 p-2.5 text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
+            className="rounded-full border border-white/10 bg-white/5 p-2.5 text-slate-300 transition-[transform,background-color,color] duration-150 ease-out-strong hover:bg-white/10 hover:text-white active:scale-[0.95] disabled:cursor-not-allowed disabled:opacity-30 disabled:active:scale-100"
           >
             <ArrowLeftRight className="h-4 w-4" />
           </button>
@@ -101,7 +100,7 @@ export default function TranslatorAiPage() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-teal-500/10 backdrop-blur-xl">
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -136,7 +135,7 @@ export default function TranslatorAiPage() {
             </button>
           </section>
 
-          <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+          <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-teal-500/10 backdrop-blur-xl">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-white">{t('translatorAiPage.translationHeading')}</h2>
               {output && (
@@ -149,9 +148,9 @@ export default function TranslatorAiPage() {
                   />
                   <button
                     onClick={handleCopy}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.95]"
                   >
-                    {copied ? <Check className="h-3.5 w-3.5 text-teal-300" /> : <Copy className="h-3.5 w-3.5" />}
+                    <CopyIconSwap copied={copied} />
                     {copied ? t('common.copied') : t('common.copy')}
                   </button>
                 </div>
@@ -170,7 +169,7 @@ export default function TranslatorAiPage() {
             )}
 
             {!loading && output && (
-              <div className="max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm leading-relaxed text-slate-100">
+              <div className="animate-fade-in-up max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm leading-relaxed text-slate-100">
                 {output}
               </div>
             )}

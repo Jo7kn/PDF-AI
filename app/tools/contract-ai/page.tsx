@@ -7,11 +7,14 @@ import {
   ShieldAlert,
   Loader2,
   AlertCircle,
+  Sparkles,
 } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
 import { AppFooter } from '@/components/app-footer'
 import { FaqSection } from '@/components/faq-section'
 import { SaveButton } from '@/components/save-button'
+import { AiLoadingState } from '@/components/ai-loading-state'
+import { CopyIconSwap } from '@/components/animations/copy-icon-swap'
 import { runContractAnalysis, runContractClauses } from '@/app/actions/contract-ai'
 import type { ContractClause } from '@/lib/nvidia/contract'
 import { useLocale } from '@/lib/i18n/locale-context'
@@ -33,6 +36,17 @@ export default function ContractAiPage() {
   const [error, setError] = useState<string | null>(null)
   const [analysis, setAnalysis] = useState<string | null>(null)
   const [clauses, setClauses] = useState<ContractClause[] | null>(null)
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error('Copia fallita:', err)
+    }
+  }
 
   const handleRun = async () => {
     if (!input.trim() || loading) return
@@ -95,7 +109,7 @@ export default function ContractAiPage() {
           </button>
         </div>
 
-        <section className="mb-6 rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+        <section className="mb-6 rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-slate-400/10 backdrop-blur-xl">
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -130,32 +144,64 @@ export default function ContractAiPage() {
           </button>
         </section>
 
-        {analysis && (
-          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
-            <div className="mb-3 flex justify-end">
+        {loading && (
+          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-slate-400/10 backdrop-blur-xl">
+            <AiLoadingState />
+          </section>
+        )}
+
+        {!loading && !analysis && !clauses && !error && (
+          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-slate-400/10 backdrop-blur-xl">
+            <div className="flex h-40 flex-col items-center justify-center gap-3 text-slate-600">
+              <Sparkles className="h-10 w-10" />
+              <p className="text-sm">{t('common.resultPlaceholder')}</p>
+            </div>
+          </section>
+        )}
+
+        {!loading && analysis && (
+          <section className="animate-fade-in-up rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-slate-400/10 backdrop-blur-xl">
+            <div className="mb-3 flex justify-end gap-2">
               <SaveButton tool="contract-ai" title={t('contractAiPage.analysisTitle')} content={analysis} metadata={{ action: 'analyze' }} />
+              <button
+                onClick={() => handleCopy(analysis)}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.95]"
+              >
+                <CopyIconSwap copied={copied} />
+                {copied ? t('common.copied') : t('common.copy')}
+              </button>
             </div>
             <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-100">{analysis}</div>
           </section>
         )}
 
-        {clauses && (
-          <div className="space-y-3">
+        {!loading && clauses && (
+          <div className="animate-fade-in-up space-y-3">
             {clauses.length > 0 && (
-              <div className="flex justify-end">
+              <div className="flex justify-end gap-2">
                 <SaveButton
                   tool="contract-ai"
                   title={t('contractAiPage.clausesTitle')}
                   content={clauses.map((c) => `${c.clause} (${t('contractAiPage.riskLabel')} ${c.risk})\n${c.explanation}`).join('\n\n')}
                   metadata={{ action: 'clauses', count: clauses.length }}
                 />
+                <button
+                  onClick={() => handleCopy(clauses.map((c) => `${c.clause} (${t('contractAiPage.riskLabel')} ${c.risk})\n${c.explanation}`).join('\n\n'))}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.95]"
+                >
+                  <CopyIconSwap copied={copied} />
+                  {copied ? t('common.copied') : t('common.copy')}
+                </button>
               </div>
             )}
             {clauses.length === 0 && (
               <p className="text-sm text-slate-400">{t('contractAiPage.noClauses')}</p>
             )}
             {clauses.map((c, i) => (
-              <div key={i} className="rounded-2xl border border-white/10 bg-slate-900/80 p-5 shadow-xl shadow-black/20">
+              <div
+                key={i}
+                className="rounded-2xl border border-white/10 bg-slate-900/80 p-5 shadow-xl shadow-black/20 backdrop-blur-xl transition-colors duration-150 ease-out hover:border-white/20"
+              >
                 <div className="mb-2 flex items-center justify-between gap-3">
                   <p className="font-medium text-white">{c.clause}</p>
                   <span className={`flex-shrink-0 rounded-full border px-2.5 py-1 text-xs capitalize ${RISK_STYLES[c.risk]}`}>

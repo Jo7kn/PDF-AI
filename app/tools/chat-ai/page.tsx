@@ -91,7 +91,7 @@ export default function ChatAiPage() {
           )}
         </div>
 
-        <div className="flex min-h-[28rem] flex-1 flex-col rounded-3xl border border-white/10 bg-slate-900/80 p-4 shadow-xl shadow-black/20 sm:p-6">
+        <div className="flex min-h-[28rem] flex-1 flex-col rounded-3xl border border-white/10 bg-slate-900/80 p-4 shadow-xl shadow-violet-500/10 backdrop-blur-xl sm:p-6">
           <div className="flex-1 space-y-5 overflow-y-auto pr-1">
             {messages.length === 0 && (
               <div className="flex h-full flex-col items-center justify-center gap-3 py-16 text-center text-slate-600">
