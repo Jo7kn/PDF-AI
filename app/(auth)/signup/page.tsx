@@ -10,9 +10,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loader2, Mail, Lock, User, Chrome, ArrowRight, Sparkles } from 'lucide-react'
+import { useLocale } from '@/lib/i18n/locale-context'
 
 export default function SignupPage() {
   const router = useRouter()
+  const { t } = useLocale()
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -36,17 +38,17 @@ export default function SignupPage() {
     e.preventDefault()
     
     if (password !== confirmPassword) {
-      setError('Le password non corrispondono')
+      setError(t('signup.errorPasswordMismatch'))
       return
     }
 
     if (password.length < 6) {
-      setError('La password deve essere almeno 6 caratteri')
+      setError(t('signup.errorPasswordTooShort'))
       return
     }
 
     if (!agreed) {
-      setError('Devi accettare i termini e condizioni')
+      setError(t('signup.errorTermsRequired'))
       return
     }
 
@@ -90,22 +92,22 @@ export default function SignupPage() {
       <CardHeader className="space-y-3 px-6 pt-6 text-left">
         <div className="inline-flex w-fit items-center gap-2 rounded-full border border-fuchsia-400/25 bg-fuchsia-400/10 px-3 py-1 text-sm text-fuchsia-200">
           <Sparkles className="h-4 w-4" />
-          Inizia gratis
+          {t('signup.badge')}
         </div>
         <div>
-          <CardTitle className="text-2xl font-semibold text-white">Crea il tuo account</CardTitle>
+          <CardTitle className="text-2xl font-semibold text-white">{t('signup.title')}</CardTitle>
           <CardDescription className="mt-2 text-sm text-slate-400">
-            Inizia oggi la tua prova gratuita e sfrutta subito l’AI sui tuoi PDF.
+            {t('signup.description')}
           </CardDescription>
         </div>
       </CardHeader>
       <CardContent className="space-y-4 px-6 pb-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-300">Nome completo</label>
+            <label className="text-sm font-medium text-slate-300">{t('signup.fullNameLabel')}</label>
             <Input
               type="text"
-              placeholder="Mario Rossi"
+              placeholder={t('signup.fullNamePlaceholder')}
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               required
@@ -114,7 +116,7 @@ export default function SignupPage() {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-300">Email</label>
+            <label className="text-sm font-medium text-slate-300">{t('signup.emailLabel')}</label>
             <Input
               type="email"
               placeholder="esempio@email.com"
@@ -126,10 +128,10 @@ export default function SignupPage() {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-300">Password</label>
+            <label className="text-sm font-medium text-slate-300">{t('signup.passwordLabel')}</label>
             <Input
               type="password"
-              placeholder="Minimo 6 caratteri"
+              placeholder={t('signup.passwordPlaceholder')}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -138,10 +140,10 @@ export default function SignupPage() {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-300">Conferma password</label>
+            <label className="text-sm font-medium text-slate-300">{t('signup.confirmPasswordLabel')}</label>
             <Input
               type="password"
-              placeholder="Ripeti la password"
+              placeholder={t('signup.confirmPasswordPlaceholder')}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
@@ -163,9 +165,9 @@ export default function SignupPage() {
               className="mt-0.5 h-4 w-4 rounded border-white/20 bg-slate-900 text-cyan-400 focus:ring-cyan-500"
             />
             <label htmlFor="terms" className="text-sm text-slate-400">
-              Accetto i{' '}
+              {t('signup.agreePrefix')}{' '}
               <Link href="/terms" className="font-medium text-cyan-300 transition-colors duration-150 ease-out hover:text-cyan-200">
-                termini e condizioni
+                {t('signup.agreeTerms')}
               </Link>
             </label>
           </div>
@@ -173,11 +175,11 @@ export default function SignupPage() {
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin-fast" />
-                Caricamento...
+                {t('common.loading')}
               </>
             ) : (
               <>
-                Registrati
+                {t('signup.submit')}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </>
             )}
@@ -189,7 +191,7 @@ export default function SignupPage() {
             <span className="w-full border-t border-white/10" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-slate-900/80 px-2 text-slate-400">Oppure</span>
+            <span className="bg-slate-900/80 px-2 text-slate-400">{t('signup.or')}</span>
           </div>
         </div>
 
@@ -201,14 +203,14 @@ export default function SignupPage() {
           disabled={loading}
         >
           <Chrome className="mr-2 h-4 w-4" />
-          Registrati con Google
+          {t('signup.googleSubmit')}
         </Button>
       </CardContent>
       <CardFooter className="flex justify-center border-t border-white/10 px-6 py-4">
         <p className="text-sm text-slate-400">
-          Hai già un account?{' '}
+          {t('signup.haveAccount')}{' '}
           <Link href="/login" className="font-semibold text-cyan-300 transition-colors duration-150 ease-out hover:text-cyan-200">
-            Accedi
+            {t('signup.loginLink')}
           </Link>
         </p>
       </CardFooter>
