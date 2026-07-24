@@ -9,8 +9,12 @@ const NVIDIA_BASE_URL = process.env.NVIDIA_NIM_BASE_URL || 'https://integrate.ap
 // e rate-limit indipendenti dalla key usata per chat/OCR.
 const NVIDIA_EMBED_API_KEY = process.env.NVIDIA_EMBED_API_KEY
 
+// Key separata per l'OCR (vision): stesso motivo, quota indipendente dalla
+// chat testuale. Fallback su NVIDIA_API_KEY se non ancora impostata.
+const NVIDIA_VISION_API_KEY = process.env.NVIDIA_VISION_API_KEY || NVIDIA_API_KEY
+
 // Modelli
-const CHAT_MODEL = 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning'
+const CHAT_MODEL = 'nvidia/llama-3.3-nemotron-super-49b-v1.5'
 const VISION_MODEL = 'meta/llama-3.2-90b-vision-instruct'
 const EMBED_MODEL = 'nvidia/nemotron-3-embed-1b'
 
@@ -207,7 +211,7 @@ async function extractTextWithVision(imageBuffer: Buffer, pageNumber: number): P
     const response = await fetchWithRetry(`${NVIDIA_BASE_URL}/chat/completions`, {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${NVIDIA_API_KEY}`,
+        Authorization: `Bearer ${NVIDIA_VISION_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
