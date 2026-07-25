@@ -90,7 +90,7 @@ export default function Home({
                 acceptedAnswer: {
                   '@type': 'Answer',
                   text:
-                    "Il documento viene analizzato in pochi secondi: se contiene testo selezionabile lo estraiamo direttamente, altrimenti passiamo all'OCR per leggere anche PDF scansionati o immagini. Da lì puoi fare domande in linguaggio naturale, chiedere un riassunto o farti segnalare automaticamente scadenze e date importanti nel testo.",
+                    "Il documento viene analizzato in pochi secondi. Se contiene testo selezionabile lo estraiamo direttamente, altrimenti usiamo l'OCR per leggere anche PDF scansionati o immagini. Da lì puoi fare domande in linguaggio naturale, chiedere un riassunto o farti segnalare scadenze e date importanti nel testo.",
                 },
               },
               {
@@ -99,7 +99,7 @@ export default function Home({
                 acceptedAnswer: {
                   '@type': 'Answer',
                   text:
-                    "Un solo pool di crediti condiviso da tutti gli strumenti della piattaforma. Il piano Free include 50 crediti al mese, Pro 1000, Team 3000: si usano dove servono, senza dover scegliere in anticipo quale abbonamento attivare per quale strumento.",
+                    "Un solo pool di crediti condiviso da tutti gli strumenti della piattaforma. Il piano Free include 50 crediti al mese, Pro 1000, Team 3000. Si usano dove servono, senza dover scegliere in anticipo quale abbonamento attivare per quale strumento.",
                 },
               },
               {
@@ -108,7 +108,7 @@ export default function Home({
                 acceptedAnswer: {
                   '@type': 'Answer',
                   text:
-                    "Sì: l'accesso ai file è protetto da autenticazione e regole di accesso a livello di riga sul database, quindi nessun altro utente può leggerli. I documenti restano dell'utente, eliminabili in qualsiasi momento dalla dashboard.",
+                    "Sì. L'accesso ai file è protetto da autenticazione e regole di accesso a livello di riga sul database. Nessun altro utente può leggerli. I documenti restano dell'utente, eliminabili in qualsiasi momento dalla dashboard.",
                 },
               },
               {
@@ -295,11 +295,11 @@ export default function Home({
             <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-black/10 backdrop-blur-xl">
               <h3 className="mb-2 text-lg font-semibold text-white">Cosa succede quando carico un PDF?</h3>
               <p className="text-sm leading-relaxed text-slate-300">
-                Il documento viene analizzato in pochi secondi: se contiene testo selezionabile lo estraiamo
-                direttamente, altrimenti passiamo all&apos;OCR per leggere anche PDF scansionati o immagini. Da lì
-                puoi fare domande in linguaggio naturale, chiedere un riassunto o farti segnalare automaticamente
-                scadenze e date importanti nel testo — tutto resta salvato nella tua area documenti, organizzabile
-                in cartelle e con ricerca semantica su tutti i file caricati.
+                Il documento viene analizzato in pochi secondi. Se contiene testo selezionabile lo estraiamo
+                direttamente, altrimenti usiamo l&apos;OCR per leggere anche PDF scansionati o immagini. Da lì
+                puoi fare domande in linguaggio naturale, chiedere un riassunto o farti segnalare scadenze e date
+                importanti nel testo. Tutto resta salvato nella tua area documenti, organizzabile in cartelle, con
+                ricerca semantica su tutti i file caricati.
               </p>
             </div>
           </ScrollReveal>
@@ -308,9 +308,9 @@ export default function Home({
               <h3 className="mb-2 text-lg font-semibold text-white">Come funzionano i crediti tra i vari strumenti?</h3>
               <p className="text-sm leading-relaxed text-slate-300">
                 Un solo pool di crediti condiviso da tutti gli strumenti della piattaforma, non un pacchetto
-                separato per ognuno. Il piano Free include 50 crediti al mese, Pro 1000, Team 3000: li usi dove
-                servono davvero, che sia per chattare con un PDF, generare un&apos;immagine o tradurre un
-                documento, senza dover scegliere in anticipo quale abbonamento attivare per quale strumento.
+                separato per ognuno. Il piano Free include 50 crediti al mese, Pro 1000, Team 3000. Li usi dove
+                servono davvero: per chattare con un PDF, generare un&apos;immagine o tradurre un documento. Nessun
+                bisogno di scegliere in anticipo quale abbonamento attivare per quale strumento.
               </p>
             </div>
           </ScrollReveal>
@@ -318,11 +318,10 @@ export default function Home({
             <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-black/10 backdrop-blur-xl">
               <h3 className="mb-2 text-lg font-semibold text-white">I miei documenti sono al sicuro?</h3>
               <p className="text-sm leading-relaxed text-slate-300">
-                Sì: l&apos;accesso ai tuoi file è protetto da autenticazione e regole di accesso a livello di
-                riga sul database, quindi nessun altro utente può leggere i tuoi documenti anche condividendo la
-                stessa infrastruttura. I documenti restano tuoi — puoi eliminarli in qualsiasi momento dalla
-                dashboard, e l&apos;elaborazione AI avviene solo su tua richiesta, mai in background senza che tu
-                lo sappia.
+                Sì. L&apos;accesso ai tuoi file è protetto da autenticazione e regole di accesso a livello di
+                riga sul database. Nessun altro utente può leggere i tuoi documenti, anche condividendo la stessa
+                infrastruttura. I documenti restano tuoi: puoi eliminarli in qualsiasi momento dalla dashboard.
+                L&apos;elaborazione AI avviene solo su tua richiesta, mai in background senza che tu lo sappia.
               </p>
             </div>
           </ScrollReveal>
@@ -330,10 +329,10 @@ export default function Home({
             <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-black/10 backdrop-blur-xl">
               <h3 className="mb-2 text-lg font-semibold text-white">Tutti gli strumenti sono già disponibili?</h3>
               <p className="text-sm leading-relaxed text-slate-300">
-                La maggior parte sì — chat sui PDF, scrittura, codice, immagini, dati, contratti, email,
+                La maggior parte sì. Chat sui PDF, scrittura, codice, immagini, dati, contratti, email,
                 traduzioni e conversione file sono attivi oggi. Siamo un progetto in fase di lancio e continuiamo
-                ad aggiungerne altri: preferiamo essere chiari su cosa funziona davvero adesso piuttosto che
-                promettere una lista di funzionalità non ancora pronte.
+                ad aggiungerne altri. Preferiamo essere chiari su cosa funziona davvero adesso, piuttosto che
+                promettere funzionalità non ancora pronte.
               </p>
             </div>
           </ScrollReveal>
