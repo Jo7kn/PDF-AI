@@ -74,6 +74,56 @@ export default function Home({
           }),
         }}
       />
+      <script
+        type="application/ld+json"
+        // Stesse 4 domande/risposte della sezione "Come funziona" in pagina —
+        // il markup deve rispecchiare contenuto realmente visibile, non testo
+        // inventato solo per lo schema.
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: [
+              {
+                '@type': 'Question',
+                name: 'Cosa succede quando carico un PDF?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text:
+                    "Il documento viene analizzato in pochi secondi: se contiene testo selezionabile lo estraiamo direttamente, altrimenti passiamo all'OCR per leggere anche PDF scansionati o immagini. Da lì puoi fare domande in linguaggio naturale, chiedere un riassunto o farti segnalare automaticamente scadenze e date importanti nel testo.",
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'Come funzionano i crediti tra i vari strumenti?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text:
+                    "Un solo pool di crediti condiviso da tutti gli strumenti della piattaforma. Il piano Free include 50 crediti al mese, Pro 1000, Team 3000: si usano dove servono, senza dover scegliere in anticipo quale abbonamento attivare per quale strumento.",
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'I miei documenti sono al sicuro?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text:
+                    "Sì: l'accesso ai file è protetto da autenticazione e regole di accesso a livello di riga sul database, quindi nessun altro utente può leggerli. I documenti restano dell'utente, eliminabili in qualsiasi momento dalla dashboard.",
+                },
+              },
+              {
+                '@type': 'Question',
+                name: 'Tutti gli strumenti sono già disponibili?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text:
+                    'La maggior parte sì — chat sui PDF, scrittura, codice, immagini, dati, contratti, email, traduzioni e conversione file sono attivi oggi. Alcuni strumenti sono ancora in arrivo.',
+                },
+              },
+            ],
+          }),
+        }}
+      />
     <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.16),_transparent_30%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
       <LandingHeader />
 
@@ -230,6 +280,62 @@ export default function Home({
               title="Chat con l’AI"
               description="Fai domande naturali sui tuoi documenti e ricevi risposte immediate e pertinenti."
             />
+          </ScrollReveal>
+        </div>
+      </section>
+
+      <section id="perche" className="mx-auto max-w-5xl px-4 py-20 sm:px-6 lg:px-8">
+        <ScrollReveal className="mb-10 text-center">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Come funziona</p>
+          <h2 className="text-3xl font-semibold text-white sm:text-4xl">Perché un&apos;unica piattaforma invece di dieci abbonamenti</h2>
+        </ScrollReveal>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <ScrollReveal delay={0}>
+            <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-black/10 backdrop-blur-xl">
+              <h3 className="mb-2 text-lg font-semibold text-white">Cosa succede quando carico un PDF?</h3>
+              <p className="text-sm leading-relaxed text-slate-300">
+                Il documento viene analizzato in pochi secondi: se contiene testo selezionabile lo estraiamo
+                direttamente, altrimenti passiamo all&apos;OCR per leggere anche PDF scansionati o immagini. Da lì
+                puoi fare domande in linguaggio naturale, chiedere un riassunto o farti segnalare automaticamente
+                scadenze e date importanti nel testo — tutto resta salvato nella tua area documenti, organizzabile
+                in cartelle e con ricerca semantica su tutti i file caricati.
+              </p>
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={0.06}>
+            <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-black/10 backdrop-blur-xl">
+              <h3 className="mb-2 text-lg font-semibold text-white">Come funzionano i crediti tra i vari strumenti?</h3>
+              <p className="text-sm leading-relaxed text-slate-300">
+                Un solo pool di crediti condiviso da tutti gli strumenti della piattaforma, non un pacchetto
+                separato per ognuno. Il piano Free include 50 crediti al mese, Pro 1000, Team 3000: li usi dove
+                servono davvero, che sia per chattare con un PDF, generare un&apos;immagine o tradurre un
+                documento, senza dover scegliere in anticipo quale abbonamento attivare per quale strumento.
+              </p>
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={0.12}>
+            <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-black/10 backdrop-blur-xl">
+              <h3 className="mb-2 text-lg font-semibold text-white">I miei documenti sono al sicuro?</h3>
+              <p className="text-sm leading-relaxed text-slate-300">
+                Sì: l&apos;accesso ai tuoi file è protetto da autenticazione e regole di accesso a livello di
+                riga sul database, quindi nessun altro utente può leggere i tuoi documenti anche condividendo la
+                stessa infrastruttura. I documenti restano tuoi — puoi eliminarli in qualsiasi momento dalla
+                dashboard, e l&apos;elaborazione AI avviene solo su tua richiesta, mai in background senza che tu
+                lo sappia.
+              </p>
+            </div>
+          </ScrollReveal>
+          <ScrollReveal delay={0.18}>
+            <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-black/10 backdrop-blur-xl">
+              <h3 className="mb-2 text-lg font-semibold text-white">Tutti gli strumenti sono già disponibili?</h3>
+              <p className="text-sm leading-relaxed text-slate-300">
+                La maggior parte sì — chat sui PDF, scrittura, codice, immagini, dati, contratti, email,
+                traduzioni e conversione file sono attivi oggi. Siamo un progetto in fase di lancio e continuiamo
+                ad aggiungerne altri: preferiamo essere chiari su cosa funziona davvero adesso piuttosto che
+                promettere una lista di funzionalità non ancora pronte.
+              </p>
+            </div>
           </ScrollReveal>
         </div>
       </section>
