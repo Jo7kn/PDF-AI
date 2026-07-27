@@ -22,15 +22,15 @@ export function DemoVideoCard({ className = 'mx-auto max-w-4xl px-4 sm:px-6 lg:p
   return (
     <section className={className}>
       <ScrollReveal delay={0.08}>
-        <div className="overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900">
-          <div className="flex items-center gap-3 border-b border-neutral-800 bg-neutral-950/60 px-5 py-3">
+        <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03]">
+          <div className="flex items-center gap-3 border-b border-white/[0.08] bg-white/[0.02] px-5 py-3">
             <div className="flex gap-1.5">
-              <span className="h-2.5 w-2.5 rounded-full bg-neutral-700" />
-              <span className="h-2.5 w-2.5 rounded-full bg-neutral-700" />
-              <span className="h-2.5 w-2.5 rounded-full bg-neutral-700" />
+              <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
+              <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
+              <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
             </div>
             <div className="flex items-center gap-1.5 text-xs font-medium text-neutral-500">
-              <Clapperboard className="h-3.5 w-3.5 text-amber-400" />
+              <Clapperboard className="h-3.5 w-3.5 text-brand" />
               {t('demoVideo.windowTitle')}
             </div>
           </div>

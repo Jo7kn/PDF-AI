@@ -24,7 +24,7 @@ export function MobileNavMenu({ navItems, children }: MobileNavMenuProps) {
     <div className="md:hidden">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex items-center justify-center rounded-lg border border-neutral-800 bg-neutral-900 p-2.5 text-neutral-300 transition-colors duration-150 ease-out hover:bg-neutral-800 hover:text-neutral-50 active:scale-[0.95]"
+        className="inline-flex items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] p-2.5 text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white active:scale-[0.95]"
         aria-label={open ? 'Chiudi menu' : 'Apri menu'}
         aria-expanded={open}
       >
@@ -32,21 +32,21 @@ export function MobileNavMenu({ navItems, children }: MobileNavMenuProps) {
       </button>
 
       {open && (
-        <div className="animate-fade-in-up absolute inset-x-0 top-full z-40 border-b border-neutral-800 bg-neutral-950 px-4 py-4 shadow-xl shadow-black/40">
+        <div className="animate-fade-in-up absolute inset-x-0 top-full z-40 border-b border-white/[0.06] bg-[#050506]/95 px-4 py-4 shadow-xl shadow-black/40 backdrop-blur-xl">
           <nav className="flex flex-col gap-1">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-3 py-2.5 text-sm font-medium text-neutral-300 transition-colors duration-150 ease-out hover:bg-neutral-900 hover:text-neutral-50"
+                className="rounded-lg px-3 py-2.5 text-sm font-medium text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white"
               >
                 {item.label}
               </Link>
             ))}
           </nav>
           {children && (
-            <div className="mt-3 flex flex-col gap-2 border-t border-neutral-800 pt-3" onClick={() => setOpen(false)}>
+            <div className="mt-3 flex flex-col gap-2 border-t border-white/[0.06] pt-3" onClick={() => setOpen(false)}>
               {children}
             </div>
           )}

@@ -24,6 +24,11 @@ const config = {
         'grid-pattern': "url('/grid.svg')",
       },
       colors: {
+        // Accento del redesign "cinematic dark" — indigo Linear-style,
+        // scelto dalla ricerca ui-ux-pro-max (Modern Dark Cinema Mobile).
+        // Non c'è un indigo-500/600 di default abbastanza vicino: token
+        // dedicato invece di approssimare con la palette stock.
+        brand: "#5E6AD2",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -68,6 +73,8 @@ const config = {
       transitionTimingFunction: {
         'out-strong': 'cubic-bezier(0.23, 1, 0.32, 1)',
         'in-out-strong': 'cubic-bezier(0.77, 0, 0.175, 1)',
+        // Expo-out — curva del redesign cinematic dark (Linear-style).
+        spring: 'cubic-bezier(0.16, 1, 0.3, 1)',
       },
       keyframes: {
         "accordion-down": {
@@ -117,6 +124,12 @@ const config = {
           "0%, 100%": { opacity: "0.15" },
           "50%": { opacity: "0.9" },
         },
+        // Deriva ambientale dei blob di sfondo del redesign cinematic —
+        // solo transform, mai in sincrono tra i blob (delay diversi inline).
+        float: {
+          "0%, 100%": { transform: "translate(0, 0)" },
+          "50%": { transform: "translate(3%, -4%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -128,6 +141,7 @@ const config = {
         "spin-slow-reverse": "spin-slow-reverse 24s linear infinite",
         "pulse-slow": "pulse-slow 6s ease-in-out infinite",
         twinkle: "twinkle 3s ease-in-out infinite",
+        float: "float 14s ease-in-out infinite",
       },
     },
   },

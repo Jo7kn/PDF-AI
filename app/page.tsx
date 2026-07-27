@@ -11,9 +11,22 @@ import { ScrollReveal } from '@/components/scroll-reveal'
 import { AnnouncementConsole } from '@/components/announcement-console'
 import { DemoVideoCard } from '@/components/demo-video-card'
 import { CtaLink } from '@/components/ui/cta-link'
+import { SpotlightCard } from '@/components/ui/spotlight-card'
 import { AuthErrorBanner } from '@/components/auth-error-banner'
 import { SITE_URL, SITE_NAME } from '@/lib/seo'
 import { useLocale, useTranslatedList } from '@/lib/i18n/locale-context'
+
+// Blob ambientali dietro l'hero — stessa idea del "Modern Dark Cinema"
+// (ui-ux-pro-max): 2-3 macchie sfocate che derivano lentissime, mai in
+// sincrono. Solo transform (animate-float), nessun impatto su layout/paint.
+function AmbientGlow() {
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div className="animate-float absolute -left-40 top-0 h-[500px] w-[500px] rounded-full bg-brand/20 blur-[120px]" />
+      <div className="animate-float absolute -right-32 top-40 h-[420px] w-[420px] rounded-full bg-fuchsia-500/10 blur-[120px]" style={{ animationDelay: '4s' }} />
+    </div>
+  )
+}
 
 function HomeContent() {
   const { t } = useLocale()
@@ -127,25 +140,26 @@ function HomeContent() {
           }),
         }}
       />
-    <main className="min-h-screen bg-neutral-950 text-neutral-50">
+    <main className="min-h-screen bg-[#050506] text-white">
       <LandingHeader />
 
       <Suspense fallback={null}>
         <AuthErrorBanner />
       </Suspense>
 
-      <section className="relative border-b border-neutral-800 [background-image:linear-gradient(to_right,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:48px_48px]">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+      <section className="relative overflow-hidden border-b border-white/[0.06]">
+        <AmbientGlow />
+        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
           <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
             <div className="animate-fade-in-up max-w-3xl">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-lg border border-neutral-800 bg-neutral-900 px-3 py-1 font-mono text-xs uppercase tracking-widest text-amber-400">
-                <Terminal className="h-3.5 w-3.5" />
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1 text-sm text-neutral-300">
+                <Terminal className="h-3.5 w-3.5 text-brand" />
                 AI-powered document intelligence
               </div>
 
-              <h1 className="mb-6 text-4xl font-semibold tracking-tight text-neutral-50 sm:text-5xl lg:text-7xl">
+              <h1 className="mb-6 text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-7xl">
                 {t('landing.hero.titleBefore')}
-                <span className="text-amber-400"> {t('landing.hero.titleHighlight')}</span>
+                <span className="text-brand"> {t('landing.hero.titleHighlight')}</span>
               </h1>
 
               <p className="mb-8 max-w-2xl text-lg text-neutral-400 sm:text-xl">{t('landing.hero.subtitle')}</p>
@@ -163,30 +177,30 @@ function HomeContent() {
               <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-neutral-400">
                 {checkmarks.map((item) => (
                   <div key={item} className="inline-flex items-center gap-1.5">
-                    <Check className="h-4 w-4 flex-shrink-0 text-amber-400" />
+                    <Check className="h-4 w-4 flex-shrink-0 text-brand" />
                     {item}
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="animate-fade-in-up overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900 shadow-2xl shadow-black/40" style={{ animationDelay: '80ms' }}>
-              <div className="flex items-center gap-1.5 border-b border-neutral-800 bg-neutral-950/60 px-4 py-3">
-                <span className="h-2.5 w-2.5 rounded-full bg-neutral-700" />
-                <span className="h-2.5 w-2.5 rounded-full bg-neutral-700" />
-                <span className="h-2.5 w-2.5 rounded-full bg-neutral-700" />
+            <div className="animate-fade-in-up overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03] shadow-2xl shadow-black/40 backdrop-blur-xl" style={{ animationDelay: '80ms' }}>
+              <div className="flex items-center gap-1.5 border-b border-white/[0.08] bg-white/[0.02] px-4 py-3">
+                <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
+                <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
+                <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
                 <span className="ml-2 font-mono text-xs text-neutral-500">{t('landing.hero.workflowLabel')}</span>
               </div>
               <div className="space-y-3 p-4">
                 {workflowSteps.map((step) => (
-                  <div key={step} className="rounded-lg border border-neutral-800 bg-neutral-950/50 p-3 font-mono text-sm text-neutral-300">
+                  <div key={step} className="rounded-xl border border-white/[0.06] bg-black/20 p-3 font-mono text-sm text-neutral-300">
                     {step}
                   </div>
                 ))}
               </div>
-              <div className="grid gap-3 border-t border-neutral-800 p-4 sm:grid-cols-2">
+              <div className="grid gap-3 border-t border-white/[0.08] p-4 sm:grid-cols-2">
                 {statPills.map((item) => (
-                  <div key={item} className="rounded-lg border border-neutral-800 bg-neutral-950/50 p-3 text-sm text-neutral-300">
+                  <div key={item} className="rounded-xl border border-white/[0.06] bg-black/20 p-3 text-sm text-neutral-300">
                     {item}
                   </div>
                 ))}
@@ -203,11 +217,11 @@ function HomeContent() {
 
       <section id="features" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <ScrollReveal className="mb-10">
-          <p className="mb-3 font-mono text-xs uppercase tracking-widest text-amber-400">// {t('landing.features.eyebrow')}</p>
-          <h2 className="text-3xl font-semibold text-neutral-50 sm:text-4xl">{t('landing.features.heading')}</h2>
+          <p className="mb-3 text-sm font-medium uppercase tracking-widest text-brand">{t('landing.features.eyebrow')}</p>
+          <h2 className="text-3xl font-semibold text-white sm:text-4xl">{t('landing.features.heading')}</h2>
         </ScrollReveal>
 
-        <div className="grid gap-px overflow-hidden rounded-xl border border-neutral-800 bg-neutral-800 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-3">
           <ScrollReveal delay={0}>
             <FeatureCard
               icon={<FileText className="h-6 w-6" />}
@@ -234,64 +248,63 @@ function HomeContent() {
 
       <section id="perche" className="mx-auto max-w-5xl px-4 py-20 sm:px-6 lg:px-8">
         <ScrollReveal className="mb-10">
-          <p className="mb-3 font-mono text-xs uppercase tracking-widest text-amber-400">// {t('landing.faq.eyebrow')}</p>
-          <h2 className="text-3xl font-semibold text-neutral-50 sm:text-4xl">{t('landing.faq.heading')}</h2>
+          <p className="mb-3 text-sm font-medium uppercase tracking-widest text-brand">{t('landing.faq.eyebrow')}</p>
+          <h2 className="text-3xl font-semibold text-white sm:text-4xl">{t('landing.faq.heading')}</h2>
         </ScrollReveal>
 
         <div className="grid gap-4 md:grid-cols-2">
           <ScrollReveal delay={0}>
-            <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-6">
-              <h3 className="mb-2 text-lg font-semibold text-neutral-50">{t('landing.faq.q1Question')}</h3>
+            <SpotlightCard className="p-6">
+              <h3 className="mb-2 text-lg font-semibold text-white">{t('landing.faq.q1Question')}</h3>
               <p className="text-sm leading-relaxed text-neutral-400">{t('landing.faq.q1Answer')}</p>
-            </div>
+            </SpotlightCard>
           </ScrollReveal>
           <ScrollReveal delay={0.06}>
-            <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-6">
-              <h3 className="mb-2 text-lg font-semibold text-neutral-50">{t('landing.faq.q2Question')}</h3>
+            <SpotlightCard className="p-6">
+              <h3 className="mb-2 text-lg font-semibold text-white">{t('landing.faq.q2Question')}</h3>
               <p className="text-sm leading-relaxed text-neutral-400">{t('landing.faq.q2Answer')}</p>
-            </div>
+            </SpotlightCard>
           </ScrollReveal>
           <ScrollReveal delay={0.12}>
-            <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-6">
-              <h3 className="mb-2 text-lg font-semibold text-neutral-50">{t('landing.faq.q3Question')}</h3>
+            <SpotlightCard className="p-6">
+              <h3 className="mb-2 text-lg font-semibold text-white">{t('landing.faq.q3Question')}</h3>
               <p className="text-sm leading-relaxed text-neutral-400">{t('landing.faq.q3Answer')}</p>
-            </div>
+            </SpotlightCard>
           </ScrollReveal>
           <ScrollReveal delay={0.18}>
-            <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-6">
-              <h3 className="mb-2 text-lg font-semibold text-neutral-50">{t('landing.faq.q4Question')}</h3>
+            <SpotlightCard className="p-6">
+              <h3 className="mb-2 text-lg font-semibold text-white">{t('landing.faq.q4Question')}</h3>
               <p className="text-sm leading-relaxed text-neutral-400">{t('landing.faq.q4Answer')}</p>
-            </div>
+            </SpotlightCard>
           </ScrollReveal>
         </div>
       </section>
 
       <section id="tools" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <ScrollReveal className="mb-10">
-          <p className="mb-3 font-mono text-xs uppercase tracking-widest text-amber-400">// {t('landing.tools.eyebrow')}</p>
-          <h2 className="text-3xl font-semibold text-neutral-50 sm:text-4xl">{t('landing.tools.heading')}</h2>
+          <p className="mb-3 text-sm font-medium uppercase tracking-widest text-brand">{t('landing.tools.eyebrow')}</p>
+          <h2 className="text-3xl font-semibold text-white sm:text-4xl">{t('landing.tools.heading')}</h2>
           <p className="mt-3 max-w-2xl text-neutral-400">{t('landing.tools.subheading')}</p>
         </ScrollReveal>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {AI_TOOLS.filter((tool) => tool.status === 'available').map((tool, i) => (
             <ScrollReveal key={tool.slug} delay={Math.min(i, 5) * 0.04}>
-              <Link
-                href={tool.href}
-                className="group block rounded-xl border border-neutral-800 bg-neutral-900 p-5 transition-[background-color,border-color,transform] duration-200 ease-out-strong hover:border-amber-400/40 hover:bg-neutral-800 active:scale-[0.98]"
-              >
-                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg border border-neutral-800 bg-neutral-950 text-amber-400">
-                  <tool.icon className="h-5 w-5" />
-                </div>
-                <h3 className="mb-1 font-semibold text-neutral-50">{tool.name}</h3>
-                <p className="text-sm text-neutral-500">{tool.tagline}</p>
+              <Link href={tool.href} className="block active:scale-[0.98]">
+                <SpotlightCard className="p-5">
+                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-brand/10 text-brand">
+                    <tool.icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="mb-1 font-semibold text-white">{tool.name}</h3>
+                  <p className="text-sm text-neutral-500">{tool.tagline}</p>
+                </SpotlightCard>
               </Link>
             </ScrollReveal>
           ))}
         </div>
 
         <div className="mt-8">
-          <Link href="/tools" className="inline-flex items-center justify-center gap-2 font-semibold text-amber-400 hover:text-amber-300">
+          <Link href="/tools" className="inline-flex items-center justify-center gap-2 font-medium text-brand hover:text-[#7A85E5]">
             {t('landing.tools.exploreAll')}
             <ArrowRight className="h-4 w-4" />
           </Link>
@@ -301,8 +314,11 @@ function HomeContent() {
       <PricingSection />
 
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <ScrollReveal className="rounded-xl border border-neutral-800 bg-neutral-900 p-10 text-center [background-image:linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:32px_32px]">
-          <h2 className="mb-4 text-3xl font-semibold text-neutral-50">{t('landing.cta.heading')}</h2>
+        <ScrollReveal className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03] p-10 text-center">
+          <div className="pointer-events-none absolute inset-0 -z-10">
+            <div className="animate-float absolute left-1/2 top-1/2 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/15 blur-[100px]" />
+          </div>
+          <h2 className="mb-4 text-3xl font-semibold text-white">{t('landing.cta.heading')}</h2>
           <p className="mx-auto mb-8 max-w-2xl text-lg text-neutral-400">{t('landing.cta.subheading')}</p>
           <CtaLink href="/dashboard" size="lg" className="px-8 py-4">
             {t('landing.cta.button')}
@@ -323,13 +339,13 @@ export default function Home() {
 
 function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
-    <div className="h-full bg-neutral-900 p-8 transition-colors duration-200 ease-out hover:bg-neutral-800/60">
-      <div className="mb-6 flex h-11 w-11 items-center justify-center rounded-lg border border-neutral-800 bg-neutral-950 text-amber-400">
+    <SpotlightCard className="h-full p-8">
+      <div className="mb-6 flex h-11 w-11 items-center justify-center rounded-lg bg-brand/10 text-brand">
         {icon}
       </div>
-      <h3 className="mb-3 text-xl font-semibold text-neutral-50">{title}</h3>
+      <h3 className="mb-3 text-xl font-semibold text-white">{title}</h3>
       <p className="text-neutral-400">{description}</p>
-    </div>
+    </SpotlightCard>
   )
 }
 

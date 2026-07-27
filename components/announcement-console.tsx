@@ -57,20 +57,20 @@ export function AnnouncementConsole({ className = 'mx-auto max-w-4xl px-4 sm:px-
   return (
     <section className={className}>
       <ScrollReveal>
-        <div className="overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900">
+        <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03]">
           {/* Barra titolo in stile finestra terminale */}
-          <div className="flex items-center gap-3 border-b border-neutral-800 bg-neutral-950/60 px-5 py-3">
+          <div className="flex items-center gap-3 border-b border-white/[0.08] bg-white/[0.02] px-5 py-3">
             <div className="flex gap-1.5">
-              <span className="h-2.5 w-2.5 rounded-full bg-neutral-700" />
-              <span className="h-2.5 w-2.5 rounded-full bg-neutral-700" />
-              <span className="h-2.5 w-2.5 rounded-full bg-neutral-700" />
+              <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
+              <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
+              <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
             </div>
             <div className="flex items-center gap-1.5 text-xs font-medium text-neutral-500">
-              <Terminal className="h-3.5 w-3.5 text-amber-400" />
+              <Terminal className="h-3.5 w-3.5 text-brand" />
               annunci@ai-toolbox
             </div>
             <span className="ml-auto flex items-center gap-1.5 text-xs text-neutral-500">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-400" />
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-brand" />
               {t('announcementConsole.live')}
             </span>
           </div>
@@ -81,9 +81,9 @@ export function AnnouncementConsole({ className = 'mx-auto max-w-4xl px-4 sm:px-
               <p className="text-neutral-600">{t('announcementConsole.loading')}</p>
             ) : announcements.length === 0 ? (
               <p className="flex items-center gap-2 text-neutral-500">
-                <span className="text-amber-400">❯</span>
+                <span className="text-brand">❯</span>
                 {t('announcementConsole.empty')}
-                <span className="inline-block h-4 w-[7px] animate-pulse bg-amber-400/80" />
+                <span className="inline-block h-4 w-[7px] animate-pulse bg-brand/80" />
               </p>
             ) : (
               announcements.map((a, i) => (
@@ -93,13 +93,13 @@ export function AnnouncementConsole({ className = 'mx-auto max-w-4xl px-4 sm:px-
                   style={{ animationDelay: `${Math.min(i, 6) * 70}ms` }}
                 >
                   <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                    <span className="text-amber-400">❯</span>
+                    <span className="text-brand">❯</span>
                     <span className="text-neutral-600">[{formatTimestamp(a.createdAt)}]</span>
-                    {a.title && <span className="font-semibold text-neutral-50">{a.title}</span>}
+                    {a.title && <span className="font-semibold text-white">{a.title}</span>}
                   </div>
                   <p className="mt-1 whitespace-pre-wrap break-words pl-5 text-neutral-300">
                     {a.message}
-                    {i === 0 && <span className="ml-1 inline-block h-4 w-[7px] translate-y-[3px] animate-pulse bg-amber-400/80" />}
+                    {i === 0 && <span className="ml-1 inline-block h-4 w-[7px] translate-y-[3px] animate-pulse bg-brand/80" />}
                   </p>
                 </div>
               ))

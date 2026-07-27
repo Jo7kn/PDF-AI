@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Mail, Sparkles, ShieldCheck, Layers, ArrowRight } from 'lucide-react'
+import { Mail, Sparkles, ShieldCheck, Layers, ArrowRight, Code2 } from 'lucide-react'
 import { LandingHeader } from '@/components/landing-header'
 import { LandingFooter } from '@/components/landing-footer'
 import { CONTACT_EMAIL } from '@/lib/seo'
@@ -51,6 +51,20 @@ export default function AboutPage() {
               description="Interfaccia e contenuti pensati per chi lavora in italiano, non tradotti all'ultimo momento."
             />
           </div>
+        </div>
+
+        <div className="animate-fade-in-up mb-12 rounded-3xl border border-white/10 bg-slate-900/80 p-8 shadow-xl shadow-black/20" style={{ animationDelay: '140ms' }}>
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-cyan-300">
+            <Code2 className="h-6 w-6" />
+          </div>
+          <h2 className="mb-3 text-2xl font-semibold text-white">Chi c'è dietro</h2>
+          <p className="text-slate-300">
+            AI Toolbox è progettato, sviluppato e mantenuto da un solo founder tecnico: frontend, backend, integrazioni
+            AI e infrastruttura sono tutti farina del suo sacco, compreso il bot Discord di supporto che gira a
+            fianco della piattaforma. Il progetto è nato da un bisogno personale — chattare con i PDF per lavoro e
+            studio invece di riaprirli in continuazione — ed è cresciuto strumento dopo strumento da lì, con ogni
+            funzionalità guidata dall'uso reale della piattaforma, non da ricerche di mercato.
+          </p>
         </div>
 
         <div className="animate-fade-in-up rounded-3xl border border-white/10 bg-slate-900/80 p-8 shadow-xl shadow-black/20" style={{ animationDelay: '160ms' }}>

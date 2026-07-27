@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { SentryInit } from "@/components/sentry-init"
 import { LocaleProvider } from "@/lib/i18n/locale-context"
 import { RouteProgress } from "@/components/route-progress"
+import { SmoothScrollProvider } from "@/components/smooth-scroll-provider"
 import { SITE_URL, SITE_NAME, DEFAULT_DESCRIPTION, CONTACT_EMAIL } from "@/lib/seo"
 // @ts-ignore
 import "./globals.css"
@@ -118,8 +119,10 @@ export default function RootLayout({
             punto — nessun componente deve gestirlo da solo. */}
         <MotionConfig reducedMotion="user">
           <LocaleProvider>
-            <RouteProgress />
-            {children}
+            <SmoothScrollProvider>
+              <RouteProgress />
+              {children}
+            </SmoothScrollProvider>
           </LocaleProvider>
         </MotionConfig>
         <SentryInit />
