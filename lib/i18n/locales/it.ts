@@ -658,6 +658,78 @@ const it = {
     feature3: 'Archiviazione ordinata',
     feature4: 'Accesso sicuro e veloce',
   },
+  landing: {
+    linkExpired: 'Il link che hai usato è scaduto o è già stato usato.',
+    linkInvalid: 'Il link che hai usato non è più valido.',
+    requestNewLink: 'Richiedine uno nuovo',
+    hero: {
+      titleBefore: 'Trasforma i tuoi PDF in una',
+      titleHighlight: 'conversazione intelligente',
+      subtitle: 'Carica documenti, estrai contenuti chiave, scopri scadenze e interagisci con l\'AI in pochi secondi.',
+      ctaPrimary: 'Inizia gratis',
+      ctaSecondary: 'Vedi i prezzi',
+      toolsCount: '{count}+ strumenti AI',
+      freeForever: 'Piano gratuito per sempre',
+      noCard: 'Nessuna carta richiesta',
+      workflowLabel: 'Esempio di workflow',
+      workflowSteps: [
+        '1. Carichi il PDF in pochi secondi.',
+        '2. L\'AI estrae contenuti, date e punti chiave.',
+        '3. Puoi fare domande e continuare la conversazione.',
+      ],
+      statPills: ['Archiviazione organizzata', 'Analisi documenti avanzata', 'Supporto rapido', 'Esperienza fluida'],
+    },
+    features: {
+      eyebrow: 'Funzionalità',
+      heading: 'Tutto quello che serve per lavorare meglio con i PDF',
+      parsingTitle: 'Parsing intelligente',
+      parsingDescription: 'Estrai testo, struttura e contenuti importanti da ogni PDF in modo rapido e affidabile.',
+      deadlinesTitle: 'Rilevamento scadenze',
+      deadlinesDescription: 'Individua automaticamente date, milestone e informazioni critiche nei documenti.',
+      chatTitle: 'Chat con l\'AI',
+      chatDescription: 'Fai domande naturali sui tuoi documenti e ricevi risposte immediate e pertinenti.',
+    },
+    faq: {
+      eyebrow: 'Come funziona',
+      heading: 'Perché un\'unica piattaforma invece di dieci abbonamenti',
+      q1Question: 'Cosa succede quando carico un PDF?',
+      q1Answer:
+        'Il documento viene analizzato in pochi secondi. Se contiene testo selezionabile lo estraiamo ' +
+        'direttamente, altrimenti usiamo l\'OCR per leggere anche PDF scansionati o immagini. Da lì puoi fare ' +
+        'domande in linguaggio naturale, chiedere un riassunto o farti segnalare scadenze e date importanti nel ' +
+        'testo. Tutto resta salvato nella tua area documenti, organizzabile in cartelle, con ricerca semantica su ' +
+        'tutti i file caricati.',
+      q2Question: 'Come funzionano i crediti tra i vari strumenti?',
+      q2Answer:
+        'Un solo pool di crediti condiviso da tutti gli strumenti della piattaforma, non un pacchetto separato ' +
+        'per ognuno. Il piano Free include 50 crediti al mese, Pro 1000, Team 3000. Li usi dove servono davvero: ' +
+        'per chattare con un PDF, generare un\'immagine o tradurre un documento. Nessun bisogno di scegliere in ' +
+        'anticipo quale abbonamento attivare per quale strumento.',
+      q3Question: 'I miei documenti sono al sicuro?',
+      q3Answer:
+        'Sì. L\'accesso ai tuoi file è protetto da autenticazione e regole di accesso a livello di riga sul ' +
+        'database. Nessun altro utente può leggere i tuoi documenti, anche condividendo la stessa infrastruttura. ' +
+        'I documenti restano tuoi: puoi eliminarli in qualsiasi momento dalla dashboard. L\'elaborazione AI avviene ' +
+        'solo su tua richiesta, mai in background senza che tu lo sappia.',
+      q4Question: 'Tutti gli strumenti sono già disponibili?',
+      q4Answer:
+        'La maggior parte sì. Chat sui PDF, scrittura, codice, immagini, dati, contratti, email, traduzioni e ' +
+        'conversione file sono attivi oggi. Siamo un progetto in fase di lancio e continuiamo ad aggiungerne altri. ' +
+        'Preferiamo essere chiari su cosa funziona davvero adesso, piuttosto che promettere funzionalità non ' +
+        'ancora pronte.',
+    },
+    tools: {
+      eyebrow: 'AI Toolbox',
+      heading: 'Tutti gli strumenti AI in un unico posto',
+      subheading: 'Oltre alla chat sui PDF, AI Toolbox include scrittura, codice, immagini, email, contratti, dati e traduzioni.',
+      exploreAll: 'Esplora tutti gli strumenti',
+    },
+    cta: {
+      heading: 'Pronto a iniziare?',
+      subheading: 'Entra nella tua workspace e fai partire la tua prima analisi con l\'AI.',
+      button: 'Inizia la prova gratuita',
+    },
+  },
 }
 
 export type TranslationDict = typeof it

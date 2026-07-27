@@ -650,6 +650,78 @@ const es: TranslationDict = {
     feature3: 'Almacenamiento organizado',
     feature4: 'Acceso seguro y rápido',
   },
+  landing: {
+    linkExpired: 'El enlace que usaste ha caducado o ya se usó.',
+    linkInvalid: 'El enlace que usaste ya no es válido.',
+    requestNewLink: 'Solicita uno nuevo',
+    hero: {
+      titleBefore: 'Convierte tus PDF en una',
+      titleHighlight: 'conversación inteligente',
+      subtitle: 'Sube documentos, extrae contenido clave, detecta vencimientos y chatea con la IA en segundos.',
+      ctaPrimary: 'Empieza gratis',
+      ctaSecondary: 'Ver precios',
+      toolsCount: '{count}+ herramientas de IA',
+      freeForever: 'Plan gratuito para siempre',
+      noCard: 'No se requiere tarjeta',
+      workflowLabel: 'Ejemplo de flujo de trabajo',
+      workflowSteps: [
+        '1. Subes el PDF en segundos.',
+        '2. La IA extrae contenido, fechas y puntos clave.',
+        '3. Puedes hacer preguntas y seguir la conversación.',
+      ],
+      statPills: ['Almacenamiento organizado', 'Análisis avanzado de documentos', 'Soporte rápido', 'Experiencia fluida'],
+    },
+    features: {
+      eyebrow: 'Funcionalidades',
+      heading: 'Todo lo que necesitas para trabajar mejor con PDF',
+      parsingTitle: 'Análisis inteligente',
+      parsingDescription: 'Extrae texto, estructura y contenido importante de cualquier PDF de forma rápida y fiable.',
+      deadlinesTitle: 'Detección de vencimientos',
+      deadlinesDescription: 'Detecta automáticamente fechas, hitos e información crítica en los documentos.',
+      chatTitle: 'Chat con la IA',
+      chatDescription: 'Haz preguntas en lenguaje natural sobre tus documentos y recibe respuestas inmediatas y relevantes.',
+    },
+    faq: {
+      eyebrow: 'Cómo funciona',
+      heading: 'Por qué una sola plataforma en vez de diez suscripciones',
+      q1Question: '¿Qué pasa cuando subo un PDF?',
+      q1Answer:
+        'El documento se analiza en segundos. Si contiene texto seleccionable lo extraemos directamente; si no, ' +
+        'usamos OCR para leer también PDF escaneados o imágenes. A partir de ahí puedes hacer preguntas en lenguaje ' +
+        'natural, pedir un resumen o que se te señalen automáticamente vencimientos y fechas importantes en el ' +
+        'texto. Todo queda guardado en tu área de documentos, organizable en carpetas, con búsqueda semántica en ' +
+        'todos los archivos que subas.',
+      q2Question: '¿Cómo funcionan los créditos entre las distintas herramientas?',
+      q2Answer:
+        'Un único fondo de créditos compartido por todas las herramientas de la plataforma, no un paquete ' +
+        'separado para cada una. El plan Free incluye 50 créditos al mes, Pro 1000, Team 3000. Los usas donde ' +
+        'realmente los necesitas: para chatear con un PDF, generar una imagen o traducir un documento, sin tener ' +
+        'que elegir de antemano qué suscripción activar para cada herramienta.',
+      q3Question: '¿Están seguros mis documentos?',
+      q3Answer:
+        'Sí. El acceso a tus archivos está protegido por autenticación y reglas de acceso a nivel de fila en la ' +
+        'base de datos. Ningún otro usuario puede leer tus documentos, incluso compartiendo la misma ' +
+        'infraestructura. Tus documentos siguen siendo tuyos: puedes eliminarlos en cualquier momento desde el ' +
+        'panel. El procesamiento con IA solo ocurre cuando tú lo solicitas, nunca en segundo plano sin que lo sepas.',
+      q4Question: '¿Ya están disponibles todas las herramientas?',
+      q4Answer:
+        'La mayoría sí. Chat con PDF, escritura, código, imágenes, datos, contratos, email, traducción y ' +
+        'conversión de archivos ya están activos hoy. Somos un proyecto en fase de lanzamiento y seguimos ' +
+        'añadiendo más. Preferimos ser claros sobre lo que realmente funciona ahora en vez de prometer funciones ' +
+        'que aún no están listas.',
+    },
+    tools: {
+      eyebrow: 'AI Toolbox',
+      heading: 'Todas las herramientas de IA en un solo lugar',
+      subheading: 'Además del chat con PDF, AI Toolbox incluye escritura, código, imágenes, email, contratos, datos y traducción.',
+      exploreAll: 'Explora todas las herramientas',
+    },
+    cta: {
+      heading: '¿Listo para empezar?',
+      subheading: 'Entra en tu espacio de trabajo y lanza tu primer análisis con IA.',
+      button: 'Empieza tu prueba gratuita',
+    },
+  },
 }
 
 export default es

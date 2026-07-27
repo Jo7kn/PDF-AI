@@ -629,6 +629,70 @@ const zh: TranslationDict = {
     feature3: '有序的存储管理',
     feature4: '安全快速的访问',
   },
+  landing: {
+    linkExpired: '你使用的链接已过期或已被使用。',
+    linkInvalid: '你使用的链接已失效。',
+    requestNewLink: '重新申请一个',
+    hero: {
+      titleBefore: '将你的 PDF 变成一场',
+      titleHighlight: '智能对话',
+      subtitle: '上传文档，提取关键内容，发现截止日期，几秒钟内与 AI 对话。',
+      ctaPrimary: '免费开始',
+      ctaSecondary: '查看价格',
+      toolsCount: '{count}+ 款 AI 工具',
+      freeForever: '永久免费方案',
+      noCard: '无需信用卡',
+      workflowLabel: '工作流程示例',
+      workflowSteps: [
+        '1. 几秒钟内上传 PDF。',
+        '2. AI 提取内容、日期和关键要点。',
+        '3. 你可以提问并继续对话。',
+      ],
+      statPills: ['有序的存储管理', '高级文档分析', '快速支持', '流畅体验'],
+    },
+    features: {
+      eyebrow: '功能',
+      heading: '更好地处理 PDF 所需的一切',
+      parsingTitle: '智能解析',
+      parsingDescription: '快速可靠地从任何 PDF 中提取文本、结构和重要内容。',
+      deadlinesTitle: '截止日期检测',
+      deadlinesDescription: '自动发现文档中的日期、里程碑和关键信息。',
+      chatTitle: '与 AI 对话',
+      chatDescription: '用自然语言询问你的文档，立即获得相关回答。',
+    },
+    faq: {
+      eyebrow: '工作原理',
+      heading: '为什么选择一个平台而不是十个订阅',
+      q1Question: '上传 PDF 后会发生什么？',
+      q1Answer:
+        '文档会在几秒钟内完成分析。如果包含可选中的文本，我们会直接提取；否则使用 OCR 读取扫描版 PDF 或图片。' +
+        '之后你可以用自然语言提问、请求摘要，或让系统自动标记文本中的截止日期和重要日期。所有内容都保存在你的' +
+        '文档区域中，可整理到文件夹，并支持对所有已上传文件的语义搜索。',
+      q2Question: '各个工具之间的额度是如何运作的？',
+      q2Answer:
+        '所有工具共享同一个额度池，而不是每个工具单独一份。Free 方案每月包含 50 点额度，Pro 1000 点，Team ' +
+        '3000 点。你可以按需使用：与 PDF 对话、生成图片或翻译文档，无需提前决定为哪个工具开通哪种订阅。',
+      q3Question: '我的文档安全吗？',
+      q3Answer:
+        '安全。你的文件访问受身份验证和数据库行级访问规则保护，即使共享同一基础设施，其他用户也无法读取你的' +
+        '文档。文档始终归你所有：可随时在控制台中删除。AI 处理仅在你主动请求时进行，绝不会在后台悄悄运行。',
+      q4Question: '所有工具都已经可用了吗？',
+      q4Answer:
+        '大部分已经可用。PDF 对话、写作、代码、图片、数据、合同、邮件、翻译和文件转换今天都已上线。我们正处于' +
+        '发布阶段，会持续增加更多工具。我们更愿意如实说明目前真正可用的功能，而不是承诺一份尚未就绪的功能清单。',
+    },
+    tools: {
+      eyebrow: 'AI Toolbox',
+      heading: '所有 AI 工具，一站式集合',
+      subheading: '除了 PDF 对话，AI Toolbox 还包括写作、代码、图片、邮件、合同、数据和翻译。',
+      exploreAll: '探索全部工具',
+    },
+    cta: {
+      heading: '准备好开始了吗？',
+      subheading: '进入你的工作区，开始你的第一次 AI 分析。',
+      button: '开始免费试用',
+    },
+  },
 }
 
 export default zh

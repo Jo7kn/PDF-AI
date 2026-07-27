@@ -647,6 +647,76 @@ const en: TranslationDict = {
     feature3: 'Organized storage',
     feature4: 'Secure, fast access',
   },
+  landing: {
+    linkExpired: 'The link you used has expired or was already used.',
+    linkInvalid: 'The link you used is no longer valid.',
+    requestNewLink: 'Request a new one',
+    hero: {
+      titleBefore: 'Turn your PDFs into a',
+      titleHighlight: 'smart conversation',
+      subtitle: 'Upload documents, extract key content, spot deadlines, and chat with AI in seconds.',
+      ctaPrimary: 'Start for free',
+      ctaSecondary: 'See pricing',
+      toolsCount: '{count}+ AI tools',
+      freeForever: 'Free plan forever',
+      noCard: 'No card required',
+      workflowLabel: 'Example workflow',
+      workflowSteps: [
+        '1. Upload your PDF in seconds.',
+        '2. AI extracts content, dates, and key points.',
+        '3. Ask questions and keep the conversation going.',
+      ],
+      statPills: ['Organized storage', 'Advanced document analysis', 'Fast support', 'Smooth experience'],
+    },
+    features: {
+      eyebrow: 'Features',
+      heading: 'Everything you need to work better with PDFs',
+      parsingTitle: 'Smart parsing',
+      parsingDescription: 'Extract text, structure, and key content from any PDF quickly and reliably.',
+      deadlinesTitle: 'Deadline detection',
+      deadlinesDescription: 'Automatically spot dates, milestones, and critical information in documents.',
+      chatTitle: 'Chat with AI',
+      chatDescription: 'Ask natural questions about your documents and get immediate, relevant answers.',
+    },
+    faq: {
+      eyebrow: 'How it works',
+      heading: 'Why one platform instead of ten subscriptions',
+      q1Question: 'What happens when I upload a PDF?',
+      q1Answer:
+        'The document is analyzed in seconds. If it contains selectable text we extract it directly, otherwise ' +
+        'we use OCR to read scanned PDFs or images too. From there you can ask natural-language questions, request ' +
+        'a summary, or get deadlines and important dates flagged automatically. Everything stays saved in your ' +
+        'document area, organized into folders, with semantic search across every file you upload.',
+      q2Question: 'How do credits work across the different tools?',
+      q2Answer:
+        'A single credit pool shared by every tool on the platform, not a separate package for each one. The Free ' +
+        'plan includes 50 credits a month, Pro 1000, Team 3000. You use them wherever you need them: chatting with ' +
+        'a PDF, generating an image, or translating a document. No need to pick in advance which subscription to ' +
+        'activate for which tool.',
+      q3Question: 'Are my documents safe?',
+      q3Answer:
+        'Yes. Access to your files is protected by authentication and row-level access rules on the database. No ' +
+        'other user can read your documents, even while sharing the same infrastructure. Your documents stay ' +
+        'yours: delete them anytime from the dashboard. AI processing only happens when you request it, never in ' +
+        'the background without your knowledge.',
+      q4Question: 'Are all the tools available already?',
+      q4Answer:
+        'Most of them, yes. Chat with PDFs, writing, code, images, data, contracts, email, translation, and file ' +
+        'conversion are all live today. We\'re a project in launch phase and keep adding more. We\'d rather be ' +
+        'clear about what genuinely works right now than promise a list of features that aren\'t ready yet.',
+    },
+    tools: {
+      eyebrow: 'AI Toolbox',
+      heading: 'Every AI tool in one place',
+      subheading: 'Beyond PDF chat, AI Toolbox includes writing, code, images, email, contracts, data, and translation.',
+      exploreAll: 'Explore all tools',
+    },
+    cta: {
+      heading: 'Ready to get started?',
+      subheading: 'Jump into your workspace and run your first AI analysis.',
+      button: 'Start your free trial',
+    },
+  },
 }
 
 export default en

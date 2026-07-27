@@ -655,6 +655,78 @@ const de: TranslationDict = {
     feature3: 'Organisierte Ablage',
     feature4: 'Sicherer, schneller Zugriff',
   },
+  landing: {
+    linkExpired: 'Der verwendete Link ist abgelaufen oder wurde bereits benutzt.',
+    linkInvalid: 'Der verwendete Link ist nicht mehr gültig.',
+    requestNewLink: 'Neuen Link anfordern',
+    hero: {
+      titleBefore: 'Verwandle deine PDFs in eine',
+      titleHighlight: 'intelligente Unterhaltung',
+      subtitle: 'Lade Dokumente hoch, extrahiere wichtige Inhalte, erkenne Fristen und chatte in Sekunden mit der KI.',
+      ctaPrimary: 'Kostenlos starten',
+      ctaSecondary: 'Preise ansehen',
+      toolsCount: '{count}+ KI-Tools',
+      freeForever: 'Für immer kostenloser Plan',
+      noCard: 'Keine Kreditkarte nötig',
+      workflowLabel: 'Beispiel-Workflow',
+      workflowSteps: [
+        '1. Du lädst das PDF in Sekunden hoch.',
+        '2. Die KI extrahiert Inhalte, Daten und wichtige Punkte.',
+        '3. Du kannst Fragen stellen und die Unterhaltung fortsetzen.',
+      ],
+      statPills: ['Organisierte Ablage', 'Erweiterte Dokumentenanalyse', 'Schneller Support', 'Reibungslose Erfahrung'],
+    },
+    features: {
+      eyebrow: 'Funktionen',
+      heading: 'Alles, was du brauchst, um besser mit PDFs zu arbeiten',
+      parsingTitle: 'Intelligentes Parsing',
+      parsingDescription: 'Extrahiere Text, Struktur und wichtige Inhalte aus jedem PDF schnell und zuverlässig.',
+      deadlinesTitle: 'Fristenerkennung',
+      deadlinesDescription: 'Erkennt automatisch Daten, Meilensteine und kritische Informationen in Dokumenten.',
+      chatTitle: 'Chat mit der KI',
+      chatDescription: 'Stelle natürliche Fragen zu deinen Dokumenten und erhalte sofortige, relevante Antworten.',
+    },
+    faq: {
+      eyebrow: 'So funktioniert es',
+      heading: 'Warum eine einzige Plattform statt zehn Abos',
+      q1Question: 'Was passiert, wenn ich ein PDF hochlade?',
+      q1Answer:
+        'Das Dokument wird in Sekunden analysiert. Enthält es auswählbaren Text, extrahieren wir ihn direkt, ' +
+        'andernfalls nutzen wir OCR, um auch gescannte PDFs oder Bilder zu lesen. Danach kannst du Fragen in ' +
+        'natürlicher Sprache stellen, eine Zusammenfassung anfordern oder dir automatisch Fristen und wichtige ' +
+        'Daten im Text anzeigen lassen. Alles bleibt in deinem Dokumentenbereich gespeichert, in Ordnern ' +
+        'organisierbar, mit semantischer Suche über alle hochgeladenen Dateien.',
+      q2Question: 'Wie funktionieren die Credits zwischen den verschiedenen Tools?',
+      q2Answer:
+        'Ein einziger Credit-Pool, geteilt von allen Tools der Plattform, kein separates Paket für jedes einzelne. ' +
+        'Der Free-Plan enthält 50 Credits pro Monat, Pro 1000, Team 3000. Du nutzt sie dort, wo du sie wirklich ' +
+        'brauchst: um mit einem PDF zu chatten, ein Bild zu generieren oder ein Dokument zu übersetzen, ohne im ' +
+        'Voraus festlegen zu müssen, welches Abo für welches Tool aktiviert wird.',
+      q3Question: 'Sind meine Dokumente sicher?',
+      q3Answer:
+        'Ja. Der Zugriff auf deine Dateien ist durch Authentifizierung und Row-Level-Zugriffsregeln in der ' +
+        'Datenbank geschützt. Kein anderer Nutzer kann deine Dokumente lesen, selbst wenn dieselbe Infrastruktur ' +
+        'genutzt wird. Deine Dokumente bleiben deine: Du kannst sie jederzeit im Dashboard löschen. Die ' +
+        'KI-Verarbeitung erfolgt nur auf deine Anfrage, nie im Hintergrund ohne dein Wissen.',
+      q4Question: 'Sind bereits alle Tools verfügbar?',
+      q4Answer:
+        'Die meisten schon. Chat mit PDFs, Schreiben, Code, Bilder, Daten, Verträge, E-Mail, Übersetzung und ' +
+        'Dateikonvertierung sind heute bereits aktiv. Wir sind ein Projekt in der Launch-Phase und fügen laufend ' +
+        'weitere hinzu. Wir sind lieber ehrlich darüber, was wirklich schon funktioniert, statt eine Liste von ' +
+        'Funktionen zu versprechen, die noch nicht bereit sind.',
+    },
+    tools: {
+      eyebrow: 'AI Toolbox',
+      heading: 'Alle KI-Tools an einem Ort',
+      subheading: 'Neben dem PDF-Chat umfasst AI Toolbox Schreiben, Code, Bilder, E-Mail, Verträge, Daten und Übersetzung.',
+      exploreAll: 'Alle Tools entdecken',
+    },
+    cta: {
+      heading: 'Bereit loszulegen?',
+      subheading: 'Steig in deinen Workspace ein und starte deine erste Analyse mit der KI.',
+      button: 'Kostenlose Testphase starten',
+    },
+  },
 }
 
 export default de

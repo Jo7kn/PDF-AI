@@ -1,4 +1,8 @@
+'use client'
+
+import { Suspense } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { AI_TOOLS } from '@/lib/tools'
 import { FileText, Sparkles, Calendar, ArrowRight, Check, BrainCircuit, AlertTriangle } from 'lucide-react'
 import { LandingHeader } from '@/components/landing-header'
@@ -9,6 +13,7 @@ import { AnnouncementConsole } from '@/components/announcement-console'
 import { DemoVideoCard } from '@/components/demo-video-card'
 import { CtaLink } from '@/components/ui/cta-link'
 import { SITE_URL, SITE_NAME } from '@/lib/seo'
+import { useLocale, useTranslatedList } from '@/lib/i18n/locale-context'
 
 // Posizioni fisse (non random ad ogni render, altrimenti "saltano" ad ogni
 // re-render di Home) per le stelline decorative dietro l'hero.
@@ -27,18 +32,23 @@ const STAR_POSITIONS = [
   { left: '95%', top: '45%', size: '2px', delay: '0.4s' },
 ]
 
-export default function Home({
-  searchParams,
-}: {
-  searchParams: { error_code?: string; error?: string }
-}) {
+function HomeContent() {
+  const { t } = useLocale()
+  const searchParams = useSearchParams()
   // Su link email scaduti/gia' usati (reset password, conferma, magic link)
   // Supabase reindirizza al Site URL configurato (questa root) invece che
   // alla pagina custom richiesta via redirectTo, con l'errore in query string
   // — senza questo banner l'utente vedrebbe solo la home normale, senza
   // capire perche' e' finito qui invece che nel flusso che si aspettava.
-  const linkExpired = searchParams.error_code === 'otp_expired'
-  const authErrored = !linkExpired && searchParams.error === 'access_denied'
+  const linkExpired = searchParams.get('error_code') === 'otp_expired'
+  const authErrored = !linkExpired && searchParams.get('error') === 'access_denied'
+  const workflowSteps = useTranslatedList('landing.hero.workflowSteps')
+  const statPills = useTranslatedList('landing.hero.statPills')
+  const checkmarks = [
+    t('landing.hero.toolsCount', { count: AI_TOOLS.filter((tool) => tool.status === 'available').length }),
+    t('landing.hero.freeForever'),
+    t('landing.hero.noCard'),
+  ]
 
   return (
     <>
@@ -132,11 +142,9 @@ export default function Home({
           <div className="animate-fade-in-up flex items-center gap-3 rounded-2xl border border-amber-400/20 bg-amber-500/10 p-4 text-sm text-amber-200">
             <AlertTriangle className="h-5 w-5 flex-shrink-0" />
             <p>
-              {linkExpired
-                ? 'Il link che hai usato è scaduto o è già stato usato.'
-                : 'Il link che hai usato non è più valido.'}{' '}
+              {linkExpired ? t('landing.linkExpired') : t('landing.linkInvalid')}{' '}
               <Link href="/forgotpass" className="font-semibold underline underline-offset-2 hover:text-amber-100">
-                Richiedine uno nuovo
+                {t('landing.requestNewLink')}
               </Link>
               .
             </p>
@@ -184,30 +192,24 @@ export default function Home({
               </div>
 
               <h1 className="mb-6 text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-7xl">
-                Trasforma i tuoi PDF in una
-                <span className="bg-gradient-to-r from-cyan-300 via-violet-400 to-fuchsia-400 bg-clip-text text-transparent"> conversazione intelligente</span>
+                {t('landing.hero.titleBefore')}
+                <span className="bg-gradient-to-r from-cyan-300 via-violet-400 to-fuchsia-400 bg-clip-text text-transparent"> {t('landing.hero.titleHighlight')}</span>
               </h1>
 
-              <p className="mb-8 max-w-2xl text-lg text-slate-300 sm:text-xl">
-                Carica documenti, estrai contenuti chiave, scopri scadenze e interagisci con l’AI in pochi secondi.
-              </p>
+              <p className="mb-8 max-w-2xl text-lg text-slate-300 sm:text-xl">{t('landing.hero.subtitle')}</p>
 
               <div className="flex flex-col gap-4 sm:flex-row">
                 <CtaLink href="/dashboard" size="lg">
-                  Inizia gratis
+                  {t('landing.hero.ctaPrimary')}
                   <ArrowRight className="h-4 w-4" />
                 </CtaLink>
                 <CtaLink href="#pricing" variant="secondary" size="lg">
-                  Vedi i prezzi
+                  {t('landing.hero.ctaSecondary')}
                 </CtaLink>
               </div>
 
               <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-400">
-                {[
-                  `${AI_TOOLS.filter((t) => t.status === 'available').length}+ strumenti AI`,
-                  'Piano gratuito per sempre',
-                  'Nessuna carta richiesta',
-                ].map((item) => (
+                {checkmarks.map((item) => (
                   <div key={item} className="inline-flex items-center gap-1.5">
                     <Check className="h-4 w-4 flex-shrink-0 text-cyan-300" />
                     {item}
@@ -218,26 +220,17 @@ export default function Home({
 
             <div className="animate-fade-in-up rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl" style={{ animationDelay: '80ms' }}>
               <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-4">
-                <p className="mb-2 text-sm font-medium text-cyan-300">Esempio di workflow</p>
+                <p className="mb-2 text-sm font-medium text-cyan-300">{t('landing.hero.workflowLabel')}</p>
                 <div className="space-y-3">
-                  <div className="rounded-xl border border-white/10 bg-slate-950/50 p-3 text-sm text-slate-300">
-                    1. Carichi il PDF in pochi secondi.
-                  </div>
-                  <div className="rounded-xl border border-white/10 bg-slate-950/50 p-3 text-sm text-slate-300">
-                    2. L’AI estrai contenuti, date e punti chiave.
-                  </div>
-                  <div className="rounded-xl border border-white/10 bg-slate-950/50 p-3 text-sm text-slate-300">
-                    3. Puoi fare domande e continuare la conversazione.
-                  </div>
+                  {workflowSteps.map((step) => (
+                    <div key={step} className="rounded-xl border border-white/10 bg-slate-950/50 p-3 text-sm text-slate-300">
+                      {step}
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
-                {[
-                  'Archiviazione organizzata',
-                  'Analisi documenti avanzata',
-                  'Supporto rapido',
-                  'Esperienza fluida',
-                ].map((item) => (
+                {statPills.map((item) => (
                   <div key={item} className="rounded-2xl border border-white/10 bg-slate-950/50 p-3 text-sm text-slate-300">
                     {item}
                   </div>
@@ -255,30 +248,30 @@ export default function Home({
 
       <section id="features" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <ScrollReveal className="mb-10 text-center">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Funzionalità</p>
-          <h2 className="text-3xl font-semibold text-white sm:text-4xl">Tutto quello che serve per lavorare meglio con i PDF</h2>
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">{t('landing.features.eyebrow')}</p>
+          <h2 className="text-3xl font-semibold text-white sm:text-4xl">{t('landing.features.heading')}</h2>
         </ScrollReveal>
 
         <div className="grid gap-8 md:grid-cols-3">
           <ScrollReveal delay={0}>
             <FeatureCard
               icon={<FileText className="h-8 w-8" />}
-              title="Parsing intelligente"
-              description="Estrai testo, struttura e contenuti importanti da ogni PDF in modo rapido e affidabile."
+              title={t('landing.features.parsingTitle')}
+              description={t('landing.features.parsingDescription')}
             />
           </ScrollReveal>
           <ScrollReveal delay={0.06}>
             <FeatureCard
               icon={<Calendar className="h-8 w-8" />}
-              title="Rilevamento scadenze"
-              description="Individua automaticamente date, milestone e informazioni critiche nei documenti."
+              title={t('landing.features.deadlinesTitle')}
+              description={t('landing.features.deadlinesDescription')}
             />
           </ScrollReveal>
           <ScrollReveal delay={0.12}>
             <FeatureCard
               icon={<Sparkles className="h-8 w-8" />}
-              title="Chat con l’AI"
-              description="Fai domande naturali sui tuoi documenti e ricevi risposte immediate e pertinenti."
+              title={t('landing.features.chatTitle')}
+              description={t('landing.features.chatDescription')}
             />
           </ScrollReveal>
         </div>
@@ -286,54 +279,33 @@ export default function Home({
 
       <section id="perche" className="mx-auto max-w-5xl px-4 py-20 sm:px-6 lg:px-8">
         <ScrollReveal className="mb-10 text-center">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">Come funziona</p>
-          <h2 className="text-3xl font-semibold text-white sm:text-4xl">Perché un&apos;unica piattaforma invece di dieci abbonamenti</h2>
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">{t('landing.faq.eyebrow')}</p>
+          <h2 className="text-3xl font-semibold text-white sm:text-4xl">{t('landing.faq.heading')}</h2>
         </ScrollReveal>
 
         <div className="grid gap-6 md:grid-cols-2">
           <ScrollReveal delay={0}>
             <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-black/10 backdrop-blur-xl">
-              <h3 className="mb-2 text-lg font-semibold text-white">Cosa succede quando carico un PDF?</h3>
-              <p className="text-sm leading-relaxed text-slate-300">
-                Il documento viene analizzato in pochi secondi. Se contiene testo selezionabile lo estraiamo
-                direttamente, altrimenti usiamo l&apos;OCR per leggere anche PDF scansionati o immagini. Da lì
-                puoi fare domande in linguaggio naturale, chiedere un riassunto o farti segnalare scadenze e date
-                importanti nel testo. Tutto resta salvato nella tua area documenti, organizzabile in cartelle, con
-                ricerca semantica su tutti i file caricati.
-              </p>
+              <h3 className="mb-2 text-lg font-semibold text-white">{t('landing.faq.q1Question')}</h3>
+              <p className="text-sm leading-relaxed text-slate-300">{t('landing.faq.q1Answer')}</p>
             </div>
           </ScrollReveal>
           <ScrollReveal delay={0.06}>
             <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-black/10 backdrop-blur-xl">
-              <h3 className="mb-2 text-lg font-semibold text-white">Come funzionano i crediti tra i vari strumenti?</h3>
-              <p className="text-sm leading-relaxed text-slate-300">
-                Un solo pool di crediti condiviso da tutti gli strumenti della piattaforma, non un pacchetto
-                separato per ognuno. Il piano Free include 50 crediti al mese, Pro 1000, Team 3000. Li usi dove
-                servono davvero: per chattare con un PDF, generare un&apos;immagine o tradurre un documento. Nessun
-                bisogno di scegliere in anticipo quale abbonamento attivare per quale strumento.
-              </p>
+              <h3 className="mb-2 text-lg font-semibold text-white">{t('landing.faq.q2Question')}</h3>
+              <p className="text-sm leading-relaxed text-slate-300">{t('landing.faq.q2Answer')}</p>
             </div>
           </ScrollReveal>
           <ScrollReveal delay={0.12}>
             <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-black/10 backdrop-blur-xl">
-              <h3 className="mb-2 text-lg font-semibold text-white">I miei documenti sono al sicuro?</h3>
-              <p className="text-sm leading-relaxed text-slate-300">
-                Sì. L&apos;accesso ai tuoi file è protetto da autenticazione e regole di accesso a livello di
-                riga sul database. Nessun altro utente può leggere i tuoi documenti, anche condividendo la stessa
-                infrastruttura. I documenti restano tuoi: puoi eliminarli in qualsiasi momento dalla dashboard.
-                L&apos;elaborazione AI avviene solo su tua richiesta, mai in background senza che tu lo sappia.
-              </p>
+              <h3 className="mb-2 text-lg font-semibold text-white">{t('landing.faq.q3Question')}</h3>
+              <p className="text-sm leading-relaxed text-slate-300">{t('landing.faq.q3Answer')}</p>
             </div>
           </ScrollReveal>
           <ScrollReveal delay={0.18}>
             <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-black/10 backdrop-blur-xl">
-              <h3 className="mb-2 text-lg font-semibold text-white">Tutti gli strumenti sono già disponibili?</h3>
-              <p className="text-sm leading-relaxed text-slate-300">
-                La maggior parte sì. Chat sui PDF, scrittura, codice, immagini, dati, contratti, email,
-                traduzioni e conversione file sono attivi oggi. Siamo un progetto in fase di lancio e continuiamo
-                ad aggiungerne altri. Preferiamo essere chiari su cosa funziona davvero adesso, piuttosto che
-                promettere funzionalità non ancora pronte.
-              </p>
+              <h3 className="mb-2 text-lg font-semibold text-white">{t('landing.faq.q4Question')}</h3>
+              <p className="text-sm leading-relaxed text-slate-300">{t('landing.faq.q4Answer')}</p>
             </div>
           </ScrollReveal>
         </div>
@@ -341,11 +313,9 @@ export default function Home({
 
       <section id="tools" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <ScrollReveal className="mb-10 text-center">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">AI Toolbox</p>
-          <h2 className="text-3xl font-semibold text-white sm:text-4xl">Tutti gli strumenti AI in un unico posto</h2>
-          <p className="mx-auto mt-3 max-w-2xl text-slate-300">
-            Oltre alla chat sui PDF, AI Toolbox include scrittura, codice, immagini, email, contratti, dati e traduzioni.
-          </p>
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">{t('landing.tools.eyebrow')}</p>
+          <h2 className="text-3xl font-semibold text-white sm:text-4xl">{t('landing.tools.heading')}</h2>
+          <p className="mx-auto mt-3 max-w-2xl text-slate-300">{t('landing.tools.subheading')}</p>
         </ScrollReveal>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -367,7 +337,7 @@ export default function Home({
 
         <div className="mt-8 text-center">
           <Link href="/tools" className="inline-flex items-center justify-center gap-2 font-semibold text-cyan-300 hover:text-cyan-200">
-            Esplora tutti gli strumenti
+            {t('landing.tools.exploreAll')}
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
@@ -377,12 +347,10 @@ export default function Home({
 
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <ScrollReveal className="rounded-3xl border border-white/10 bg-white/10 p-10 text-center shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
-          <h2 className="mb-4 text-3xl font-semibold text-white">Pronto a iniziare?</h2>
-          <p className="mx-auto mb-8 max-w-2xl text-lg text-slate-300">
-            Entra nella tua workspace e fai partire la tua prima analisi con l’AI.
-          </p>
+          <h2 className="mb-4 text-3xl font-semibold text-white">{t('landing.cta.heading')}</h2>
+          <p className="mx-auto mb-8 max-w-2xl text-lg text-slate-300">{t('landing.cta.subheading')}</p>
           <CtaLink href="/dashboard" size="lg" className="px-8 py-4">
-            Inizia la prova gratuita
+            {t('landing.cta.button')}
             <ArrowRight className="h-4 w-4" />
           </CtaLink>
         </ScrollReveal>
@@ -391,6 +359,14 @@ export default function Home({
       <LandingFooter />
     </main>
     </>
+  )
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={null}>
+      <HomeContent />
+    </Suspense>
   )
 }
 
