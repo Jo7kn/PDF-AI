@@ -41,31 +41,27 @@ export function AppHeader({ icon: Icon, title, subtitle, gradient, active, logoH
   ]
 
   return (
-    <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/80 shadow-lg shadow-black/20 backdrop-blur-xl">
+    <header className="sticky top-0 z-20 border-b border-white/[0.06] bg-[#050506]/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6 lg:px-8">
         <Link href={logoHref} className="group flex items-center gap-3">
-          <div
-            className={`flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br ${gradient} shadow-lg shadow-black/20 ring-1 ring-white/10 transition-[transform,box-shadow] duration-200 group-hover:scale-105 group-hover:rotate-3 group-hover:shadow-xl group-hover:shadow-cyan-500/25`}
-          >
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand shadow-[0_0_20px_-4px_rgba(94,106,210,0.7)] transition-transform duration-200 ease-spring group-hover:scale-105">
             <Icon className="h-5 w-5 text-white" />
           </div>
           <div className="hidden sm:block">
             <p className="text-lg font-semibold leading-tight text-white">{title}</p>
-            <p className="text-xs text-slate-400">{subtitle}</p>
+            <p className="text-xs text-neutral-500">{subtitle}</p>
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-1 rounded-full border border-white/10 bg-white/5 p-1 md:flex">
+        <nav className="hidden items-center gap-1 rounded-xl border border-white/[0.08] bg-white/[0.03] p-1 md:flex">
           {NAV_ITEMS.map((item) => {
             const isActive = active === item.key
             return (
               <Link
                 key={item.key}
                 href={item.href}
-                className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors duration-150 ease-out active:scale-[0.97] ${
-                  isActive
-                    ? 'bg-gradient-to-r from-cyan-500 to-violet-500 text-white shadow-md shadow-cyan-500/25'
-                    : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-150 ease-out active:scale-[0.97] ${
+                  isActive ? 'bg-brand text-white' : 'text-neutral-400 hover:bg-white/[0.06] hover:text-white'
                 }`}
               >
                 <item.icon className="h-3.5 w-3.5" />
@@ -81,20 +77,20 @@ export function AppHeader({ icon: Icon, title, subtitle, gradient, active, logoH
           {profile && (
             <div
               title={t('nav.credits')}
-              className="hidden items-center gap-1.5 rounded-full border border-amber-400/20 bg-amber-400/10 px-3 py-2 text-sm font-medium text-amber-200 sm:flex"
+              className="hidden items-center gap-1.5 rounded-xl border border-amber-400/20 bg-amber-400/10 px-3 py-2 text-sm font-medium text-amber-200 sm:flex"
             >
               <Zap className="h-3.5 w-3.5 fill-amber-300 text-amber-300" />
               {profile.credits}
             </div>
           )}
 
-          <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/10 py-1.5 pl-1.5 pr-3 transition-colors duration-150 ease-out hover:border-white/20 hover:bg-white/[0.15]">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-cyan-400 to-violet-500 text-sm font-semibold text-white ring-2 ring-white/10">
+          <div className="flex items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] py-1.5 pl-1.5 pr-3 transition-colors duration-150 ease-out hover:border-white/[0.14] hover:bg-white/[0.06]">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-sm font-semibold text-white">
               {(profile?.email || '?').charAt(0).toUpperCase()}
             </div>
             <div className="hidden text-left sm:block">
               <p className="max-w-[160px] truncate text-sm font-medium leading-tight text-white">{profile?.email || '...'}</p>
-              <p className="text-xs leading-tight text-cyan-300/80">
+              <p className="text-xs leading-tight text-brand/80">
                 {profile ? getTierByName(profile.tier)?.name || profile.tier : '...'}
               </p>
             </div>
@@ -103,7 +99,7 @@ export function AppHeader({ icon: Icon, title, subtitle, gradient, active, logoH
             <button
               type="submit"
               title={t('nav.logout')}
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 p-2.5 text-sm font-medium text-slate-200 transition-colors duration-150 ease-out hover:border-red-400/30 hover:bg-red-500/10 hover:text-red-200 active:scale-[0.97] sm:px-3 sm:py-2"
+              className="inline-flex items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] p-2.5 text-sm font-medium text-neutral-200 transition-colors duration-150 ease-out hover:border-red-400/30 hover:bg-red-500/10 hover:text-red-200 active:scale-[0.97] sm:px-3 sm:py-2"
             >
               <LogOut className="h-4 w-4" />
               <span className="hidden sm:inline">{t('nav.logout')}</span>
@@ -112,17 +108,15 @@ export function AppHeader({ icon: Icon, title, subtitle, gradient, active, logoH
         </div>
       </div>
 
-      <nav className="flex items-center gap-1 overflow-x-auto border-t border-white/5 px-4 py-2 md:hidden">
+      <nav className="flex items-center gap-1 overflow-x-auto border-t border-white/[0.04] px-4 py-2 md:hidden">
         {NAV_ITEMS.map((item) => {
           const isActive = active === item.key
           return (
             <Link
               key={item.key}
               href={item.href}
-              className={`flex flex-shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors duration-150 ease-out active:scale-[0.97] ${
-                isActive
-                  ? 'bg-gradient-to-r from-cyan-500 to-violet-500 text-white'
-                  : 'text-slate-400 hover:text-white'
+              className={`flex flex-shrink-0 items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-medium transition-colors duration-150 ease-out active:scale-[0.97] ${
+                isActive ? 'bg-brand text-white' : 'text-neutral-400 hover:text-white'
               }`}
             >
               <item.icon className="h-3.5 w-3.5" />
@@ -165,15 +159,15 @@ export function LanguageSwitcher() {
       <button
         onClick={() => (open ? closeMenu() : openMenu())}
         title="Language"
-        className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-2 text-sm text-slate-200 transition-colors duration-150 ease-out hover:border-white/20 hover:bg-white/10 active:scale-[0.97]"
+        className="flex items-center gap-1.5 rounded-xl border border-white/[0.08] bg-white/[0.03] px-2.5 py-2 text-sm text-neutral-200 transition-colors duration-150 ease-out hover:border-white/[0.14] hover:bg-white/[0.06] active:scale-[0.97]"
       >
-        <Globe className="h-4 w-4 text-cyan-300" />
+        <Globe className="h-4 w-4 text-brand" />
         <span className="hidden text-base leading-none sm:inline">{LOCALE_LABELS[locale].flag}</span>
       </button>
 
       {visible && (
         <div
-          className={`absolute right-0 top-full z-30 mt-2 w-44 origin-top-right overflow-hidden rounded-2xl border border-white/10 bg-slate-900/95 p-1.5 shadow-2xl shadow-black/40 backdrop-blur-xl transition-[opacity,transform] duration-150 ease-out-strong ${
+          className={`absolute right-0 top-full z-30 mt-2 w-44 origin-top-right overflow-hidden rounded-2xl border border-white/[0.08] bg-[#0a0a0c]/95 p-1.5 shadow-2xl shadow-black/40 backdrop-blur-xl transition-[opacity,transform] duration-200 ease-spring ${
             open ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
           }`}
         >
@@ -181,8 +175,8 @@ export function LanguageSwitcher() {
             <button
               key={code}
               onClick={() => { setLocale(code); closeMenu() }}
-              className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-sm transition-colors duration-150 ease-out active:scale-[0.98] ${
-                locale === code ? 'bg-cyan-400/15 text-cyan-200' : 'text-slate-300 hover:bg-white/10 hover:text-white'
+              className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors duration-150 ease-out active:scale-[0.98] ${
+                locale === code ? 'bg-brand/15 text-brand' : 'text-neutral-300 hover:bg-white/[0.06] hover:text-white'
               }`}
             >
               <span className="flex items-center gap-2">
