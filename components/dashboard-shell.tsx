@@ -16,12 +16,12 @@ import { PageTransition } from '@/components/animations/page-transition'
 
 export function DashboardShell({ children, isAdmin }: { children: React.ReactNode; isAdmin?: boolean }) {
   return (
-    <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
+    <div className="flex min-h-screen flex-col bg-[#050506] text-white">
       <AppHeader
         icon={FileText}
         title="PDF AI"
         subtitle="Workspace"
-        gradient="from-cyan-400 to-violet-500"
+        gradient=""
         active="documents"
       />
 

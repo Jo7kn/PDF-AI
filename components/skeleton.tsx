@@ -19,7 +19,7 @@ export function Skeleton({ className = '' }: { className?: string }) {
 // il contenuto reale arriva.
 export function SkeletonRow({ className = '' }: { className?: string }) {
   return (
-    <div className={`flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 ${className}`}>
+    <div className={`flex items-center gap-4 rounded-xl border border-white/[0.08] bg-white/[0.03] p-4 ${className}`}>
       <Skeleton className="h-12 w-12 flex-shrink-0" />
       <div className="min-w-0 flex-1 space-y-2">
         <Skeleton className="h-4 w-1/3" />
@@ -33,7 +33,7 @@ export function SkeletonRow({ className = '' }: { className?: string }) {
 // Skeleton per una tile statistica (icona + valore grande + etichetta).
 export function SkeletonStat({ className = '' }: { className?: string }) {
   return (
-    <div className={`rounded-2xl border border-white/10 bg-slate-950/40 p-5 ${className}`}>
+    <div className={`rounded-xl border border-white/[0.08] bg-black/20 p-5 ${className}`}>
       <Skeleton className="mb-3 h-10 w-10" />
       <Skeleton className="mb-2 h-8 w-16" />
       <Skeleton className="h-3 w-24" />
