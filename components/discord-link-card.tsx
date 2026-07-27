@@ -59,9 +59,9 @@ export function DiscordLinkCard() {
   }
 
   return (
-    <section className="animate-fade-in-up rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20" style={{ animationDelay: '140ms' }}>
+    <section className="animate-fade-in-up rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6" style={{ animationDelay: '140ms' }}>
       <div className="mb-4 flex items-center gap-2">
-        <Link2 className="h-5 w-5 text-cyan-300" />
+        <Link2 className="h-5 w-5 text-brand" />
         <h2 className="text-lg font-semibold text-white">{t('discordCard.title')}</h2>
       </div>
 
@@ -71,12 +71,12 @@ export function DiscordLinkCard() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-sm text-emerald-300">{t('discordCard.connected')}</p>
-            {linkedAt && <p className="mt-0.5 text-xs text-slate-400">{t('discordCard.since', { date: new Date(linkedAt).toLocaleDateString(LOCALE_DATE_TAG[locale]) })}</p>}
+            {linkedAt && <p className="mt-0.5 text-xs text-neutral-400">{t('discordCard.since', { date: new Date(linkedAt).toLocaleDateString(LOCALE_DATE_TAG[locale]) })}</p>}
           </div>
           <button
             onClick={handleUnlink}
             disabled={unlinking}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-3 py-2 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-red-400/15 hover:text-red-300 active:scale-[0.97] disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.03] px-3 py-2 text-xs text-neutral-300 transition-colors duration-150 ease-out hover:bg-red-400/15 hover:text-red-300 active:scale-[0.97] disabled:opacity-50"
           >
             <Unlink className="h-3.5 w-3.5" />
             {unlinking ? t('discordCard.disconnecting') : t('discordCard.disconnect')}
@@ -86,11 +86,11 @@ export function DiscordLinkCard() {
 
       {status === 'unlinked' && !code && (
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-slate-300">{t('discordCard.connectPrompt')}</p>
+          <p className="text-sm text-neutral-300">{t('discordCard.connectPrompt')}</p>
           <button
             onClick={handleGenerate}
             disabled={generating}
-            className="rounded-lg bg-cyan-400/15 px-4 py-2 text-sm text-cyan-200 transition-colors duration-150 ease-out hover:bg-cyan-400/25 active:scale-[0.97] disabled:opacity-50"
+            className="rounded-lg bg-brand/15 px-4 py-2 text-sm text-brand transition-colors duration-150 ease-out hover:bg-brand/25 active:scale-[0.97] disabled:opacity-50"
           >
             {generating ? t('discordCard.generating') : t('discordCard.generateCode')}
           </button>
@@ -99,16 +99,16 @@ export function DiscordLinkCard() {
 
       {status === 'unlinked' && code && (
         <div className="space-y-3">
-          <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-2.5">
-            <code className="text-sm text-cyan-200">/link code:{code}</code>
-            <button onClick={handleCopy} className="text-slate-300 transition-colors duration-150 ease-out hover:text-white" title={t('common.copy')}>
+          <div className="flex items-center justify-between rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5">
+            <code className="text-sm text-brand">/link code:{code}</code>
+            <button onClick={handleCopy} className="text-neutral-300 transition-colors duration-150 ease-out hover:text-white" title={t('common.copy')}>
               <CopyIconSwap copied={copied} />
             </button>
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-neutral-400">
             {t('discordCard.runCommand')}
           </p>
-          <button onClick={refreshStatus} className="text-xs text-cyan-300 underline-offset-2 hover:underline">
+          <button onClick={refreshStatus} className="text-xs text-brand underline-offset-2 hover:underline">
             {t('discordCard.checkStatus')}
           </button>
         </div>

@@ -32,7 +32,7 @@ function renderInline(text: string): React.ReactNode[] {
     } else {
       const label = match[2]
       const href = match[3]
-      const linkClass = 'text-cyan-300 underline underline-offset-2 hover:text-cyan-200'
+      const linkClass = 'text-brand underline underline-offset-2 hover:text-[#7A85E5]'
       parts.push(
         href.startsWith('/') ? (
           <Link key={key++} href={href} className={linkClass}>
@@ -67,7 +67,7 @@ export default function TermsPage() {
 
       <section className="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="animate-fade-in-up">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">{t('terms.eyebrow')}</p>
+          <p className="mb-3 text-sm font-medium uppercase tracking-widest text-brand">{t('terms.eyebrow')}</p>
           <h1 className="mb-3 text-4xl font-semibold tracking-tight text-white sm:text-5xl">{t('terms.title')}</h1>
           <p className="mb-12 text-sm text-slate-500">{t('terms.lastUpdated', { date: lastUpdatedFormatted })}</p>
         </div>

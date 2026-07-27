@@ -58,7 +58,7 @@ export function AnnouncementComposer() {
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Titolo (opzionale — es. 🚀 Nuovo strumento disponibile)"
         maxLength={256}
-        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-cyan-400/50 focus:outline-none"
+        className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:border-brand/50 focus:outline-none"
       />
       <textarea
         value={message}
@@ -66,7 +66,7 @@ export function AnnouncementComposer() {
         placeholder="Scrivi l'annuncio da mostrare nel riquadro console del sito..."
         rows={4}
         maxLength={4096}
-        className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-cyan-400/50 focus:outline-none"
+        className="w-full resize-none rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:border-brand/50 focus:outline-none"
       />
       <div className="flex items-center justify-between gap-3">
         <div className="text-xs">
@@ -80,7 +80,7 @@ export function AnnouncementComposer() {
               <AlertCircle className="h-3.5 w-3.5" /> {errorLabel(error)}
             </span>
           )}
-          {status === 'idle' && <span className="text-slate-500">{message.length}/4096 caratteri</span>}
+          {status === 'idle' && <span className="text-neutral-500">{message.length}/4096 caratteri</span>}
         </div>
         <Button type="submit" className="flex-shrink-0 gap-2" disabled={status === 'loading' || !message.trim()}>
           {status === 'loading' ? <Loader2 className="h-4 w-4 animate-spin-fast" /> : <Send className="h-4 w-4" />}

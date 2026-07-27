@@ -12,7 +12,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { Sparkles } from 'lucide-react'
+import { Sparkle } from 'lucide-react'
 import { useLocale } from '@/lib/i18n/locale-context'
 import { useReducedMotion } from '@/lib/hooks/use-reduced-motion'
 
@@ -109,14 +109,14 @@ export function RouteProgress() {
           visible ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0'
         }`}
       >
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-violet-500 shadow-lg shadow-cyan-500/30">
-          <Sparkles className="h-7 w-7 text-white" />
+        <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-brand shadow-[0_0_24px_-4px_rgba(94,106,210,0.7)]">
+          <Sparkle className="h-7 w-7 text-white" fill="currentColor" />
         </div>
         <p className="text-2xl font-bold tracking-tight text-white">AI Toolbox</p>
         <div className="h-px w-40 bg-white/15" />
         <div className="flex w-40 items-center justify-between text-xs">
-          <span className="font-mono uppercase tracking-[0.2em] text-slate-500">{t('common.loading')}</span>
-          <span className="font-mono tabular-nums text-slate-300">{Math.floor(progress)}%</span>
+          <span className="font-mono uppercase tracking-[0.2em] text-neutral-500">{t('common.loading')}</span>
+          <span className="font-mono tabular-nums text-neutral-300">{Math.floor(progress)}%</span>
         </div>
       </div>
 
@@ -126,7 +126,7 @@ export function RouteProgress() {
         className={`absolute left-0 top-0 h-[3px] w-full transition-opacity duration-200 ease-out ${visible ? 'opacity-100' : 'opacity-0'}`}
       >
         <div
-          className="h-full origin-left bg-gradient-to-r from-cyan-400 via-violet-400 to-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.55)] transition-transform duration-[400ms] ease-out-strong"
+          className="h-full origin-left bg-brand shadow-[0_0_10px_rgba(94,106,210,0.55)] transition-transform duration-[400ms] ease-out-strong"
           style={{ transform: `scaleX(${progress / 100})` }}
         />
       </div>

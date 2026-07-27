@@ -9,7 +9,7 @@
 // visivo (sfondo con glow ciano, badge Sparkles) per coerenza totale.
 
 import { useEffect, useState } from 'react'
-import { Sparkles } from 'lucide-react'
+import { Sparkle } from 'lucide-react'
 import { useLocale } from '@/lib/i18n/locale-context'
 
 export default function Loading() {
@@ -50,14 +50,14 @@ export default function Loading() {
           visible ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0'
         }`}
       >
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-violet-500 shadow-lg shadow-cyan-500/30">
-          <Sparkles className="h-7 w-7 text-white" />
+        <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-brand shadow-[0_0_24px_-4px_rgba(94,106,210,0.7)]">
+          <Sparkle className="h-7 w-7 text-white" fill="currentColor" />
         </div>
         <p className="text-2xl font-bold tracking-tight text-white">AI Toolbox</p>
         <div className="h-px w-40 bg-white/15" />
         <div className="flex w-40 items-center justify-between text-xs">
-          <span className="font-mono uppercase tracking-[0.2em] text-slate-500">{t('common.loading')}</span>
-          <span className="font-mono tabular-nums text-slate-300">{Math.floor(progress)}%</span>
+          <span className="font-mono uppercase tracking-[0.2em] text-neutral-500">{t('common.loading')}</span>
+          <span className="font-mono tabular-nums text-neutral-300">{Math.floor(progress)}%</span>
         </div>
       </div>
     </div>

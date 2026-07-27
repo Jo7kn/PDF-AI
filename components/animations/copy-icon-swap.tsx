@@ -22,7 +22,7 @@ export function CopyIconSwap({ copied, className = 'h-3.5 w-3.5' }: { copied: bo
           transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
           className="inline-flex"
         >
-          <Check className={`${className} text-cyan-300`} />
+          <Check className={`${className} text-emerald-400`} />
         </motion.span>
       ) : (
         <motion.span

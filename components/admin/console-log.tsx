@@ -15,7 +15,7 @@ import { getRecentLogs, type AppLogEntry } from '@/app/actions/admin'
 const LEVEL_STYLE: Record<AppLogEntry['level'], string> = {
   error: 'text-red-300',
   warn: 'text-amber-300',
-  info: 'text-slate-400',
+  info: 'text-neutral-400',
 }
 
 const POLL_MS = 5000
@@ -37,27 +37,27 @@ export function ConsoleLog() {
   }, [])
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6">
+    <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6">
       <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-white">
         <Terminal className="h-4 w-4 text-emerald-300" /> Console
-        <span className="ml-auto flex items-center gap-1.5 text-xs font-normal text-slate-500">
+        <span className="ml-auto flex items-center gap-1.5 text-xs font-normal text-neutral-500">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
           live
         </span>
       </div>
-      <div className="max-h-80 overflow-y-auto rounded-xl border border-white/5 bg-black/40 p-3 font-mono text-xs leading-relaxed">
+      <div className="max-h-80 overflow-y-auto rounded-xl border border-white/[0.06] bg-black/40 p-3 font-mono text-xs leading-relaxed">
         {!logs ? (
-          <p className="text-slate-600">Caricamento…</p>
+          <p className="text-neutral-600">Caricamento…</p>
         ) : logs.length === 0 ? (
-          <p className="text-slate-600">Nessun evento registrato ancora.</p>
+          <p className="text-neutral-600">Nessun evento registrato ancora.</p>
         ) : (
           logs.map((log) => (
             <div key={log.id} className="flex gap-2 whitespace-pre-wrap break-all">
-              <span className="flex-shrink-0 text-slate-600">{new Date(log.createdAt).toLocaleTimeString('it-IT')}</span>
+              <span className="flex-shrink-0 text-neutral-600">{new Date(log.createdAt).toLocaleTimeString('it-IT')}</span>
               <span className={`flex-shrink-0 uppercase ${LEVEL_STYLE[log.level]}`}>[{log.level}]</span>
-              <span className="text-slate-300">
+              <span className="text-neutral-300">
                 {log.message}
-                {log.meta && <span className="text-slate-500"> {JSON.stringify(log.meta)}</span>}
+                {log.meta && <span className="text-neutral-500"> {JSON.stringify(log.meta)}</span>}
               </span>
             </div>
           ))

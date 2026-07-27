@@ -11,13 +11,13 @@ export function FaqSection({ slug }: { slug: string }) {
   if (!faqs) return null
 
   return (
-    <section className="mt-6 rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+    <section className="mt-6 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6">
       <h2 className="mb-4 text-lg font-semibold text-white">Domande frequenti</h2>
       <div className="space-y-4">
         {faqs.map((faq) => (
           <div key={faq.question}>
             <p className="mb-1 text-sm font-medium text-white">{faq.question}</p>
-            <p className="text-sm text-slate-400">{faq.answer}</p>
+            <p className="text-sm text-neutral-400">{faq.answer}</p>
           </div>
         ))}
       </div>

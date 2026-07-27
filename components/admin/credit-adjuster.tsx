@@ -52,14 +52,14 @@ export function CreditAdjuster() {
           value={email}
           onChange={(e) => { setEmail(e.target.value); setStatus('idle') }}
           placeholder="email@utente.it"
-          className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-cyan-400/50 focus:outline-none"
+          className="flex-1 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:border-brand/50 focus:outline-none"
         />
         <input
           type="number"
           value={amount}
           onChange={(e) => { setAmount(e.target.value); setStatus('idle') }}
           placeholder="+50 o -20"
-          className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-cyan-400/50 focus:outline-none sm:w-32"
+          className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:border-brand/50 focus:outline-none sm:w-32"
         />
         <Button type="submit" variant="subtle" className="flex-shrink-0 gap-2" disabled={status === 'loading' || !email.trim() || !amount}>
           {status === 'loading' ? <Loader2 className="h-4 w-4 animate-spin-fast" /> : <Zap className="h-4 w-4" />}

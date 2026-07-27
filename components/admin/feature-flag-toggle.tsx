@@ -27,13 +27,13 @@ export function FeatureFlagToggle({ flag }: { flag: FeatureFlag }) {
       onClick={handleToggle}
       disabled={isPending}
       className={`flex items-center justify-between gap-3 rounded-2xl border p-4 text-left transition-colors duration-150 ease-out active:scale-[0.99] disabled:opacity-60 ${
-        enabled ? 'border-emerald-400/30 bg-emerald-400/10' : 'border-white/10 bg-slate-900/70'
+        enabled ? 'border-emerald-400/30 bg-emerald-400/10' : 'border-white/[0.08] bg-white/[0.03]'
       }`}
     >
       <span className="text-sm font-medium text-white">{flag.label}</span>
       <span
         className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors duration-150 ease-out ${
-          enabled ? 'bg-emerald-500' : 'bg-slate-700'
+          enabled ? 'bg-emerald-500' : 'bg-neutral-700'
         }`}
       >
         <span

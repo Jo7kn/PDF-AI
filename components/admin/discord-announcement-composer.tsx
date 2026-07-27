@@ -63,7 +63,7 @@ export function DiscordAnnouncementComposer() {
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Titolo (opzionale — es. 🚀 Nuovo strumento disponibile)"
         maxLength={256}
-        className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-cyan-400/50 focus:outline-none"
+        className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:border-brand/50 focus:outline-none"
       />
       <textarea
         value={message}
@@ -71,14 +71,14 @@ export function DiscordAnnouncementComposer() {
         placeholder="Scrivi l'annuncio da postare nel canale Discord..."
         rows={4}
         maxLength={4096}
-        className="w-full resize-none rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-cyan-400/50 focus:outline-none"
+        className="w-full resize-none rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:border-brand/50 focus:outline-none"
       />
       <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-300">
         <input
           type="checkbox"
           checked={tagEveryone}
           onChange={(e) => setTagEveryone(e.target.checked)}
-          className="h-4 w-4 rounded border-white/20 bg-white/5 text-cyan-400 focus:ring-cyan-400/50 focus:ring-offset-0"
+          className="h-4 w-4 rounded border-white/20 bg-white/5 text-brand focus:ring-brand/50 focus:ring-offset-0"
         />
         <AtSign className="h-3.5 w-3.5 text-slate-400" />
         Tagga tutti (@everyone)
@@ -95,7 +95,7 @@ export function DiscordAnnouncementComposer() {
               <AlertCircle className="h-3.5 w-3.5" /> {errorLabel(error)}
             </span>
           )}
-          {status === 'idle' && <span className="text-slate-500">{message.length}/4096 caratteri</span>}
+          {status === 'idle' && <span className="text-neutral-500">{message.length}/4096 caratteri</span>}
         </div>
         <Button type="submit" className="flex-shrink-0 gap-2" disabled={status === 'loading' || !message.trim()}>
           {status === 'loading' ? <Loader2 className="h-4 w-4 animate-spin-fast" /> : <Send className="h-4 w-4" />}

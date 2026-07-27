@@ -34,15 +34,15 @@ export function TierGate({ gradient, children }: { gradient: string; children: R
 
   if (tier !== 'pro' && tier !== 'team') {
     return (
-      <div className="animate-fade-in-up mx-auto max-w-lg rounded-3xl border border-white/10 bg-slate-900/80 p-10 text-center shadow-xl shadow-black/20">
+      <div className="animate-fade-in-up mx-auto max-w-lg rounded-2xl border border-white/[0.08] bg-white/[0.03] p-10 text-center">
         <div className={`mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${gradient}`}>
           <Lock className="h-6 w-6 text-white" />
         </div>
         <h2 className="mb-2 text-xl font-semibold text-white">{t('tierGate.title')}</h2>
-        <p className="mb-6 text-sm text-slate-400">{t('tierGate.description')}</p>
+        <p className="mb-6 text-sm text-neutral-400">{t('tierGate.description')}</p>
         <Link
           href="/dashboard/billing"
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-6 py-3 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97]"
+          className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand px-6 py-3 font-semibold text-white transition-[transform,background-color] duration-200 ease-spring hover:bg-[#6D79E0] active:scale-[0.97]"
         >
           {t('tierGate.cta')}
           <ArrowRight className="h-4 w-4" />
