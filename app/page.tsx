@@ -3,7 +3,7 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
 import { AI_TOOLS } from '@/lib/tools'
-import { FileText, Sparkles, Calendar, ArrowRight, Check, BrainCircuit } from 'lucide-react'
+import { FileText, Terminal, Calendar, ArrowRight, Check, MessageSquare } from 'lucide-react'
 import { LandingHeader } from '@/components/landing-header'
 import { LandingFooter } from '@/components/landing-footer'
 import { PricingSection } from '@/components/pricing-section'
@@ -14,23 +14,6 @@ import { CtaLink } from '@/components/ui/cta-link'
 import { AuthErrorBanner } from '@/components/auth-error-banner'
 import { SITE_URL, SITE_NAME } from '@/lib/seo'
 import { useLocale, useTranslatedList } from '@/lib/i18n/locale-context'
-
-// Posizioni fisse (non random ad ogni render, altrimenti "saltano" ad ogni
-// re-render di Home) per le stelline decorative dietro l'hero.
-const STAR_POSITIONS = [
-  { left: '8%', top: '15%', size: '3px', delay: '0s' },
-  { left: '18%', top: '55%', size: '2px', delay: '0.6s' },
-  { left: '28%', top: '20%', size: '2px', delay: '1.4s' },
-  { left: '35%', top: '75%', size: '3px', delay: '0.3s' },
-  { left: '12%', top: '85%', size: '2px', delay: '2s' },
-  { left: '62%', top: '12%', size: '2px', delay: '1s' },
-  { left: '72%', top: '60%', size: '3px', delay: '1.8s' },
-  { left: '82%', top: '25%', size: '2px', delay: '0.8s' },
-  { left: '90%', top: '70%', size: '2px', delay: '2.4s' },
-  { left: '55%', top: '85%', size: '2px', delay: '1.2s' },
-  { left: '45%', top: '10%', size: '3px', delay: '2.8s' },
-  { left: '95%', top: '45%', size: '2px', delay: '0.4s' },
-]
 
 function HomeContent() {
   const { t } = useLocale()
@@ -144,58 +127,28 @@ function HomeContent() {
           }),
         }}
       />
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.16),_transparent_30%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
+    <main className="min-h-screen bg-neutral-950 text-neutral-50">
       <LandingHeader />
 
       <Suspense fallback={null}>
         <AuthErrorBanner />
       </Suspense>
 
-      <section className="relative overflow-hidden">
-        {/* Glow dietro al titolo — stesso trattamento della hero card
-            (cyan/violet), solo più diffuso. pointer-events-none così non
-            interferisce con click/selezione del testo sopra. pulse-slow
-            (scale+opacity, mai posizione) fa "respirare" lo sfondo senza
-            causare reflow. */}
-        <div className="animate-pulse-slow pointer-events-none absolute left-1/2 top-0 -z-10 h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/3 rounded-full bg-gradient-to-br from-cyan-500/25 via-violet-500/20 to-transparent blur-3xl" />
-
-        {/* Orb come sfondo (non più elemento a sé): due anelli che ruotano
-            in direzioni opposte, centrati dietro tutto l'hero, molto
-            attenuati — si vede come texture ambientale, non come oggetto
-            in primo piano. */}
-        <div className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[640px] w-[640px] -translate-x-1/2 -translate-y-1/2 opacity-40">
-          <div className="animate-spin-slow absolute inset-0 rounded-full border border-cyan-400/20 [border-top-color:transparent] [border-right-color:transparent]" />
-          <div className="animate-spin-slow-reverse absolute inset-16 rounded-full border border-violet-400/20 [border-bottom-color:transparent] [border-left-color:transparent]" />
-        </div>
-
-        {/* Stelline sparse: opacità che pulsa con delay diversi per punto,
-            mai in sincrono — altrimenti sembra un flash invece di un cielo
-            stellato. Solo sopra lg: sotto lo spazio è troppo stretto e
-            distrarrebbe dal testo. */}
-        <div className="pointer-events-none absolute inset-0 -z-10 hidden lg:block">
-          {STAR_POSITIONS.map((star, i) => (
-            <span
-              key={i}
-              className="animate-twinkle absolute rounded-full bg-white"
-              style={{ left: star.left, top: star.top, width: star.size, height: star.size, animationDelay: star.delay }}
-            />
-          ))}
-        </div>
-
+      <section className="relative border-b border-neutral-800 [background-image:linear-gradient(to_right,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:48px_48px]">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
           <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
             <div className="animate-fade-in-up max-w-3xl">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-1 text-sm text-cyan-200">
-                <BrainCircuit className="h-4 w-4" />
+              <div className="mb-6 inline-flex items-center gap-2 rounded-lg border border-neutral-800 bg-neutral-900 px-3 py-1 font-mono text-xs uppercase tracking-widest text-amber-400">
+                <Terminal className="h-3.5 w-3.5" />
                 AI-powered document intelligence
               </div>
 
-              <h1 className="mb-6 text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-7xl">
+              <h1 className="mb-6 text-4xl font-semibold tracking-tight text-neutral-50 sm:text-5xl lg:text-7xl">
                 {t('landing.hero.titleBefore')}
-                <span className="bg-gradient-to-r from-cyan-300 via-violet-400 to-fuchsia-400 bg-clip-text text-transparent"> {t('landing.hero.titleHighlight')}</span>
+                <span className="text-amber-400"> {t('landing.hero.titleHighlight')}</span>
               </h1>
 
-              <p className="mb-8 max-w-2xl text-lg text-slate-300 sm:text-xl">{t('landing.hero.subtitle')}</p>
+              <p className="mb-8 max-w-2xl text-lg text-neutral-400 sm:text-xl">{t('landing.hero.subtitle')}</p>
 
               <div className="flex flex-col gap-4 sm:flex-row">
                 <CtaLink href="/dashboard" size="lg">
@@ -207,30 +160,33 @@ function HomeContent() {
                 </CtaLink>
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-400">
+              <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-neutral-400">
                 {checkmarks.map((item) => (
                   <div key={item} className="inline-flex items-center gap-1.5">
-                    <Check className="h-4 w-4 flex-shrink-0 text-cyan-300" />
+                    <Check className="h-4 w-4 flex-shrink-0 text-amber-400" />
                     {item}
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="animate-fade-in-up rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl" style={{ animationDelay: '80ms' }}>
-              <div className="mb-6 rounded-2xl border border-white/10 bg-white/5 p-4">
-                <p className="mb-2 text-sm font-medium text-cyan-300">{t('landing.hero.workflowLabel')}</p>
-                <div className="space-y-3">
-                  {workflowSteps.map((step) => (
-                    <div key={step} className="rounded-xl border border-white/10 bg-slate-950/50 p-3 text-sm text-slate-300">
-                      {step}
-                    </div>
-                  ))}
-                </div>
+            <div className="animate-fade-in-up overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900 shadow-2xl shadow-black/40" style={{ animationDelay: '80ms' }}>
+              <div className="flex items-center gap-1.5 border-b border-neutral-800 bg-neutral-950/60 px-4 py-3">
+                <span className="h-2.5 w-2.5 rounded-full bg-neutral-700" />
+                <span className="h-2.5 w-2.5 rounded-full bg-neutral-700" />
+                <span className="h-2.5 w-2.5 rounded-full bg-neutral-700" />
+                <span className="ml-2 font-mono text-xs text-neutral-500">{t('landing.hero.workflowLabel')}</span>
               </div>
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-3 p-4">
+                {workflowSteps.map((step) => (
+                  <div key={step} className="rounded-lg border border-neutral-800 bg-neutral-950/50 p-3 font-mono text-sm text-neutral-300">
+                    {step}
+                  </div>
+                ))}
+              </div>
+              <div className="grid gap-3 border-t border-neutral-800 p-4 sm:grid-cols-2">
                 {statPills.map((item) => (
-                  <div key={item} className="rounded-2xl border border-white/10 bg-slate-950/50 p-3 text-sm text-slate-300">
+                  <div key={item} className="rounded-lg border border-neutral-800 bg-neutral-950/50 p-3 text-sm text-neutral-300">
                     {item}
                   </div>
                 ))}
@@ -240,35 +196,35 @@ function HomeContent() {
         </div>
       </section>
 
-      <div className="mx-auto grid max-w-6xl gap-6 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+      <div className="mx-auto grid max-w-6xl gap-6 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:px-8">
         <AnnouncementConsole className="w-full" />
         <DemoVideoCard className="w-full" />
       </div>
 
       <section id="features" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <ScrollReveal className="mb-10 text-center">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">{t('landing.features.eyebrow')}</p>
-          <h2 className="text-3xl font-semibold text-white sm:text-4xl">{t('landing.features.heading')}</h2>
+        <ScrollReveal className="mb-10">
+          <p className="mb-3 font-mono text-xs uppercase tracking-widest text-amber-400">// {t('landing.features.eyebrow')}</p>
+          <h2 className="text-3xl font-semibold text-neutral-50 sm:text-4xl">{t('landing.features.heading')}</h2>
         </ScrollReveal>
 
-        <div className="grid gap-8 md:grid-cols-3">
+        <div className="grid gap-px overflow-hidden rounded-xl border border-neutral-800 bg-neutral-800 md:grid-cols-3">
           <ScrollReveal delay={0}>
             <FeatureCard
-              icon={<FileText className="h-8 w-8" />}
+              icon={<FileText className="h-6 w-6" />}
               title={t('landing.features.parsingTitle')}
               description={t('landing.features.parsingDescription')}
             />
           </ScrollReveal>
           <ScrollReveal delay={0.06}>
             <FeatureCard
-              icon={<Calendar className="h-8 w-8" />}
+              icon={<Calendar className="h-6 w-6" />}
               title={t('landing.features.deadlinesTitle')}
               description={t('landing.features.deadlinesDescription')}
             />
           </ScrollReveal>
           <ScrollReveal delay={0.12}>
             <FeatureCard
-              icon={<Sparkles className="h-8 w-8" />}
+              icon={<MessageSquare className="h-6 w-6" />}
               title={t('landing.features.chatTitle')}
               description={t('landing.features.chatDescription')}
             />
@@ -277,44 +233,44 @@ function HomeContent() {
       </section>
 
       <section id="perche" className="mx-auto max-w-5xl px-4 py-20 sm:px-6 lg:px-8">
-        <ScrollReveal className="mb-10 text-center">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">{t('landing.faq.eyebrow')}</p>
-          <h2 className="text-3xl font-semibold text-white sm:text-4xl">{t('landing.faq.heading')}</h2>
+        <ScrollReveal className="mb-10">
+          <p className="mb-3 font-mono text-xs uppercase tracking-widest text-amber-400">// {t('landing.faq.eyebrow')}</p>
+          <h2 className="text-3xl font-semibold text-neutral-50 sm:text-4xl">{t('landing.faq.heading')}</h2>
         </ScrollReveal>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2">
           <ScrollReveal delay={0}>
-            <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-black/10 backdrop-blur-xl">
-              <h3 className="mb-2 text-lg font-semibold text-white">{t('landing.faq.q1Question')}</h3>
-              <p className="text-sm leading-relaxed text-slate-300">{t('landing.faq.q1Answer')}</p>
+            <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-6">
+              <h3 className="mb-2 text-lg font-semibold text-neutral-50">{t('landing.faq.q1Question')}</h3>
+              <p className="text-sm leading-relaxed text-neutral-400">{t('landing.faq.q1Answer')}</p>
             </div>
           </ScrollReveal>
           <ScrollReveal delay={0.06}>
-            <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-black/10 backdrop-blur-xl">
-              <h3 className="mb-2 text-lg font-semibold text-white">{t('landing.faq.q2Question')}</h3>
-              <p className="text-sm leading-relaxed text-slate-300">{t('landing.faq.q2Answer')}</p>
+            <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-6">
+              <h3 className="mb-2 text-lg font-semibold text-neutral-50">{t('landing.faq.q2Question')}</h3>
+              <p className="text-sm leading-relaxed text-neutral-400">{t('landing.faq.q2Answer')}</p>
             </div>
           </ScrollReveal>
           <ScrollReveal delay={0.12}>
-            <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-black/10 backdrop-blur-xl">
-              <h3 className="mb-2 text-lg font-semibold text-white">{t('landing.faq.q3Question')}</h3>
-              <p className="text-sm leading-relaxed text-slate-300">{t('landing.faq.q3Answer')}</p>
+            <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-6">
+              <h3 className="mb-2 text-lg font-semibold text-neutral-50">{t('landing.faq.q3Question')}</h3>
+              <p className="text-sm leading-relaxed text-neutral-400">{t('landing.faq.q3Answer')}</p>
             </div>
           </ScrollReveal>
           <ScrollReveal delay={0.18}>
-            <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-lg shadow-black/10 backdrop-blur-xl">
-              <h3 className="mb-2 text-lg font-semibold text-white">{t('landing.faq.q4Question')}</h3>
-              <p className="text-sm leading-relaxed text-slate-300">{t('landing.faq.q4Answer')}</p>
+            <div className="rounded-xl border border-neutral-800 bg-neutral-900 p-6">
+              <h3 className="mb-2 text-lg font-semibold text-neutral-50">{t('landing.faq.q4Question')}</h3>
+              <p className="text-sm leading-relaxed text-neutral-400">{t('landing.faq.q4Answer')}</p>
             </div>
           </ScrollReveal>
         </div>
       </section>
 
       <section id="tools" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <ScrollReveal className="mb-10 text-center">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">{t('landing.tools.eyebrow')}</p>
-          <h2 className="text-3xl font-semibold text-white sm:text-4xl">{t('landing.tools.heading')}</h2>
-          <p className="mx-auto mt-3 max-w-2xl text-slate-300">{t('landing.tools.subheading')}</p>
+        <ScrollReveal className="mb-10">
+          <p className="mb-3 font-mono text-xs uppercase tracking-widest text-amber-400">// {t('landing.tools.eyebrow')}</p>
+          <h2 className="text-3xl font-semibold text-neutral-50 sm:text-4xl">{t('landing.tools.heading')}</h2>
+          <p className="mt-3 max-w-2xl text-neutral-400">{t('landing.tools.subheading')}</p>
         </ScrollReveal>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -322,20 +278,20 @@ function HomeContent() {
             <ScrollReveal key={tool.slug} delay={Math.min(i, 5) * 0.04}>
               <Link
                 href={tool.href}
-                className="group block rounded-2xl border border-white/10 bg-slate-900/70 p-5 shadow-lg shadow-black/10 backdrop-blur-xl transition-[background-color,box-shadow,border-color,transform] duration-200 ease-out-strong hover:border-cyan-400/30 hover:bg-white/10 hover:shadow-xl hover:shadow-cyan-500/10 active:scale-[0.97]"
+                className="group block rounded-xl border border-neutral-800 bg-neutral-900 p-5 transition-[background-color,border-color,transform] duration-200 ease-out-strong hover:border-amber-400/40 hover:bg-neutral-800 active:scale-[0.98]"
               >
-                <div className={`mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br ${tool.gradient} text-white`}>
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg border border-neutral-800 bg-neutral-950 text-amber-400">
                   <tool.icon className="h-5 w-5" />
                 </div>
-                <h3 className="mb-1 font-semibold text-white">{tool.name}</h3>
-                <p className="text-sm text-slate-400">{tool.tagline}</p>
+                <h3 className="mb-1 font-semibold text-neutral-50">{tool.name}</h3>
+                <p className="text-sm text-neutral-500">{tool.tagline}</p>
               </Link>
             </ScrollReveal>
           ))}
         </div>
 
-        <div className="mt-8 text-center">
-          <Link href="/tools" className="inline-flex items-center justify-center gap-2 font-semibold text-cyan-300 hover:text-cyan-200">
+        <div className="mt-8">
+          <Link href="/tools" className="inline-flex items-center justify-center gap-2 font-semibold text-amber-400 hover:text-amber-300">
             {t('landing.tools.exploreAll')}
             <ArrowRight className="h-4 w-4" />
           </Link>
@@ -345,9 +301,9 @@ function HomeContent() {
       <PricingSection />
 
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <ScrollReveal className="rounded-3xl border border-white/10 bg-white/10 p-10 text-center shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
-          <h2 className="mb-4 text-3xl font-semibold text-white">{t('landing.cta.heading')}</h2>
-          <p className="mx-auto mb-8 max-w-2xl text-lg text-slate-300">{t('landing.cta.subheading')}</p>
+        <ScrollReveal className="rounded-xl border border-neutral-800 bg-neutral-900 p-10 text-center [background-image:linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:32px_32px]">
+          <h2 className="mb-4 text-3xl font-semibold text-neutral-50">{t('landing.cta.heading')}</h2>
+          <p className="mx-auto mb-8 max-w-2xl text-lg text-neutral-400">{t('landing.cta.subheading')}</p>
           <CtaLink href="/dashboard" size="lg" className="px-8 py-4">
             {t('landing.cta.button')}
             <ArrowRight className="h-4 w-4" />
@@ -367,12 +323,12 @@ export default function Home() {
 
 function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
-    <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-8 shadow-lg shadow-black/10 backdrop-blur-xl transition-[background-color,box-shadow,border-color] duration-200 ease-out hover:border-cyan-400/30 hover:bg-white/10 hover:shadow-2xl hover:shadow-cyan-500/10">
-      <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-violet-500 text-white shadow-lg shadow-cyan-500/30">
+    <div className="h-full bg-neutral-900 p-8 transition-colors duration-200 ease-out hover:bg-neutral-800/60">
+      <div className="mb-6 flex h-11 w-11 items-center justify-center rounded-lg border border-neutral-800 bg-neutral-950 text-amber-400">
         {icon}
       </div>
-      <h3 className="mb-3 text-xl font-semibold text-white">{title}</h3>
-      <p className="text-slate-400">{description}</p>
+      <h3 className="mb-3 text-xl font-semibold text-neutral-50">{title}</h3>
+      <p className="text-neutral-400">{description}</p>
     </div>
   )
 }

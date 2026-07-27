@@ -57,20 +57,20 @@ export function AnnouncementConsole({ className = 'mx-auto max-w-4xl px-4 sm:px-
   return (
     <section className={className}>
       <ScrollReveal>
-        <div className="overflow-hidden rounded-3xl border border-white/10 bg-slate-900/80 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
+        <div className="overflow-hidden rounded-xl border border-neutral-800 bg-neutral-900">
           {/* Barra titolo in stile finestra terminale */}
-          <div className="flex items-center gap-3 border-b border-white/10 bg-white/5 px-5 py-3">
+          <div className="flex items-center gap-3 border-b border-neutral-800 bg-neutral-950/60 px-5 py-3">
             <div className="flex gap-1.5">
-              <span className="h-2.5 w-2.5 rounded-full bg-red-400/70" />
-              <span className="h-2.5 w-2.5 rounded-full bg-amber-400/70" />
-              <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/70" />
+              <span className="h-2.5 w-2.5 rounded-full bg-neutral-700" />
+              <span className="h-2.5 w-2.5 rounded-full bg-neutral-700" />
+              <span className="h-2.5 w-2.5 rounded-full bg-neutral-700" />
             </div>
-            <div className="flex items-center gap-1.5 text-xs font-medium text-slate-400">
-              <Terminal className="h-3.5 w-3.5 text-cyan-300" />
+            <div className="flex items-center gap-1.5 text-xs font-medium text-neutral-500">
+              <Terminal className="h-3.5 w-3.5 text-amber-400" />
               annunci@ai-toolbox
             </div>
-            <span className="ml-auto flex items-center gap-1.5 text-xs text-slate-500">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
+            <span className="ml-auto flex items-center gap-1.5 text-xs text-neutral-500">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-amber-400" />
               {t('announcementConsole.live')}
             </span>
           </div>
@@ -78,12 +78,12 @@ export function AnnouncementConsole({ className = 'mx-auto max-w-4xl px-4 sm:px-
           {/* Corpo log */}
           <div className="max-h-80 overflow-y-auto p-5 font-mono text-sm leading-relaxed">
             {announcements === null ? (
-              <p className="text-slate-600">{t('announcementConsole.loading')}</p>
+              <p className="text-neutral-600">{t('announcementConsole.loading')}</p>
             ) : announcements.length === 0 ? (
-              <p className="flex items-center gap-2 text-slate-500">
-                <span className="text-cyan-400">❯</span>
+              <p className="flex items-center gap-2 text-neutral-500">
+                <span className="text-amber-400">❯</span>
                 {t('announcementConsole.empty')}
-                <span className="inline-block h-4 w-[7px] animate-pulse bg-cyan-300/80" />
+                <span className="inline-block h-4 w-[7px] animate-pulse bg-amber-400/80" />
               </p>
             ) : (
               announcements.map((a, i) => (
@@ -93,13 +93,13 @@ export function AnnouncementConsole({ className = 'mx-auto max-w-4xl px-4 sm:px-
                   style={{ animationDelay: `${Math.min(i, 6) * 70}ms` }}
                 >
                   <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                    <span className="text-cyan-400">❯</span>
-                    <span className="text-slate-600">[{formatTimestamp(a.createdAt)}]</span>
-                    {a.title && <span className="font-semibold text-white">{a.title}</span>}
+                    <span className="text-amber-400">❯</span>
+                    <span className="text-neutral-600">[{formatTimestamp(a.createdAt)}]</span>
+                    {a.title && <span className="font-semibold text-neutral-50">{a.title}</span>}
                   </div>
-                  <p className="mt-1 whitespace-pre-wrap break-words pl-5 text-slate-300">
+                  <p className="mt-1 whitespace-pre-wrap break-words pl-5 text-neutral-300">
                     {a.message}
-                    {i === 0 && <span className="ml-1 inline-block h-4 w-[7px] translate-y-[3px] animate-pulse bg-cyan-300/80" />}
+                    {i === 0 && <span className="ml-1 inline-block h-4 w-[7px] translate-y-[3px] animate-pulse bg-amber-400/80" />}
                   </p>
                 </div>
               ))

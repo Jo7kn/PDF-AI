@@ -19,11 +19,11 @@ interface CtaLinkProps {
 }
 
 const BASE =
-  'inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-[transform,background-color,border-color,box-shadow] duration-150 ease-out-strong active:scale-[0.97]'
+  'inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-[transform,background-color,border-color,box-shadow] duration-150 ease-out-strong active:scale-[0.97]'
 
 const VARIANTS = {
-  primary: 'bg-gradient-to-r from-cyan-500 to-violet-500 text-white shadow-lg shadow-cyan-500/25 hover:from-cyan-400 hover:to-violet-400',
-  secondary: 'border border-white/10 bg-white/5 text-slate-200 hover:border-cyan-400/30 hover:bg-white/10',
+  primary: 'bg-amber-400 text-neutral-950 hover:bg-amber-300',
+  secondary: 'border border-neutral-700 bg-transparent text-neutral-200 hover:border-neutral-500 hover:bg-neutral-900',
 }
 
 const SIZES = {
