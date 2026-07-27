@@ -2,9 +2,8 @@
 
 import { Suspense } from 'react'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
 import { AI_TOOLS } from '@/lib/tools'
-import { FileText, Sparkles, Calendar, ArrowRight, Check, BrainCircuit, AlertTriangle } from 'lucide-react'
+import { FileText, Sparkles, Calendar, ArrowRight, Check, BrainCircuit } from 'lucide-react'
 import { LandingHeader } from '@/components/landing-header'
 import { LandingFooter } from '@/components/landing-footer'
 import { PricingSection } from '@/components/pricing-section'
@@ -12,6 +11,7 @@ import { ScrollReveal } from '@/components/scroll-reveal'
 import { AnnouncementConsole } from '@/components/announcement-console'
 import { DemoVideoCard } from '@/components/demo-video-card'
 import { CtaLink } from '@/components/ui/cta-link'
+import { AuthErrorBanner } from '@/components/auth-error-banner'
 import { SITE_URL, SITE_NAME } from '@/lib/seo'
 import { useLocale, useTranslatedList } from '@/lib/i18n/locale-context'
 
@@ -34,14 +34,6 @@ const STAR_POSITIONS = [
 
 function HomeContent() {
   const { t } = useLocale()
-  const searchParams = useSearchParams()
-  // Su link email scaduti/gia' usati (reset password, conferma, magic link)
-  // Supabase reindirizza al Site URL configurato (questa root) invece che
-  // alla pagina custom richiesta via redirectTo, con l'errore in query string
-  // — senza questo banner l'utente vedrebbe solo la home normale, senza
-  // capire perche' e' finito qui invece che nel flusso che si aspettava.
-  const linkExpired = searchParams.get('error_code') === 'otp_expired'
-  const authErrored = !linkExpired && searchParams.get('error') === 'access_denied'
   const workflowSteps = useTranslatedList('landing.hero.workflowSteps')
   const statPills = useTranslatedList('landing.hero.statPills')
   const checkmarks = [
@@ -134,23 +126,30 @@ function HomeContent() {
           }),
         }}
       />
+      <script
+        type="application/ld+json"
+        // Stessi 3 step del workflow mostrato nella hero card (t('landing.hero.workflowSteps'))
+        // — testo IT hardcoded qui perché lo schema deve restare stabile
+        // indipendentemente dalla lingua visualizzata dall'utente.
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'HowTo',
+            name: 'Come chattare con un PDF su AI Toolbox',
+            step: [
+              { '@type': 'HowToStep', position: 1, name: 'Carica il PDF', text: 'Carichi il PDF in pochi secondi.' },
+              { '@type': 'HowToStep', position: 2, name: 'Estrazione automatica', text: "L'AI estrae contenuti, date e punti chiave." },
+              { '@type': 'HowToStep', position: 3, name: 'Fai domande', text: 'Puoi fare domande e continuare la conversazione.' },
+            ],
+          }),
+        }}
+      />
     <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.16),_transparent_30%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
       <LandingHeader />
 
-      {(linkExpired || authErrored) && (
-        <div className="mx-auto max-w-2xl px-4 pt-6 sm:px-6 lg:px-8">
-          <div className="animate-fade-in-up flex items-center gap-3 rounded-2xl border border-amber-400/20 bg-amber-500/10 p-4 text-sm text-amber-200">
-            <AlertTriangle className="h-5 w-5 flex-shrink-0" />
-            <p>
-              {linkExpired ? t('landing.linkExpired') : t('landing.linkInvalid')}{' '}
-              <Link href="/forgotpass" className="font-semibold underline underline-offset-2 hover:text-amber-100">
-                {t('landing.requestNewLink')}
-              </Link>
-              .
-            </p>
-          </div>
-        </div>
-      )}
+      <Suspense fallback={null}>
+        <AuthErrorBanner />
+      </Suspense>
 
       <section className="relative overflow-hidden">
         {/* Glow dietro al titolo — stesso trattamento della hero card
@@ -363,11 +362,7 @@ function HomeContent() {
 }
 
 export default function Home() {
-  return (
-    <Suspense fallback={null}>
-      <HomeContent />
-    </Suspense>
-  )
+  return <HomeContent />
 }
 
 function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
