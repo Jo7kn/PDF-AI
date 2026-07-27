@@ -1,6 +1,7 @@
 'use client'
 
 import { Suspense } from 'react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { AI_TOOLS } from '@/lib/tools'
 import { FileText, Terminal, Calendar, ArrowRight, Check, MessageSquare } from 'lucide-react'
@@ -16,13 +17,18 @@ import { AuthErrorBanner } from '@/components/auth-error-banner'
 import { SITE_URL, SITE_NAME } from '@/lib/seo'
 import { useLocale, useTranslatedList } from '@/lib/i18n/locale-context'
 
-// Blob ambientali dietro l'hero — stessa idea del "Modern Dark Cinema"
-// (ui-ux-pro-max): 2-3 macchie sfocate che derivano lentissime, mai in
-// sincrono. Solo transform (animate-float), nessun impatto su layout/paint.
+// Canvas WebGL: niente window/GL lato server, ssr:false obbligatorio.
+const ThreeHeroBackground = dynamic(
+  () => import('@/components/three-hero-background').then((m) => m.ThreeHeroBackground),
+  { ssr: false },
+)
+
+// Fallback CSS dietro il canvas 3D: colma il momento prima che WebGL monti
+// e i bordi della scena dove il blob non copre — mai un buco nero vuoto.
 function AmbientGlow() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      <div className="animate-float absolute -left-40 top-0 h-[500px] w-[500px] rounded-full bg-brand/20 blur-[120px]" />
+      <div className="animate-float absolute -left-40 top-0 h-[500px] w-[500px] rounded-full bg-brand/15 blur-[120px]" />
       <div className="animate-float absolute -right-32 top-40 h-[420px] w-[420px] rounded-full bg-fuchsia-500/10 blur-[120px]" style={{ animationDelay: '4s' }} />
     </div>
   )
@@ -149,6 +155,9 @@ function HomeContent() {
 
       <section className="relative overflow-hidden border-b border-white/[0.06]">
         <AmbientGlow />
+        <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 lg:block">
+          <ThreeHeroBackground />
+        </div>
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
           <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
             <div className="animate-fade-in-up max-w-3xl">

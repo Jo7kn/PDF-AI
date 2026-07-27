@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { Sparkle, ArrowRight, Layers, Wallet, ShieldCheck, LayoutGrid } from 'lucide-react'
 import { AppHeader } from '@/components/app-header'
@@ -14,6 +15,11 @@ import { AI_TOOLS } from '@/lib/tools'
 import { getCurrentUserProfile } from '@/app/actions/auth'
 import { getPublicFeatureFlags } from '@/app/actions/feature-flags'
 import { useLocale } from '@/lib/i18n/locale-context'
+
+const ThreeHeroBackground = dynamic(
+  () => import('@/components/three-hero-background').then((m) => m.ThreeHeroBackground),
+  { ssr: false },
+)
 
 export default function HomePage() {
   const { t } = useLocale()
@@ -45,7 +51,10 @@ export default function HomePage() {
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
         <section className="relative mb-10 overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03] p-8 sm:p-12">
           <div className="pointer-events-none absolute inset-0 -z-10">
-            <div className="animate-float absolute right-0 top-0 h-[420px] w-[420px] translate-x-1/4 -translate-y-1/4 rounded-full bg-brand/20 blur-[110px]" />
+            <div className="animate-float absolute right-0 top-0 h-[420px] w-[420px] translate-x-1/4 -translate-y-1/4 rounded-full bg-brand/15 blur-[110px]" />
+          </div>
+          <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 lg:block">
+            <ThreeHeroBackground />
           </div>
           <div className="max-w-3xl">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-sm text-brand">
