@@ -19,20 +19,23 @@ export function AuthPromoPanel() {
   ]
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-white/10 p-8 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
-      <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-sm text-cyan-200">
-        <span className="h-2 w-2 rounded-full bg-cyan-300" />
+    <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.03] p-8">
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="animate-float absolute -left-20 -top-20 h-[360px] w-[360px] rounded-full bg-brand/15 blur-[100px]" />
+      </div>
+      <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-sm text-brand">
+        <span className="h-2 w-2 rounded-full bg-brand" />
         {t('authPromo.badge')}
       </div>
       <h1 className="mb-4 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
         {t('authPromo.title')}
       </h1>
-      <p className="mb-8 max-w-xl text-lg text-slate-300">
+      <p className="mb-8 max-w-xl text-lg text-neutral-400">
         {t('authPromo.subtitle')}
       </p>
       <div className="grid gap-4 sm:grid-cols-2">
         {features.map((item) => (
-          <div key={item} className="rounded-2xl border border-white/10 bg-slate-950/50 p-4 text-sm text-slate-200">
+          <div key={item} className="rounded-xl border border-white/[0.06] bg-black/20 p-4 text-sm text-neutral-200">
             {item}
           </div>
         ))}

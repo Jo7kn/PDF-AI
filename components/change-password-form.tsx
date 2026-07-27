@@ -56,9 +56,9 @@ export function ChangePasswordForm({
   }
 
   return (
-    <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+    <section className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6">
       <div className="mb-4 flex items-center gap-2">
-        <KeyRound className="h-5 w-5 text-cyan-300" />
+        <KeyRound className="h-5 w-5 text-brand" />
         <h2 className="text-lg font-semibold text-white">{resolvedTitle}</h2>
       </div>
 
@@ -68,14 +68,14 @@ export function ChangePasswordForm({
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder={t('changePasswordForm.newPasswordPlaceholder')}
-          className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-cyan-400/50 focus:outline-none"
+          className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:border-brand/50 focus:outline-none"
         />
         <input
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           placeholder={t('changePasswordForm.confirmPasswordPlaceholder')}
-          className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-cyan-400/50 focus:outline-none"
+          className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:border-brand/50 focus:outline-none"
         />
 
         {error && (
@@ -94,7 +94,7 @@ export function ChangePasswordForm({
         <button
           type="submit"
           disabled={loading || !password || !confirmPassword}
-          className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex items-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-medium text-white transition-colors duration-150 ease-out hover:bg-[#6D79E0] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {loading && <Loader2 className="h-4 w-4 animate-spin-fast" />}
           {t('changePasswordForm.updateButton')}

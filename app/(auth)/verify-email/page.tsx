@@ -61,14 +61,14 @@ function VerifyEmailForm() {
   }
 
   return (
-    <Card className="w-full border border-white/10 bg-slate-900/85 p-0 shadow-2xl shadow-fuchsia-500/10">
+    <Card className="w-full p-0">
       <CardHeader className="space-y-3 px-6 pt-6 text-left">
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-violet-500 shadow-lg shadow-cyan-500/20">
+        <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand shadow-[0_0_20px_-4px_rgba(94,106,210,0.7)]">
           <KeyRound className="h-5 w-5 text-white" />
         </div>
         <div>
           <CardTitle className="text-2xl font-semibold text-white">Verifica la tua email</CardTitle>
-          <CardDescription className="mt-2 flex items-center gap-1.5 text-sm text-slate-400">
+          <CardDescription className="mt-2 flex items-center gap-1.5 text-sm text-neutral-400">
             <Mail className="h-3.5 w-3.5 flex-shrink-0" />
             Codice inviato a {email || 'la tua email'}
           </CardDescription>
@@ -77,7 +77,7 @@ function VerifyEmailForm() {
       <CardContent className="space-y-4 px-6 pb-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-300">Codice di verifica</label>
+            <label className="text-sm font-medium text-neutral-300">Codice di verifica</label>
             <Input
               type="text"
               inputMode="numeric"
@@ -86,14 +86,14 @@ function VerifyEmailForm() {
               onChange={(e) => setCode(e.target.value)}
               required
               maxLength={8}
-              className="w-full border-white/10 bg-slate-950/80 text-center text-lg tracking-[0.35em] text-white placeholder:text-slate-500"
+              className="text-center text-lg tracking-[0.35em]"
               icon={<KeyRound className="w-4 h-4" />}
             />
           </div>
           {error && (
             <div className="animate-fade-in-up rounded-xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-200">{error}</div>
           )}
-          <Button type="submit" className="w-full bg-gradient-to-r from-fuchsia-500 to-violet-500 hover:from-fuchsia-400 hover:to-violet-400" disabled={loading || code.trim().length < 8}>
+          <Button type="submit" className="w-full" disabled={loading || code.trim().length < 8}>
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin-fast" />
@@ -108,7 +108,7 @@ function VerifyEmailForm() {
         <button
           onClick={handleResend}
           disabled={cooldown > 0}
-          className="flex w-full items-center justify-center gap-1.5 text-sm text-cyan-300 transition-colors duration-150 ease-out hover:text-cyan-200 disabled:cursor-not-allowed disabled:text-slate-500"
+          className="flex w-full items-center justify-center gap-1.5 text-sm text-brand transition-colors duration-150 ease-out hover:text-[#7A85E5] disabled:cursor-not-allowed disabled:text-neutral-500"
         >
           <RotateCw className="h-3.5 w-3.5" />
           {cooldown > 0 ? `Rinvia codice (${cooldown}s)` : 'Rinvia codice'}
@@ -119,10 +119,10 @@ function VerifyEmailForm() {
           </p>
         )}
       </CardContent>
-      <CardFooter className="flex justify-center border-t border-white/10 px-6 py-4">
-        <p className="text-sm text-slate-400">
+      <CardFooter className="flex justify-center border-t border-white/[0.08] px-6 py-4">
+        <p className="text-sm text-neutral-400">
           Email sbagliata?{' '}
-          <Link href="/signup" className="font-semibold text-cyan-300 transition-colors duration-150 ease-out hover:text-cyan-200">
+          <Link href="/signup" className="font-semibold text-brand transition-colors duration-150 ease-out hover:text-[#7A85E5]">
             Torna alla registrazione
           </Link>
         </p>

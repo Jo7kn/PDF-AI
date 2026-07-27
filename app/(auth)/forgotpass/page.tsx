@@ -30,14 +30,14 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <Card className="w-full border border-white/10 bg-slate-900/85 p-0 shadow-2xl shadow-cyan-500/10">
+    <Card className="w-full p-0">
       <CardHeader className="space-y-3 px-6 pt-6 text-left">
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-violet-500 shadow-lg shadow-cyan-500/20">
+        <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand shadow-[0_0_20px_-4px_rgba(94,106,210,0.7)]">
           <KeyRound className="h-5 w-5 text-white" />
         </div>
         <div>
           <CardTitle className="text-2xl font-semibold text-white">Password dimenticata</CardTitle>
-          <CardDescription className="mt-2 text-sm text-slate-400">
+          <CardDescription className="mt-2 text-sm text-neutral-400">
             Ti invieremo un link per reimpostare la password.
           </CardDescription>
         </div>
@@ -47,26 +47,25 @@ export default function ForgotPasswordPage() {
           <div className="py-6 text-center">
             <CheckCircle className="mx-auto mb-4 h-16 w-16 text-emerald-400" />
             <h3 className="text-lg font-semibold text-emerald-300">Email inviata!</h3>
-            <p className="mt-2 text-sm text-slate-400">Controlla la tua casella di posta per le istruzioni.</p>
+            <p className="mt-2 text-sm text-neutral-400">Controlla la tua casella di posta per le istruzioni.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300">Email</label>
+              <label className="text-sm font-medium text-neutral-300">Email</label>
               <Input
                 type="email"
                 placeholder="esempio@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full border-white/10 bg-slate-950/80 text-white placeholder:text-slate-500"
                 icon={<Mail className="w-4 h-4" />}
               />
             </div>
             {error && (
               <div className="animate-fade-in-up rounded-xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-200">{error}</div>
             )}
-            <Button type="submit" className="w-full bg-gradient-to-r from-cyan-500 to-violet-500 hover:from-cyan-400 hover:to-violet-400" disabled={loading}>
+            <Button type="submit" className="w-full" disabled={loading}>
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin-fast" />
@@ -79,8 +78,8 @@ export default function ForgotPasswordPage() {
           </form>
         )}
       </CardContent>
-      <CardFooter className="flex justify-center border-t border-white/10 px-6 py-4">
-        <Link href="/login" className="text-sm font-semibold text-cyan-300 transition-colors duration-150 ease-out hover:text-cyan-200">
+      <CardFooter className="flex justify-center border-t border-white/[0.08] px-6 py-4">
+        <Link href="/login" className="text-sm font-semibold text-brand transition-colors duration-150 ease-out hover:text-[#7A85E5]">
           Torna al login
         </Link>
       </CardFooter>

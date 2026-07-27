@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Sparkles } from 'lucide-react'
+import { Sparkle } from 'lucide-react'
 import { useLocale } from '@/lib/i18n/locale-context'
 import { LanguageSwitcher } from '@/components/app-header'
 import { MobileNavMenu } from '@/components/mobile-nav-menu'
@@ -16,15 +16,15 @@ export function AuthHeader() {
   ]
 
   return (
-    <header className="sticky top-0 z-20 border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-20 border-b border-white/[0.06] bg-[#050506]/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-violet-500 shadow-lg shadow-cyan-500/20">
-            <Sparkles className="h-5 w-5 text-white" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand shadow-[0_0_20px_-4px_rgba(94,106,210,0.7)]">
+            <Sparkle className="h-4.5 w-4.5 text-white" fill="currentColor" />
           </div>
           <div>
             <p className="text-lg font-semibold tracking-tight text-white">AI Toolbox</p>
-            <p className="text-xs text-slate-400">{t('nav.tagline')}</p>
+            <p className="text-xs text-neutral-500">{t('nav.tagline')}</p>
           </div>
         </Link>
 
@@ -33,7 +33,7 @@ export function AuthHeader() {
             <Link
               key={item.href}
               href={item.href}
-              className="text-sm font-medium text-slate-300 transition-colors duration-150 ease-out hover:text-white"
+              className="text-sm font-medium text-neutral-400 transition-colors duration-150 ease-out hover:text-white"
             >
               {item.label}
             </Link>
@@ -44,18 +44,18 @@ export function AuthHeader() {
           <LanguageSwitcher />
           <Link
             href="/login"
-            className="hidden rounded-full border border-white/10 px-4 py-2 text-sm font-medium text-slate-300 transition-[transform,background-color,border-color] duration-150 ease-out-strong hover:border-cyan-400/30 hover:text-white active:scale-[0.97] sm:inline-flex"
+            className="hidden rounded-xl border border-white/[0.08] px-4 py-2 text-sm font-medium text-neutral-300 transition-[transform,background-color,border-color] duration-200 ease-spring hover:border-white/[0.14] hover:text-white active:scale-[0.97] sm:inline-flex"
           >
             {t('nav.login')}
           </Link>
           <Link
             href="/signup"
-            className="inline-flex rounded-full bg-white/10 px-3 py-2 text-xs font-medium text-white transition-[transform,background-color] duration-150 ease-out-strong hover:bg-white/20 active:scale-[0.97] sm:px-4 sm:text-sm"
+            className="inline-flex rounded-xl bg-brand px-3 py-2 text-xs font-medium text-white transition-[transform,background-color] duration-200 ease-spring hover:bg-[#6D79E0] active:scale-[0.97] sm:px-4 sm:text-sm"
           >
             {t('nav.signup')}
           </Link>
           <MobileNavMenu navItems={navItems}>
-            <Link href="/login" className="rounded-full border border-white/10 px-4 py-2.5 text-center text-sm font-medium text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white">
+            <Link href="/login" className="rounded-xl border border-white/[0.08] px-4 py-2.5 text-center text-sm font-medium text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.04] hover:text-white">
               {t('nav.login')}
             </Link>
           </MobileNavMenu>

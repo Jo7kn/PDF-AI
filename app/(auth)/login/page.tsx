@@ -64,7 +64,7 @@ const handleGoogleLogin = async () => {
   }
 
   return (
-    <Card className="w-full border border-white/10 bg-slate-900/85 p-0 shadow-2xl shadow-cyan-500/10">
+    <Card className="w-full p-0">
       <CardHeader className="space-y-3 px-6 pt-6 text-left">
         <div className="inline-flex w-fit items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1 text-sm text-emerald-200">
           <ShieldCheck className="h-4 w-4" />
@@ -72,7 +72,7 @@ const handleGoogleLogin = async () => {
         </div>
         <div>
           <CardTitle className="text-2xl font-semibold text-white">{t('login.title')}</CardTitle>
-          <CardDescription className="mt-2 text-sm text-slate-400">
+          <CardDescription className="mt-2 text-sm text-neutral-400">
             {t('login.description')}
           </CardDescription>
         </div>
@@ -80,21 +80,20 @@ const handleGoogleLogin = async () => {
       <CardContent className="space-y-4 px-6 pb-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-slate-300">{t('login.emailLabel')}</label>
+            <label className="text-sm font-medium text-neutral-300">{t('login.emailLabel')}</label>
             <Input
               type="email"
               placeholder="esempio@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full border-white/10 bg-slate-950/80 text-white placeholder:text-slate-500"
               icon={<Mail className="w-4 h-4" />}
             />
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-slate-300">{t('login.passwordLabel')}</label>
-              <Link href="/forgotpass" className="text-xs text-cyan-300 transition-colors duration-150 ease-out hover:text-cyan-200">
+              <label className="text-sm font-medium text-neutral-300">{t('login.passwordLabel')}</label>
+              <Link href="/forgotpass" className="text-xs text-brand transition-colors duration-150 ease-out hover:text-[#7A85E5]">
                 {t('login.forgotPassword')}
               </Link>
             </div>
@@ -104,7 +103,6 @@ const handleGoogleLogin = async () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full border-white/10 bg-slate-950/80 text-white placeholder:text-slate-500"
               icon={<Lock className="w-4 h-4" />}
             />
           </div>
@@ -113,7 +111,7 @@ const handleGoogleLogin = async () => {
               {error}
             </div>
           )}
-          <Button type="submit" className="w-full bg-gradient-to-r from-cyan-500 to-violet-500 hover:from-cyan-400 hover:to-violet-400" disabled={loading}>
+          <Button type="submit" className="w-full" disabled={loading}>
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin-fast" />
@@ -130,28 +128,22 @@ const handleGoogleLogin = async () => {
 
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-white/10" />
+            <span className="w-full border-t border-white/[0.08]" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-slate-900/80 px-2 text-slate-400">{t('login.or')}</span>
+            <span className="bg-[#0a0a0c] px-2 text-neutral-500">{t('login.or')}</span>
           </div>
         </div>
 
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full border-white/10 bg-white/5 text-white hover:bg-white/10"
-          onClick={handleGoogleLogin}
-          disabled={loading}
-        >
+        <Button type="button" variant="outline" className="w-full" onClick={handleGoogleLogin} disabled={loading}>
           <Chrome className="mr-2 h-4 w-4" />
           {t('login.googleSubmit')}
         </Button>
       </CardContent>
-      <CardFooter className="flex justify-center border-t border-white/10 px-6 py-4">
-        <p className="text-sm text-slate-400">
+      <CardFooter className="flex justify-center border-t border-white/[0.08] px-6 py-4">
+        <p className="text-sm text-neutral-400">
           {t('login.noAccount')}{' '}
-          <Link href="/signup" className="font-semibold text-cyan-300 transition-colors duration-150 ease-out hover:text-cyan-200">
+          <Link href="/signup" className="font-semibold text-brand transition-colors duration-150 ease-out hover:text-[#7A85E5]">
             {t('login.signupLink')}
           </Link>
         </p>
