@@ -42,7 +42,7 @@ export default function FileConverterPage() {
   ]
 
   return (
-    <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
+    <div className="flex min-h-screen flex-col bg-[#050506] text-white">
       <AppHeader
         icon={RefreshCw}
         title="File Converter"
@@ -60,7 +60,7 @@ export default function FileConverterPage() {
               className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-150 ease-out active:scale-[0.97] ${
                 mode === m.key
                   ? 'border-lime-400/40 bg-lime-400/15 text-lime-200'
-                  : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'
+                  : 'border-white/[0.08] bg-white/[0.03] text-neutral-300 hover:bg-white/[0.06]'
               }`}
             >
               <m.icon className="h-4 w-4" />
@@ -69,7 +69,7 @@ export default function FileConverterPage() {
           ))}
         </div>
 
-        <p className="mb-6 text-sm text-slate-500">
+        <p className="mb-6 text-sm text-neutral-500">
           {t('fileConverterPage.unsupportedFormats')}
         </p>
 
@@ -115,10 +115,10 @@ function TextConverter() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
+      <section className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
         <div className="mb-4 flex flex-wrap items-center gap-3">
           <FormatSelect value={from} onChange={setFrom} />
-          <ArrowRight className="h-4 w-4 text-slate-500" />
+          <ArrowRight className="h-4 w-4 text-neutral-500" />
           <FormatSelect value={to} onChange={setTo} />
         </div>
         <textarea
@@ -126,7 +126,7 @@ function TextConverter() {
           onChange={(e) => setInput(e.target.value)}
           placeholder={t('fileConverterPage.textInputPlaceholder')}
           rows={14}
-          className="w-full resize-none rounded-2xl border border-white/10 bg-slate-950/60 p-4 font-mono text-sm text-slate-100 placeholder-slate-600 focus:border-lime-400/50 focus:outline-none"
+          className="w-full resize-none rounded-2xl border border-white/[0.08] bg-black/20 p-4 font-mono text-sm text-neutral-100 placeholder-neutral-600 focus:border-lime-400/50 focus:outline-none"
         />
         {error && (
           <div className="mt-4 flex items-center gap-2 rounded-xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-200">
@@ -144,13 +144,13 @@ function TextConverter() {
         </button>
       </section>
 
-      <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
+      <section className="relative rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-white">{t('common.result')}</h2>
           {output && (
             <div className="flex items-center gap-2">
               <SaveButton tool="file-converter" title={`Conversione ${from} → ${to}`} content={output} metadata={{ from, to }} />
-              <button onClick={handleCopy} className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.95]">
+              <button onClick={handleCopy} className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.03] px-2.5 py-1.5 text-xs text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white active:scale-[0.95]">
                 <CopyIconSwap copied={copied} />
                 {copied ? t('common.copied') : t('common.copy')}
               </button>
@@ -159,13 +159,13 @@ function TextConverter() {
         </div>
         {loading && <AiLoadingState />}
         {!loading && !output && (
-          <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-600">
+          <div className="flex h-64 flex-col items-center justify-center gap-3 text-neutral-600">
             <Sparkles className="h-10 w-10" />
             <p className="text-sm">{t('common.resultPlaceholder')}</p>
           </div>
         )}
         {!loading && output && (
-          <pre className="animate-fade-in-up max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-slate-950/60 p-4 font-mono text-sm text-slate-100">{output}</pre>
+          <pre className="animate-fade-in-up max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/[0.08] bg-black/20 p-4 font-mono text-sm text-neutral-100">{output}</pre>
         )}
       </section>
     </div>
@@ -177,10 +177,10 @@ function FormatSelect({ value, onChange }: { value: TextFormat; onChange: (v: Te
     <select
       value={value}
       onChange={(e) => onChange(e.target.value as TextFormat)}
-      className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm capitalize text-white focus:border-lime-400/50 focus:outline-none"
+      className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm capitalize text-white focus:border-lime-400/50 focus:outline-none"
     >
       {TEXT_FORMATS.map((f) => (
-        <option key={f} value={f} className="bg-slate-900 capitalize">{f}</option>
+        <option key={f} value={f} className="bg-[#0a0a0c] capitalize">{f}</option>
       ))}
     </select>
   )
@@ -221,17 +221,17 @@ function CsvJsonConverter() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
+      <section className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
         <div className="mb-4 flex gap-2">
           <button
             onClick={() => { setDirection('csv-to-json'); setInput(''); setOutput(null); setError(null) }}
-            className={`rounded-full border px-4 py-2 text-sm transition-colors duration-150 ease-out active:scale-[0.97] ${direction === 'csv-to-json' ? 'border-lime-400/40 bg-lime-400/15 text-lime-200' : 'border-white/10 bg-white/5 text-slate-300'}`}
+            className={`rounded-full border px-4 py-2 text-sm transition-colors duration-150 ease-out active:scale-[0.97] ${direction === 'csv-to-json' ? 'border-lime-400/40 bg-lime-400/15 text-lime-200' : 'border-white/[0.08] bg-white/[0.03] text-neutral-300'}`}
           >
             CSV → JSON
           </button>
           <button
             onClick={() => { setDirection('json-to-csv'); setInput(''); setOutput(null); setError(null) }}
-            className={`rounded-full border px-4 py-2 text-sm transition-colors duration-150 ease-out active:scale-[0.97] ${direction === 'json-to-csv' ? 'border-lime-400/40 bg-lime-400/15 text-lime-200' : 'border-white/10 bg-white/5 text-slate-300'}`}
+            className={`rounded-full border px-4 py-2 text-sm transition-colors duration-150 ease-out active:scale-[0.97] ${direction === 'json-to-csv' ? 'border-lime-400/40 bg-lime-400/15 text-lime-200' : 'border-white/[0.08] bg-white/[0.03] text-neutral-300'}`}
           >
             JSON → CSV
           </button>
@@ -241,7 +241,7 @@ function CsvJsonConverter() {
           onChange={(e) => setInput(e.target.value)}
           placeholder={direction === 'csv-to-json' ? t('fileConverterPage.csvToJsonPlaceholder') : t('fileConverterPage.jsonToCsvPlaceholder')}
           rows={14}
-          className="w-full resize-none rounded-2xl border border-white/10 bg-slate-950/60 p-4 font-mono text-sm text-slate-100 placeholder-slate-600 focus:border-lime-400/50 focus:outline-none"
+          className="w-full resize-none rounded-2xl border border-white/[0.08] bg-black/20 p-4 font-mono text-sm text-neutral-100 placeholder-neutral-600 focus:border-lime-400/50 focus:outline-none"
         />
         {error && (
           <div className="mt-4 flex items-center gap-2 rounded-xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-200">
@@ -259,13 +259,13 @@ function CsvJsonConverter() {
         </button>
       </section>
 
-      <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
+      <section className="relative rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-white">{t('common.result')}</h2>
           {output && (
             <div className="flex items-center gap-2">
               <SaveButton tool="file-converter" title={direction === 'csv-to-json' ? 'CSV → JSON' : 'JSON → CSV'} content={output} metadata={{ direction }} />
-              <button onClick={handleCopy} className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.95]">
+              <button onClick={handleCopy} className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.03] px-2.5 py-1.5 text-xs text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white active:scale-[0.95]">
                 <CopyIconSwap copied={copied} />
                 {copied ? t('common.copied') : t('common.copy')}
               </button>
@@ -273,13 +273,13 @@ function CsvJsonConverter() {
           )}
         </div>
         {!output && (
-          <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-600">
+          <div className="flex h-64 flex-col items-center justify-center gap-3 text-neutral-600">
             <FileJson className="h-10 w-10" />
             <p className="text-sm">{t('common.resultPlaceholder')}</p>
           </div>
         )}
         {output && (
-          <pre className="animate-fade-in-up max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-slate-950/60 p-4 font-mono text-sm text-slate-100">{output}</pre>
+          <pre className="animate-fade-in-up max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/[0.08] bg-black/20 p-4 font-mono text-sm text-neutral-100">{output}</pre>
         )}
       </section>
     </div>
@@ -327,14 +327,14 @@ function PdfToTextConverter() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
+      <section className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
         <div
-          className="cursor-pointer rounded-2xl border-2 border-dashed border-white/15 bg-white/5 p-8 text-center transition-colors duration-150 ease-out hover:border-lime-400/40"
+          className="cursor-pointer rounded-2xl border-2 border-dashed border-white/[0.12] bg-white/[0.03] p-8 text-center transition-colors duration-150 ease-out hover:border-lime-400/40"
           onClick={() => document.getElementById('pdf-input')?.click()}
         >
-          <Upload className="mx-auto mb-4 h-12 w-12 text-slate-400" />
+          <Upload className="mx-auto mb-4 h-12 w-12 text-neutral-400" />
           <p className="mb-2 text-white">{t('fileConverterPage.uploadPdfTitle')}</p>
-          <p className="text-sm text-slate-500">{t('fileConverterPage.uploadPdfSubtitle')}</p>
+          <p className="text-sm text-neutral-500">{t('fileConverterPage.uploadPdfSubtitle')}</p>
           <input id="pdf-input" type="file" accept=".pdf" className="hidden" onChange={handleFileSelect} />
           {file && <p className="mt-3 text-sm text-lime-300">{file.name}</p>}
         </div>
@@ -354,13 +354,13 @@ function PdfToTextConverter() {
         </button>
       </section>
 
-      <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
+      <section className="relative rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-white">{t('fileConverterPage.extractedTextTitle')}</h2>
           {output && (
             <div className="flex items-center gap-2">
               <SaveButton tool="file-converter" title={`PDF → Testo · ${file?.name || ''}`} content={output} metadata={{ from: 'pdf', to: 'text' }} />
-              <button onClick={handleCopy} className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.95]">
+              <button onClick={handleCopy} className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.03] px-2.5 py-1.5 text-xs text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white active:scale-[0.95]">
                 <CopyIconSwap copied={copied} />
                 {copied ? t('common.copied') : t('common.copy')}
               </button>
@@ -368,14 +368,14 @@ function PdfToTextConverter() {
           )}
         </div>
         {!output && !loading && (
-          <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-600">
+          <div className="flex h-64 flex-col items-center justify-center gap-3 text-neutral-600">
             <FileText className="h-10 w-10" />
             <p className="text-sm">{t('fileConverterPage.extractedTextPlaceholder')}</p>
           </div>
         )}
         {loading && <AiLoadingState />}
         {output && (
-          <pre className="animate-fade-in-up max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm text-slate-100">{output}</pre>
+          <pre className="animate-fade-in-up max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/[0.08] bg-black/20 p-4 text-sm text-neutral-100">{output}</pre>
         )}
       </section>
     </div>
@@ -416,27 +416,27 @@ function ImageConverter() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-2">
-      <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
+      <section className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
         <div
-          className="cursor-pointer rounded-2xl border-2 border-dashed border-white/15 bg-white/5 p-8 text-center transition-colors duration-150 ease-out hover:border-lime-400/40"
+          className="cursor-pointer rounded-2xl border-2 border-dashed border-white/[0.12] bg-white/[0.03] p-8 text-center transition-colors duration-150 ease-out hover:border-lime-400/40"
           onClick={() => document.getElementById('image-input')?.click()}
         >
-          <Upload className="mx-auto mb-4 h-12 w-12 text-slate-400" />
+          <Upload className="mx-auto mb-4 h-12 w-12 text-neutral-400" />
           <p className="mb-2 text-white">{t('fileConverterPage.uploadImageTitle')}</p>
-          <p className="text-sm text-slate-500">{t('fileConverterPage.uploadImageSubtitle')}</p>
+          <p className="text-sm text-neutral-500">{t('fileConverterPage.uploadImageSubtitle')}</p>
           <input id="image-input" type="file" accept="image/*" className="hidden" onChange={handleFileSelect} />
           {file && <p className="mt-3 text-sm text-lime-300">{file.name}</p>}
         </div>
 
-        <label className="mt-4 flex items-center gap-2 text-sm text-slate-400">
+        <label className="mt-4 flex items-center gap-2 text-sm text-neutral-400">
           {t('fileConverterPage.convertToLabel')}
           <select
             value={format}
             onChange={(e) => setFormat(e.target.value as ImageOutputFormat)}
-            className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm uppercase text-white focus:border-lime-400/50 focus:outline-none"
+            className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm uppercase text-white focus:border-lime-400/50 focus:outline-none"
           >
             {IMAGE_FORMATS.map((f) => (
-              <option key={f} value={f} className="bg-slate-900 uppercase">{f}</option>
+              <option key={f} value={f} className="bg-[#0a0a0c] uppercase">{f}</option>
             ))}
           </select>
         </label>
@@ -458,7 +458,7 @@ function ImageConverter() {
         </button>
       </section>
 
-      <section className="flex flex-col rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
+      <section className="flex flex-col rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-lime-500/10 backdrop-blur-xl">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-white">{t('common.result')}</h2>
           {resultUrl && (
@@ -467,7 +467,7 @@ function ImageConverter() {
               <a
                 href={resultUrl}
                 download={`converted.${format}`}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.03] px-2.5 py-1.5 text-xs text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white"
               >
                 <Download className="h-3.5 w-3.5" />
                 {t('common.download')}
@@ -475,10 +475,10 @@ function ImageConverter() {
             </div>
           )}
         </div>
-        <div className="flex flex-1 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-slate-950/60">
+        <div className="flex flex-1 items-center justify-center overflow-hidden rounded-2xl border border-white/[0.08] bg-black/20">
           {loading && <AiLoadingState className="p-8" />}
           {!loading && !resultUrl && (
-            <div className="flex flex-col items-center gap-3 p-8 text-slate-600">
+            <div className="flex flex-col items-center gap-3 p-8 text-neutral-600">
               <ImageIcon className="h-10 w-10" />
               <p className="text-sm">{t('fileConverterPage.convertedImagePlaceholder')}</p>
             </div>

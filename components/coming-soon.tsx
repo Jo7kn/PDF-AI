@@ -111,16 +111,16 @@ export function ComingSoon(props: ComingSoonProps) {
   const joined = status === 'success' || status === 'already-joined'
 
   const content = (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-y-auto bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] px-4 py-12 text-center text-white">
-      <div className="animate-fade-in-up mb-6 flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-cyan-400 to-violet-500 shadow-lg shadow-cyan-500/20">
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-y-auto bg-[#050506] px-4 py-12 text-center text-white">
+      <div className="animate-fade-in-up mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand">
         <Icon className="h-7 w-7 text-white" />
       </div>
-      <div className="animate-fade-in-up mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-1 text-sm text-cyan-200" style={{ animationDelay: '40ms' }}>
+      <div className="animate-fade-in-up mb-4 inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-sm text-brand" style={{ animationDelay: '40ms' }}>
         <Clock className="h-3.5 w-3.5" />
         {t('comingSoon.badge')}
       </div>
       <h1 className="animate-fade-in-up mb-3 max-w-xl text-3xl font-semibold tracking-tight sm:text-4xl" style={{ animationDelay: '80ms' }}>{title}</h1>
-      <p className="animate-fade-in-up mb-8 max-w-md text-slate-300" style={{ animationDelay: '120ms' }}>{description}</p>
+      <p className="animate-fade-in-up mb-8 max-w-md text-neutral-300" style={{ animationDelay: '120ms' }}>{description}</p>
 
       <div className="animate-fade-in-up w-full max-w-sm" style={{ animationDelay: '160ms' }}>
         <AnimatePresence mode="wait" initial={false}>
@@ -146,19 +146,19 @@ export function ComingSoon(props: ComingSoonProps) {
               className="mb-2 flex w-full flex-col gap-2 sm:flex-row"
             >
               <div className="relative flex-1">
-                <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => { setEmail(e.target.value); if (status !== 'loading') setStatus('idle') }}
                   placeholder={t('comingSoon.notifyPlaceholder')}
-                  className="w-full rounded-full border border-white/10 bg-white/5 py-2.5 pl-9 pr-4 text-sm text-white placeholder-slate-500 focus:border-cyan-400/50 focus:outline-none"
+                  className="w-full rounded-full border border-white/[0.08] bg-white/[0.03] py-2.5 pl-9 pr-4 text-sm text-white placeholder-neutral-500 focus:border-brand/50 focus:outline-none"
                 />
               </div>
               <button
                 type="submit"
                 disabled={status === 'loading' || !email.trim()}
-                className="inline-flex flex-shrink-0 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+                className="inline-flex flex-shrink-0 items-center justify-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
               >
                 {status === 'loading' && <Loader2 className="h-4 w-4 animate-spin-fast" />}
                 {t('comingSoon.notifyButton')}
@@ -178,7 +178,7 @@ export function ComingSoon(props: ComingSoonProps) {
 
       <Link
         href="/"
-        className="animate-fade-in-up mt-4 inline-flex items-center gap-2 text-sm font-medium text-slate-400 transition-colors duration-150 ease-out hover:text-white"
+        className="animate-fade-in-up mt-4 inline-flex items-center gap-2 text-sm font-medium text-neutral-400 transition-colors duration-150 ease-out hover:text-white"
         style={{ animationDelay: '200ms' }}
       >
         <ArrowLeft className="h-4 w-4" />

@@ -54,7 +54,7 @@ export default function ImageAiPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
+    <div className="flex min-h-screen flex-col bg-[#050506] text-white">
       <AppHeader
         icon={ImageIcon}
         title="Image AI"
@@ -66,26 +66,26 @@ export default function ImageAiPage() {
         <h1 className="mb-4 text-xl font-semibold text-white sm:text-2xl">Image AI: genera e modifica immagini con l’AI</h1>
         <TierGate gradient="from-orange-400 to-rose-500">
         <div className="grid gap-6 lg:grid-cols-2">
-          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-orange-500/10 backdrop-blur-xl">
-            <label className="mb-2 block text-sm font-medium text-slate-300">{t('imageAiPage.describeLabel')}</label>
+          <section className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-orange-500/10 backdrop-blur-xl">
+            <label className="mb-2 block text-sm font-medium text-neutral-300">{t('imageAiPage.describeLabel')}</label>
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder={t('imageAiPage.promptPlaceholder')}
               rows={6}
-              className="w-full resize-none rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm text-slate-100 placeholder-slate-600 focus:border-orange-400/50 focus:outline-none"
+              className="w-full resize-none rounded-2xl border border-white/[0.08] bg-black/20 p-4 text-sm text-neutral-100 placeholder-neutral-600 focus:border-orange-400/50 focus:outline-none"
             />
 
-            <label className="mb-2 mt-4 block text-sm font-medium text-slate-300">{t('imageAiPage.avoidLabel')}</label>
+            <label className="mb-2 mt-4 block text-sm font-medium text-neutral-300">{t('imageAiPage.avoidLabel')}</label>
             <input
               type="text"
               value={negativePrompt}
               onChange={(e) => setNegativePrompt(e.target.value)}
               placeholder={t('imageAiPage.negativePromptPlaceholder')}
-              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-orange-400/50 focus:outline-none"
+              className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:border-orange-400/50 focus:outline-none"
             />
 
-            <p className="mb-2 mt-4 text-sm font-medium text-slate-300">{t('imageAiPage.formatLabel')}</p>
+            <p className="mb-2 mt-4 text-sm font-medium text-neutral-300">{t('imageAiPage.formatLabel')}</p>
             <div className="flex flex-wrap gap-2">
               {ASPECTS.map((a) => (
                 <button
@@ -94,10 +94,10 @@ export default function ImageAiPage() {
                   className={`rounded-full border px-4 py-2 text-sm transition-colors duration-150 ease-out ${
                     aspect === a.key
                       ? 'border-orange-400/40 bg-orange-400/15 text-orange-200'
-                      : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'
+                      : 'border-white/[0.08] bg-white/[0.03] text-neutral-300 hover:bg-white/[0.06]'
                   }`}
                 >
-                  {a.label} <span className="text-xs text-slate-500">({a.ratio})</span>
+                  {a.label} <span className="text-xs text-neutral-500">({a.ratio})</span>
                 </button>
               ))}
             </div>
@@ -128,7 +128,7 @@ export default function ImageAiPage() {
             </button>
           </section>
 
-          <section className="flex flex-col rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-orange-500/10 backdrop-blur-xl">
+          <section className="flex flex-col rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-orange-500/10 backdrop-blur-xl">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-white">{t('common.result')}</h2>
               {imageUrl && (
@@ -143,7 +143,7 @@ export default function ImageAiPage() {
                   <a
                     href={imageUrl}
                     download="image-ai.jpg"
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.03] px-2.5 py-1.5 text-xs text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white"
                   >
                     <Download className="h-3.5 w-3.5" />
                     {t('common.download')}
@@ -152,13 +152,13 @@ export default function ImageAiPage() {
               )}
             </div>
 
-            <div className="flex flex-1 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-slate-950/60">
+            <div className="flex flex-1 items-center justify-center overflow-hidden rounded-2xl border border-white/[0.08] bg-black/20">
               {loading && (
                 <AiLoadingState className="p-8" />
               )}
 
               {!loading && !imageUrl && (
-                <div className="flex flex-col items-center gap-3 p-8 text-slate-600">
+                <div className="flex flex-col items-center gap-3 p-8 text-neutral-600">
                   <ImageIcon className="h-10 w-10" />
                   <p className="text-sm">{t('imageAiPage.imagePlaceholder')}</p>
                 </div>

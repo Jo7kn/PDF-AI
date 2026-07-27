@@ -199,19 +199,19 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
+    <div className="min-h-screen bg-[#050506] text-white">
       <AppHeader
         icon={FileText}
         title="PDF AI"
         subtitle={doc?.name || 'Documento'}
-        gradient="from-cyan-400 to-violet-500"
+        gradient=""
         active="documents"
       />
 
       <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <Link
           href="/dashboard/files"
-          className="mb-6 inline-flex items-center gap-2 text-sm text-slate-400 transition-colors duration-150 ease-out hover:text-white"
+          className="mb-6 inline-flex items-center gap-2 text-sm text-neutral-400 transition-colors duration-150 ease-out hover:text-white"
         >
           <ArrowLeft className="h-4 w-4" />
           Torna ai documenti
@@ -220,7 +220,7 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
         <div className="grid gap-8 xl:grid-cols-[0.95fr_1.05fr]">
           <aside className="space-y-6">
             {loadingDoc ? (
-              <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+              <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 ">
                 <div className="flex items-start gap-3">
                   <Skeleton className="h-12 w-12 flex-shrink-0 rounded-2xl" />
                   <div className="min-w-0 flex-1 space-y-2 pt-1">
@@ -230,14 +230,14 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
                 </div>
               </div>
             ) : docError ? (
-              <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+              <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 ">
                 <div className="flex items-center gap-2 rounded-xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-200">
                   <AlertCircle className="h-4 w-4 flex-shrink-0" />
                   <span>{docError}</span>
                 </div>
               </div>
             ) : (
-              <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+              <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 ">
                 {error && (
                   <div className="mb-4 flex items-center gap-2 rounded-xl border border-red-400/20 bg-red-500/10 p-3 text-sm text-red-200">
                     <AlertCircle className="h-4 w-4 flex-shrink-0" />
@@ -247,19 +247,19 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
 
                 <div className="mb-4 flex items-start justify-between gap-3">
                   <div className="flex items-start gap-3 min-w-0">
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-500 to-violet-500">
+                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br brand">
                       <FileText className="h-6 w-6 text-white" />
                     </div>
                     <div className="min-w-0">
                       <h2 className="truncate font-semibold text-white">{doc?.name}</h2>
-                      <p className="text-sm text-slate-400">{doc?.total_pages || 0} pagine</p>
+                      <p className="text-sm text-neutral-400">{doc?.total_pages || 0} pagine</p>
                     </div>
                   </div>
                   {isOwner && (
                     <button
                       onClick={() => setShareOpen(true)}
                       title="Condividi documento"
-                      className="flex-shrink-0 rounded-xl border border-white/10 bg-white/5 p-2 text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white"
+                      className="flex-shrink-0 rounded-xl border border-white/[0.08] bg-white/[0.03] p-2 text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white"
                     >
                       <Users className="h-4 w-4" />
                     </button>
@@ -267,7 +267,7 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
                 </div>
 
                 {!isOwner && (
-                  <div className="mb-4 flex items-center gap-2 rounded-xl border border-violet-400/20 bg-violet-400/10 p-3 text-sm text-violet-200">
+                  <div className="mb-4 flex items-center gap-2 rounded-xl border border-brand/20 bg-brand/10 p-3 text-sm text-brand">
                     <Users className="h-4 w-4 flex-shrink-0" />
                     <span>
                       Documento condiviso da {doc?.ownerEmail || 'un altro utente'}
@@ -277,7 +277,7 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
                 )}
 
                 {isProcessing && (
-                  <div className="animate-fade-in-up mb-4 flex items-center gap-2 rounded-xl border border-cyan-400/20 bg-cyan-400/10 p-3 text-sm text-cyan-200">
+                  <div className="animate-fade-in-up mb-4 flex items-center gap-2 rounded-xl border border-brand/20 bg-brand/10 p-3 text-sm text-brand">
                     <Loader2 className="h-4 w-4 flex-shrink-0 animate-spin-fast" />
                     <span>Documento in elaborazione, un momento...</span>
                   </div>
@@ -292,7 +292,7 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
                     <button
                       onClick={handleRetry}
                       disabled={retrying}
-                      className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-slate-200 transition-colors duration-150 ease-out hover:bg-white/10 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+                      className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2 text-sm font-medium text-neutral-200 transition-colors duration-150 ease-out hover:bg-white/[0.06] active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
                     >
                       {retrying ? (
                         <Loader2 className="h-4 w-4 animate-spin-fast" />
@@ -308,18 +308,18 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
                   <div className="space-y-4">
                     <div>
                       <h3 className="mb-2 text-sm font-semibold text-white">Riassunto</h3>
-                      <p className="text-sm text-slate-400">{doc?.summary || 'Nessun riassunto disponibile.'}</p>
+                      <p className="text-sm text-neutral-400">{doc?.summary || 'Nessun riassunto disponibile.'}</p>
                     </div>
 
                     {doc?.deadlines_json && doc.deadlines_json.length > 0 && (
                       <div>
                         <h3 className="mb-2 flex items-center gap-2 text-sm font-semibold text-white">
-                          <Calendar className="h-4 w-4 text-cyan-300" />
+                          <Calendar className="h-4 w-4 text-brand" />
                           Scadenze
                         </h3>
                         <div className="space-y-2">
                           {doc.deadlines_json.map((deadline: any, index: number) => (
-                            <div key={index} className="rounded-xl border border-white/10 bg-white/5 p-3">
+                            <div key={index} className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-3">
                               <p className="text-sm font-medium text-white">{deadline.description}</p>
                             </div>
                           ))}
@@ -331,13 +331,13 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
               </div>
             )}
 
-            <div className="rounded-3xl border border-white/10 bg-white/10 p-6 backdrop-blur-xl">
+            <div className="rounded-2xl border border-white/[0.08] bg-white/10 p-6 backdrop-blur-xl">
               <h3 className="mb-4 text-lg font-semibold text-white">Azioni rapide</h3>
               <div className="space-y-2">
                 <button
                   onClick={() => sendMessage('Fammi un riassunto dettagliato del documento, punto per punto.')}
                   disabled={isProcessing || loading}
-                  className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 text-left text-sm text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+                  className="flex w-full items-center justify-between rounded-xl border border-white/[0.08] bg-black/20 px-4 py-3 text-left text-sm text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
                 >
                   <span>Riassumi il documento</span>
                   <Sparkles className="h-4 w-4 flex-shrink-0" />
@@ -345,7 +345,7 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
                 <button
                   onClick={() => sendMessage('Elenca tutte le scadenze e le date importanti presenti nel documento.')}
                   disabled={isProcessing || loading}
-                  className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 text-left text-sm text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+                  className="flex w-full items-center justify-between rounded-xl border border-white/[0.08] bg-black/20 px-4 py-3 text-left text-sm text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
                 >
                   <span>Estrai tutte le scadenze</span>
                   <Calendar className="h-4 w-4 flex-shrink-0" />
@@ -353,23 +353,23 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
                 <button
                   onClick={handleExportCalendar}
                   disabled={!doc?.deadlines_json?.length}
-                  className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 text-left text-sm text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+                  className="flex w-full items-center justify-between rounded-xl border border-white/[0.08] bg-black/20 px-4 py-3 text-left text-sm text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
                 >
                   <span>Esporta nel calendario</span>
                   <CalendarDays className="h-4 w-4 flex-shrink-0" />
                 </button>
                 <button
                   onClick={handleCopyLink}
-                  className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 text-left text-sm text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white"
+                  className="flex w-full items-center justify-between rounded-xl border border-white/[0.08] bg-black/20 px-4 py-3 text-left text-sm text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white"
                 >
                   <span>{linkCopied ? 'Link copiato!' : 'Copia link documento'}</span>
-                  {linkCopied ? <Check className="h-4 w-4 flex-shrink-0 text-cyan-300" /> : <Link2 className="h-4 w-4 flex-shrink-0" />}
+                  {linkCopied ? <Check className="h-4 w-4 flex-shrink-0 text-brand" /> : <Link2 className="h-4 w-4 flex-shrink-0" />}
                 </button>
               </div>
             </div>
           </aside>
 
-          <section className="rounded-3xl border border-white/10 bg-slate-900/80 shadow-xl shadow-black/20">
+          <section className="rounded-2xl border border-white/[0.08] bg-white/[0.03] ">
             <div className="flex h-[calc(100vh-200px)] flex-col">
               <div className="flex-1 space-y-4 overflow-y-auto p-6">
                 {messages.map((message) => (
@@ -378,7 +378,7 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
                   </div>
                 ))}
                 {loading && (
-                  <div className="flex items-center gap-3 text-cyan-300">
+                  <div className="flex items-center gap-3 text-brand">
                     <Loader2 className="h-5 w-5 animate-spin-fast" />
                     <span className="text-sm">L'AI sta pensando...</span>
                   </div>
@@ -386,9 +386,9 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
                 <div ref={messagesEndRef} />
               </div>
 
-              <div className="border-t border-white/10 p-4">
+              <div className="border-t border-white/[0.08] p-4">
                 {isProcessing && (
-                  <div className="mb-2 flex items-center gap-2 text-xs text-slate-500">
+                  <div className="mb-2 flex items-center gap-2 text-xs text-neutral-500">
                     <Clock className="h-3 w-3" />
                     <span>La chat sarà disponibile appena l'elaborazione termina</span>
                   </div>
@@ -399,13 +399,13 @@ export default function DocumentPage({ params }: { params: { id: string } }) {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Fai una domanda su questo documento..."
-                    className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 transition-colors duration-150 ease-out focus:border-cyan-400/50 focus:outline-none disabled:opacity-50"
+                    className="flex-1 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-white placeholder-neutral-500 transition-colors duration-150 ease-out focus:border-brand/50 focus:outline-none disabled:opacity-50"
                     disabled={loading || isProcessing}
                   />
                   <button
                     type="submit"
                     disabled={loading || isProcessing || !input.trim()}
-                    className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 px-6 py-3 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+                    className="flex items-center gap-2 rounded-xl bg-brand px-6 py-3 font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
                   >
                     {loading ? <Loader2 className="h-5 w-5 animate-spin-fast" /> : <Send className="h-5 w-5" />}
                   </button>
@@ -494,17 +494,17 @@ function ShareModal({ documentId, onClose }: { documentId: string; onClose: () =
       onClick={handleClose}
     >
       <div
-        className={`w-full max-w-md origin-center rounded-3xl border border-white/10 bg-slate-900 p-6 shadow-2xl transition-[opacity,transform] duration-200 ease-out-strong ${
+        className={`w-full max-w-md origin-center rounded-2xl border border-white/[0.08] bg-[#0a0a0c] p-6 shadow-2xl transition-[opacity,transform] duration-200 ease-out-strong ${
           show ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
         }`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-center justify-between">
           <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
-            <Users className="h-5 w-5 text-cyan-300" />
+            <Users className="h-5 w-5 text-brand" />
             Condividi documento
           </h3>
-          <button onClick={handleClose} className="text-slate-400 transition-colors duration-150 ease-out hover:text-white active:scale-90">
+          <button onClick={handleClose} className="text-neutral-400 transition-colors duration-150 ease-out hover:text-white active:scale-90">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -516,12 +516,12 @@ function ShareModal({ documentId, onClose }: { documentId: string; onClose: () =
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="email@esempio.com"
-            className="flex-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-slate-500 transition-colors duration-150 ease-out focus:border-cyan-400/50 focus:outline-none"
+            className="flex-1 rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm text-white placeholder-neutral-500 transition-colors duration-150 ease-out focus:border-brand/50 focus:outline-none"
           />
           <button
             type="submit"
             disabled={submitting || !email.trim()}
-            className="rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 px-4 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+            className="rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
           >
             {submitting ? <Loader2 className="h-4 w-4 animate-spin-fast" /> : 'Invita'}
           </button>
@@ -534,31 +534,31 @@ function ShareModal({ documentId, onClose }: { documentId: string; onClose: () =
           </div>
         )}
 
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-500">
           Persone con accesso
         </p>
 
         {loading ? (
           <div className="flex justify-center py-4">
-            <Loader2 className="h-5 w-5 animate-spin-fast text-cyan-300" />
+            <Loader2 className="h-5 w-5 animate-spin-fast text-brand" />
           </div>
         ) : shares.length === 0 ? (
-          <p className="text-sm text-slate-500">Non hai ancora condiviso questo documento con nessuno.</p>
+          <p className="text-sm text-neutral-500">Non hai ancora condiviso questo documento con nessuno.</p>
         ) : (
           <div className="space-y-2">
             {shares.map((share) => (
-              <div key={share.id} className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3">
+              <div key={share.id} className="flex items-center justify-between rounded-xl border border-white/[0.08] bg-white/[0.03] p-3">
                 <div className="flex items-center gap-2 min-w-0">
                   {share.permission === 'view' ? (
-                    <Eye className="h-3.5 w-3.5 flex-shrink-0 text-slate-500" />
+                    <Eye className="h-3.5 w-3.5 flex-shrink-0 text-neutral-500" />
                   ) : (
-                    <Check className="h-3.5 w-3.5 flex-shrink-0 text-cyan-300" />
+                    <Check className="h-3.5 w-3.5 flex-shrink-0 text-brand" />
                   )}
-                  <span className="truncate text-sm text-slate-200">{share.email}</span>
+                  <span className="truncate text-sm text-neutral-200">{share.email}</span>
                 </div>
                 <button
                   onClick={() => handleRemove(share.id)}
-                  className="flex-shrink-0 text-slate-500 transition-colors duration-150 ease-out hover:text-red-300"
+                  className="flex-shrink-0 text-neutral-500 transition-colors duration-150 ease-out hover:text-red-300"
                   title="Rimuovi accesso"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -568,7 +568,7 @@ function ShareModal({ documentId, onClose }: { documentId: string; onClose: () =
           </div>
         )}
 
-        <p className="mt-4 text-xs text-slate-500">
+        <p className="mt-4 text-xs text-neutral-500">
           Nota: la persona deve avere già un account su AI Toolbox con questa email.
         </p>
       </div>
@@ -596,7 +596,7 @@ function MessageBubble({ message }: { message: any }) {
     <div className={`flex items-start gap-3 ${isUser ? 'flex-row-reverse' : ''}`}>
       <div
         className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${
-          isUser ? 'bg-gradient-to-br from-cyan-400 to-violet-500' : 'bg-gradient-to-br from-violet-500 to-fuchsia-500'
+          isUser ? 'bg-brand' : 'bg-white/[0.08]'
         }`}
       >
         {isUser ? <User className="h-4 w-4 text-white" /> : <Bot className="h-4 w-4 text-white" />}
@@ -604,8 +604,8 @@ function MessageBubble({ message }: { message: any }) {
       <div
         className={`group relative max-w-[80%] rounded-2xl px-4 py-3 ${
           isUser
-            ? 'bg-gradient-to-r from-cyan-500 to-violet-500 text-white'
-            : 'border border-white/10 bg-white/5 text-slate-200'
+            ? 'bg-brand text-white'
+            : 'border border-white/[0.08] bg-white/[0.03] text-neutral-200'
         }`}
       >
         <p className="text-sm">{message.content}</p>
@@ -613,7 +613,7 @@ function MessageBubble({ message }: { message: any }) {
         {!isUser && (
           <button
             onClick={handleCopy}
-            className="absolute -right-9 top-2 rounded-lg bg-white/5 p-1.5 text-slate-400 opacity-0 transition-[opacity,background-color,color] duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-90 group-hover:opacity-100"
+            className="absolute -right-9 top-2 rounded-lg bg-white/[0.03] p-1.5 text-neutral-400 opacity-0 transition-[opacity,background-color,color] duration-150 ease-out hover:bg-white/[0.06] hover:text-white active:scale-90 group-hover:opacity-100"
             title="Copia testo"
           >
             <CopyIconSwap copied={copied} className="h-4 w-4" />

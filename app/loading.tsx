@@ -41,7 +41,7 @@ export default function Loading() {
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] transition-opacity duration-300 ease-out ${
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-[#050506] transition-opacity duration-300 ease-out ${
         visible ? 'opacity-100' : 'opacity-0'
       }`}
     >

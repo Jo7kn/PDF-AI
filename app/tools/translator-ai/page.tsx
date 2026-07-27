@@ -76,7 +76,7 @@ export default function TranslatorAiPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
+    <div className="flex min-h-screen flex-col bg-[#050506] text-white">
       <AppHeader
         icon={Languages}
         title="Translator AI"
@@ -86,13 +86,13 @@ export default function TranslatorAiPage() {
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
         <h1 className="mb-4 text-xl font-semibold text-white sm:text-2xl">Translator AI: traduci documenti mantenendo il formato</h1>
-        <div className="mb-6 flex flex-wrap items-center justify-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-3">
+        <div className="mb-6 flex flex-wrap items-center justify-center gap-3 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-3">
           <LanguageSelect value={sourceLanguage} onChange={setSourceLanguage} options={[AUTO_DETECT, ...LANGUAGES]} />
           <button
             onClick={handleSwap}
             disabled={sourceLanguage === AUTO_DETECT}
             title={t('translatorAiPage.swapTitle')}
-            className="rounded-full border border-white/10 bg-white/5 p-2.5 text-slate-300 transition-[transform,background-color,color] duration-150 ease-out-strong hover:bg-white/10 hover:text-white active:scale-[0.95] disabled:cursor-not-allowed disabled:opacity-30 disabled:active:scale-100"
+            className="rounded-full border border-white/[0.08] bg-white/[0.03] p-2.5 text-neutral-300 transition-[transform,background-color,color] duration-150 ease-out-strong hover:bg-white/[0.06] hover:text-white active:scale-[0.95] disabled:cursor-not-allowed disabled:opacity-30 disabled:active:scale-100"
           >
             <ArrowLeftRight className="h-4 w-4" />
           </button>
@@ -100,13 +100,13 @@ export default function TranslatorAiPage() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-teal-500/10 backdrop-blur-xl">
+          <section className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-teal-500/10 backdrop-blur-xl">
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder={t('translatorAiPage.inputPlaceholder')}
               rows={14}
-              className="w-full resize-none rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm text-slate-100 placeholder-slate-600 focus:border-teal-400/50 focus:outline-none"
+              className="w-full resize-none rounded-2xl border border-white/[0.08] bg-black/20 p-4 text-sm text-neutral-100 placeholder-neutral-600 focus:border-teal-400/50 focus:outline-none"
             />
 
             {error && (
@@ -135,7 +135,7 @@ export default function TranslatorAiPage() {
             </button>
           </section>
 
-          <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-teal-500/10 backdrop-blur-xl">
+          <section className="relative rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-teal-500/10 backdrop-blur-xl">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-white">{t('translatorAiPage.translationHeading')}</h2>
               {output && (
@@ -148,7 +148,7 @@ export default function TranslatorAiPage() {
                   />
                   <button
                     onClick={handleCopy}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.95]"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.03] px-2.5 py-1.5 text-xs text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white active:scale-[0.95]"
                   >
                     <CopyIconSwap copied={copied} />
                     {copied ? t('common.copied') : t('common.copy')}
@@ -162,14 +162,14 @@ export default function TranslatorAiPage() {
             )}
 
             {!loading && !output && !error && (
-              <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-600">
+              <div className="flex h-64 flex-col items-center justify-center gap-3 text-neutral-600">
                 <Sparkles className="h-10 w-10" />
                 <p className="text-sm">{t('translatorAiPage.translationPlaceholder')}</p>
               </div>
             )}
 
             {!loading && output && (
-              <div className="animate-fade-in-up max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm leading-relaxed text-slate-100">
+              <div className="animate-fade-in-up max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/[0.08] bg-black/20 p-4 text-sm leading-relaxed text-neutral-100">
                 {output}
               </div>
             )}
@@ -188,10 +188,10 @@ function LanguageSelect({ value, onChange, options }: { value: string; onChange:
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white focus:border-teal-400/50 focus:outline-none"
+      className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white focus:border-teal-400/50 focus:outline-none"
     >
       {options.map((lang) => (
-        <option key={lang} value={lang} className="bg-slate-900">{lang}</option>
+        <option key={lang} value={lang} className="bg-[#0a0a0c]">{lang}</option>
       ))}
     </select>
   )

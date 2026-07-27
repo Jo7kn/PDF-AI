@@ -73,7 +73,7 @@ export default function EmailAiPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
+    <div className="flex min-h-screen flex-col bg-[#050506] text-white">
       <AppHeader
         icon={Mail}
         title="Email AI"
@@ -91,7 +91,7 @@ export default function EmailAiPage() {
               className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-150 ease-out active:scale-[0.97] ${
                 mode === m.key
                   ? 'border-blue-400/40 bg-blue-400/15 text-blue-200'
-                  : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'
+                  : 'border-white/[0.08] bg-white/[0.03] text-neutral-300 hover:bg-white/[0.06]'
               }`}
             >
               <m.icon className="h-4 w-4" />
@@ -101,17 +101,17 @@ export default function EmailAiPage() {
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-blue-500/10 backdrop-blur-xl">
+          <section className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-blue-500/10 backdrop-blur-xl">
             <div className="mb-4">
-              <label className="flex items-center gap-2 text-sm text-slate-400">
+              <label className="flex items-center gap-2 text-sm text-neutral-400">
                 {t('emailAiPage.toneLabel')}
                 <select
                   value={tone}
                   onChange={(e) => setTone(e.target.value)}
-                  className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-blue-400/50 focus:outline-none"
+                  className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm text-white focus:border-blue-400/50 focus:outline-none"
                 >
                   {TONES.map((t) => (
-                    <option key={t} value={t} className="bg-slate-900">{t}</option>
+                    <option key={t} value={t} className="bg-[#0a0a0c]">{t}</option>
                   ))}
                 </select>
               </label>
@@ -122,7 +122,7 @@ export default function EmailAiPage() {
               onChange={(e) => setInput(e.target.value)}
               placeholder={activeMode.placeholder}
               rows={14}
-              className="w-full resize-none rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm text-slate-100 placeholder-slate-600 focus:border-blue-400/50 focus:outline-none"
+              className="w-full resize-none rounded-2xl border border-white/[0.08] bg-black/20 p-4 text-sm text-neutral-100 placeholder-neutral-600 focus:border-blue-400/50 focus:outline-none"
             />
 
             {activeMode.needsOriginal && (
@@ -131,7 +131,7 @@ export default function EmailAiPage() {
                 value={extraNote}
                 onChange={(e) => setExtraNote(e.target.value)}
                 placeholder={t('emailAiPage.extraNotePlaceholder')}
-                className="mt-3 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-blue-400/50 focus:outline-none"
+                className="mt-3 w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:border-blue-400/50 focus:outline-none"
               />
             )}
 
@@ -161,7 +161,7 @@ export default function EmailAiPage() {
             </button>
           </section>
 
-          <section className="relative rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-blue-500/10 backdrop-blur-xl">
+          <section className="relative rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-blue-500/10 backdrop-blur-xl">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-white">{t('common.result')}</h2>
               {output && (
@@ -174,7 +174,7 @@ export default function EmailAiPage() {
                   />
                   <button
                     onClick={handleCopy}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.95]"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.03] px-2.5 py-1.5 text-xs text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white active:scale-[0.95]"
                   >
                     <CopyIconSwap copied={copied} />
                     {copied ? t('common.copied') : t('common.copy')}
@@ -188,14 +188,14 @@ export default function EmailAiPage() {
             )}
 
             {!loading && !output && !error && (
-              <div className="flex h-64 flex-col items-center justify-center gap-3 text-slate-600">
+              <div className="flex h-64 flex-col items-center justify-center gap-3 text-neutral-600">
                 <Sparkles className="h-10 w-10" />
                 <p className="text-sm">{t('emailAiPage.emailPlaceholder')}</p>
               </div>
             )}
 
             {!loading && output && (
-              <div className="animate-fade-in-up max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm leading-relaxed text-slate-100">
+              <div className="animate-fade-in-up max-h-[32rem] overflow-auto whitespace-pre-wrap rounded-2xl border border-white/[0.08] bg-black/20 p-4 text-sm leading-relaxed text-neutral-100">
                 {output}
               </div>
             )}

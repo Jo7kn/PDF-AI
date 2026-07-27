@@ -150,7 +150,7 @@ export default function DataAiPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
+    <div className="flex min-h-screen flex-col bg-[#050506] text-white">
       <AppHeader
         icon={Database}
         title="Data AI"
@@ -162,14 +162,14 @@ export default function DataAiPage() {
         <h1 className="mb-4 text-xl font-semibold text-white sm:text-2xl">Data AI: analizza CSV ed Excel con l’AI</h1>
         <TierGate gradient="from-sky-400 to-blue-500">
         {!parsed && (
-          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-sky-500/10 backdrop-blur-xl">
+          <section className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-sky-500/10 backdrop-blur-xl">
             <div
-              className="cursor-pointer rounded-2xl border-2 border-dashed border-white/15 bg-white/5 p-8 text-center transition-colors duration-150 ease-out hover:border-sky-400/40"
+              className="cursor-pointer rounded-2xl border-2 border-dashed border-white/[0.12] bg-white/[0.03] p-8 text-center transition-colors duration-150 ease-out hover:border-sky-400/40"
               onClick={() => document.getElementById('csv-input')?.click()}
             >
-              <Upload className="mx-auto mb-4 h-12 w-12 text-slate-400" />
+              <Upload className="mx-auto mb-4 h-12 w-12 text-neutral-400" />
               <p className="mb-2 text-white">{t('dataAiPage.uploadTitle')}</p>
-              <p className="text-sm text-slate-500">{t('dataAiPage.uploadSubtitle')}</p>
+              <p className="text-sm text-neutral-500">{t('dataAiPage.uploadSubtitle')}</p>
               <input id="csv-input" type="file" accept=".csv" className="hidden" onChange={handleFileUpload} />
             </div>
 
@@ -185,7 +185,7 @@ export default function DataAiPage() {
               onChange={(e) => handleParse(e.target.value)}
               placeholder={t('dataAiPage.csvPlaceholder')}
               rows={8}
-              className="mt-4 w-full resize-none rounded-2xl border border-white/10 bg-slate-950/60 p-4 font-mono text-sm text-slate-100 placeholder-slate-600 focus:border-sky-400/50 focus:outline-none"
+              className="mt-4 w-full resize-none rounded-2xl border border-white/[0.08] bg-black/20 p-4 font-mono text-sm text-neutral-100 placeholder-neutral-600 focus:border-sky-400/50 focus:outline-none"
             />
           </section>
         )}
@@ -199,53 +199,53 @@ export default function DataAiPage() {
               </div>
               <button
                 onClick={() => { setParsed(null); setCsvText(''); setInsights(null) }}
-                className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10"
+                className="rounded-full border border-white/[0.08] bg-white/[0.03] px-4 py-2 text-sm text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06]"
               >
                 {t('dataAiPage.loadAnother')}
               </button>
             </div>
 
-            <section className="mb-6 rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-sky-500/10 backdrop-blur-xl">
+            <section className="mb-6 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-sky-500/10 backdrop-blur-xl">
               <div className="mb-4 flex flex-wrap items-center gap-3">
                 <div className="flex items-center gap-2 text-white">
                   <BarChart3 className="h-5 w-5 text-sky-300" />
                   <h2 className="text-lg font-semibold">{t('dataAiPage.chartTitle')}</h2>
                 </div>
-                <label className="ml-auto flex items-center gap-2 text-sm text-slate-400">
+                <label className="ml-auto flex items-center gap-2 text-sm text-neutral-400">
                   {t('dataAiPage.valueLabel')}
                   <select
                     value={numericCol}
                     onChange={(e) => setNumericCol(e.target.value)}
-                    className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-sky-400/50 focus:outline-none"
+                    className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm text-white focus:border-sky-400/50 focus:outline-none"
                   >
                     {numericColumns.map((c) => (
-                      <option key={c} value={c} className="bg-slate-900">{c}</option>
+                      <option key={c} value={c} className="bg-[#0a0a0c]">{c}</option>
                     ))}
                   </select>
                 </label>
-                <label className="flex items-center gap-2 text-sm text-slate-400">
+                <label className="flex items-center gap-2 text-sm text-neutral-400">
                   {t('dataAiPage.groupByLabel')}
                   <select
                     value={groupCol}
                     onChange={(e) => setGroupCol(e.target.value)}
-                    className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white focus:border-sky-400/50 focus:outline-none"
+                    className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm text-white focus:border-sky-400/50 focus:outline-none"
                   >
-                    <option value="" className="bg-slate-900">{t('dataAiPage.noneByRow')}</option>
+                    <option value="" className="bg-[#0a0a0c]">{t('dataAiPage.noneByRow')}</option>
                     {categoricalColumns.map((c) => (
-                      <option key={c} value={c} className="bg-slate-900">{c}</option>
+                      <option key={c} value={c} className="bg-[#0a0a0c]">{c}</option>
                     ))}
                   </select>
                 </label>
               </div>
 
               {numericColumns.length === 0 ? (
-                <p className="text-sm text-slate-500">{t('dataAiPage.noNumericColumns')}</p>
+                <p className="text-sm text-neutral-500">{t('dataAiPage.noNumericColumns')}</p>
               ) : (
                 <BarChart data={chartData} locale={locale} />
               )}
             </section>
 
-            <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-sky-500/10 backdrop-blur-xl">
+            <section className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-sky-500/10 backdrop-blur-xl">
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-white">{t('dataAiPage.insightsTitle')}</h2>
                 <button
@@ -268,7 +268,7 @@ export default function DataAiPage() {
               {loadingInsights && <AiLoadingState className="h-40" />}
 
               {!insights && !loadingInsights && (
-                <p className="text-sm text-slate-500">{t('dataAiPage.insightsEmpty')}</p>
+                <p className="text-sm text-neutral-500">{t('dataAiPage.insightsEmpty')}</p>
               )}
 
               {!loadingInsights && insights && (
@@ -277,13 +277,13 @@ export default function DataAiPage() {
                     <SaveButton tool="data-ai" title={t('dataAiPage.insightsSavedTitle')} content={insights} />
                     <button
                       onClick={handleCopy}
-                      className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.95]"
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.03] px-2.5 py-1.5 text-xs text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white active:scale-[0.95]"
                     >
                       <CopyIconSwap copied={copied} />
                       {copied ? t('common.copied') : t('common.copy')}
                     </button>
                   </div>
-                  <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-100">{insights}</div>
+                  <div className="whitespace-pre-wrap text-sm leading-relaxed text-neutral-100">{insights}</div>
                 </div>
               )}
             </section>
@@ -300,8 +300,8 @@ export default function DataAiPage() {
 
 function StatTile({ icon: Icon, label, value }: { icon: typeof Rows3; label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-slate-900/80 px-5 py-4 shadow-xl shadow-black/20 backdrop-blur-xl transition-colors duration-150 ease-out hover:border-white/20">
-      <div className="mb-1 flex items-center gap-2 text-slate-400">
+    <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] px-5 py-4  backdrop-blur-xl transition-colors duration-150 ease-out hover:border-white/20">
+      <div className="mb-1 flex items-center gap-2 text-neutral-400">
         <Icon className="h-4 w-4" />
         <span className="text-xs">{label}</span>
       </div>
@@ -318,7 +318,7 @@ function BarChart({ data, locale }: { data: { label: string; value: number }[]; 
   const [hovered, setHovered] = useState<number | null>(null)
 
   if (data.length === 0) {
-    return <p className="text-sm text-slate-500">{t('dataAiPage.noChartData')}</p>
+    return <p className="text-sm text-neutral-500">{t('dataAiPage.noChartData')}</p>
   }
 
   const maxValue = Math.max(...data.map((d) => d.value), 1)
@@ -334,10 +334,10 @@ function BarChart({ data, locale }: { data: { label: string; value: number }[]; 
             <div key={d.label} className="flex flex-1 flex-col items-center justify-end">
               <div className="relative flex w-full flex-col items-center justify-end" style={{ height: chartHeight }}>
                 {i === maxIndex && (
-                  <span className="mb-1 text-xs font-medium text-slate-300">{d.value.toLocaleString(LOCALE_DATE_TAG[locale])}</span>
+                  <span className="mb-1 text-xs font-medium text-neutral-300">{d.value.toLocaleString(LOCALE_DATE_TAG[locale])}</span>
                 )}
                 {hovered === i && i !== maxIndex && (
-                  <span className="animate-fade-in-up absolute -top-6 rounded-md bg-slate-800 px-2 py-1 text-xs text-white shadow-lg">
+                  <span className="animate-fade-in-up absolute -top-6 rounded-md bg-[#1a1a1e] px-2 py-1 text-xs text-white shadow-lg">
                     {d.value.toLocaleString(LOCALE_DATE_TAG[locale])}
                   </span>
                 )}
@@ -348,7 +348,7 @@ function BarChart({ data, locale }: { data: { label: string; value: number }[]; 
                   style={{ height: barHeight }}
                 />
               </div>
-              <p className="mt-2 w-full truncate text-center text-[11px] text-slate-500" title={d.label}>
+              <p className="mt-2 w-full truncate text-center text-[11px] text-neutral-500" title={d.label}>
                 {d.label}
               </p>
             </div>

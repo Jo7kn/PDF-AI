@@ -77,7 +77,7 @@ export default async function AdminPage() {
   const enabledCount = flags.filter((f) => f.enabled).length
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
+    <div className="min-h-screen bg-[#050506] text-white">
       <div className="sticky top-0 z-10 border-b border-white/[0.08] bg-[#050506]/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">

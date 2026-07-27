@@ -69,7 +69,7 @@ export default function ContractAiPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
+    <div className="flex min-h-screen flex-col bg-[#050506] text-white">
       <AppHeader
         icon={FileSignature}
         title="Contract AI"
@@ -89,8 +89,8 @@ export default function ContractAiPage() {
             onClick={() => { setMode('analyze'); setAnalysis(null); setClauses(null); setError(null) }}
             className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-150 ease-out active:scale-[0.97] ${
               mode === 'analyze'
-                ? 'border-slate-300/40 bg-slate-300/15 text-slate-100'
-                : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'
+                ? 'border-slate-300/40 bg-slate-300/15 text-neutral-100'
+                : 'border-white/[0.08] bg-white/[0.03] text-neutral-300 hover:bg-white/[0.06]'
             }`}
           >
             <ScrollText className="h-4 w-4" />
@@ -100,8 +100,8 @@ export default function ContractAiPage() {
             onClick={() => { setMode('clauses'); setAnalysis(null); setClauses(null); setError(null) }}
             className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-150 ease-out active:scale-[0.97] ${
               mode === 'clauses'
-                ? 'border-slate-300/40 bg-slate-300/15 text-slate-100'
-                : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'
+                ? 'border-slate-300/40 bg-slate-300/15 text-neutral-100'
+                : 'border-white/[0.08] bg-white/[0.03] text-neutral-300 hover:bg-white/[0.06]'
             }`}
           >
             <ShieldAlert className="h-4 w-4" />
@@ -109,13 +109,13 @@ export default function ContractAiPage() {
           </button>
         </div>
 
-        <section className="mb-6 rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-slate-400/10 backdrop-blur-xl">
+        <section className="mb-6 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-slate-400/10 backdrop-blur-xl">
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={t('contractAiPage.inputPlaceholder')}
             rows={12}
-            className="w-full resize-none rounded-2xl border border-white/10 bg-slate-950/60 p-4 text-sm text-slate-100 placeholder-slate-600 focus:border-slate-300/50 focus:outline-none"
+            className="w-full resize-none rounded-2xl border border-white/[0.08] bg-black/20 p-4 text-sm text-neutral-100 placeholder-neutral-600 focus:border-slate-300/50 focus:outline-none"
           />
 
           {error && (
@@ -145,14 +145,14 @@ export default function ContractAiPage() {
         </section>
 
         {loading && (
-          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-slate-400/10 backdrop-blur-xl">
+          <section className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-slate-400/10 backdrop-blur-xl">
             <AiLoadingState />
           </section>
         )}
 
         {!loading && !analysis && !clauses && !error && (
-          <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-slate-400/10 backdrop-blur-xl">
-            <div className="flex h-40 flex-col items-center justify-center gap-3 text-slate-600">
+          <section className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-slate-400/10 backdrop-blur-xl">
+            <div className="flex h-40 flex-col items-center justify-center gap-3 text-neutral-600">
               <Sparkles className="h-10 w-10" />
               <p className="text-sm">{t('common.resultPlaceholder')}</p>
             </div>
@@ -160,18 +160,18 @@ export default function ContractAiPage() {
         )}
 
         {!loading && analysis && (
-          <section className="animate-fade-in-up rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-slate-400/10 backdrop-blur-xl">
+          <section className="animate-fade-in-up rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 shadow-xl shadow-slate-400/10 backdrop-blur-xl">
             <div className="mb-3 flex justify-end gap-2">
               <SaveButton tool="contract-ai" title={t('contractAiPage.analysisTitle')} content={analysis} metadata={{ action: 'analyze' }} />
               <button
                 onClick={() => handleCopy(analysis)}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.95]"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.03] px-2.5 py-1.5 text-xs text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white active:scale-[0.95]"
               >
                 <CopyIconSwap copied={copied} />
                 {copied ? t('common.copied') : t('common.copy')}
               </button>
             </div>
-            <div className="whitespace-pre-wrap text-sm leading-relaxed text-slate-100">{analysis}</div>
+            <div className="whitespace-pre-wrap text-sm leading-relaxed text-neutral-100">{analysis}</div>
           </section>
         )}
 
@@ -187,7 +187,7 @@ export default function ContractAiPage() {
                 />
                 <button
                   onClick={() => handleCopy(clauses.map((c) => `${c.clause} (${t('contractAiPage.riskLabel')} ${c.risk})\n${c.explanation}`).join('\n\n'))}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.95]"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.03] px-2.5 py-1.5 text-xs text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white active:scale-[0.95]"
                 >
                   <CopyIconSwap copied={copied} />
                   {copied ? t('common.copied') : t('common.copy')}
@@ -195,12 +195,12 @@ export default function ContractAiPage() {
               </div>
             )}
             {clauses.length === 0 && (
-              <p className="text-sm text-slate-400">{t('contractAiPage.noClauses')}</p>
+              <p className="text-sm text-neutral-400">{t('contractAiPage.noClauses')}</p>
             )}
             {clauses.map((c, i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-white/10 bg-slate-900/80 p-5 shadow-xl shadow-black/20 backdrop-blur-xl transition-colors duration-150 ease-out hover:border-white/20"
+                className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5  backdrop-blur-xl transition-colors duration-150 ease-out hover:border-white/20"
               >
                 <div className="mb-2 flex items-center justify-between gap-3">
                   <p className="font-medium text-white">{c.clause}</p>
@@ -208,7 +208,7 @@ export default function ContractAiPage() {
                     {t('contractAiPage.riskLabel')} {c.risk}
                   </span>
                 </div>
-                <p className="text-sm text-slate-400">{c.explanation}</p>
+                <p className="text-sm text-neutral-400">{c.explanation}</p>
               </div>
             ))}
           </div>

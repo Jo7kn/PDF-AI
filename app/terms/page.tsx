@@ -62,7 +62,7 @@ export default function TermsPage() {
   })
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.16),_transparent_30%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
+    <main className="min-h-screen bg-[#050506] text-white">
       <LandingHeader />
 
       <section className="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
