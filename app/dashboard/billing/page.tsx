@@ -20,17 +20,17 @@ export default function BillingPage() {
 
   return (
     <div className="animate-fade-in-up space-y-6">
-      <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+      <section className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 ">
         <div className="mb-6 flex items-center gap-2">
-          <CreditCard className="h-5 w-5 text-cyan-300" />
+          <CreditCard className="h-5 w-5 text-brand" />
           <h1 className="text-xl font-semibold text-white">{t('billingPage.title')}</h1>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-2xl border border-white/10 bg-slate-950/40 p-5 transition-transform duration-200 ease-out-strong hover:-translate-y-0.5">
-            <p className="text-sm text-slate-400">{t('billingPage.currentPlanLabel')}</p>
+          <div className="rounded-2xl border border-white/[0.08] bg-black/20 p-5 transition-transform duration-200 ease-out-strong hover:-translate-y-0.5">
+            <p className="text-sm text-neutral-400">{t('billingPage.currentPlanLabel')}</p>
             {profile ? (
-              <p className="mt-1 text-2xl font-semibold text-cyan-300">{currentTierName}</p>
+              <p className="mt-1 text-2xl font-semibold text-brand">{currentTierName}</p>
             ) : (
               <Skeleton className="mt-1 h-8 w-20" />
             )}
@@ -59,20 +59,20 @@ export default function BillingPage() {
           return (
             <div
               key={tier.name}
-              className={`animate-fade-in-up rounded-3xl border p-6 shadow-xl shadow-black/20 transition-transform duration-200 ease-out-strong hover:-translate-y-1 ${
-                isCurrent ? 'border-cyan-400/40 bg-cyan-500/10' : 'border-white/10 bg-slate-900/80'
+              className={`animate-fade-in-up rounded-2xl border p-6  transition-transform duration-200 ease-out-strong hover:-translate-y-1 ${
+                isCurrent ? 'border-brand/40 bg-brand/10' : 'border-white/[0.08] bg-white/[0.03]'
               }`}
               style={{ animationDelay: `${i * 60}ms` }}
             >
               <h3 className="mb-1 text-lg font-semibold text-white">{tier.name}</h3>
               <div className="mb-4">
                 <span className="text-3xl font-bold text-white">€{tier.price}</span>
-                <span className="text-slate-400">{t('billingPage.perMonth')}</span>
+                <span className="text-neutral-400">{t('billingPage.perMonth')}</span>
               </div>
 
               <ul className="mb-6 space-y-2.5">
                 {features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-2 text-sm text-slate-300">
+                  <li key={feature} className="flex items-start gap-2 text-sm text-neutral-300">
                     <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-400" />
                     <span>{feature}</span>
                   </li>
@@ -80,11 +80,11 @@ export default function BillingPage() {
               </ul>
 
               {isCurrent ? (
-                <div className="rounded-xl border border-cyan-400/30 bg-cyan-400/10 px-4 py-2.5 text-center text-sm font-semibold text-cyan-200">
+                <div className="rounded-xl border border-brand/40 bg-brand/10 px-4 py-2.5 text-center text-sm font-semibold text-brand">
                   {t('billingPage.currentPlanBadge')}
                 </div>
               ) : planKey === 'free' ? (
-                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-center text-sm text-slate-500">
+                <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-center text-sm text-neutral-500">
                   {t('billingPage.freePlanBadge')}
                 </div>
               ) : (
@@ -117,7 +117,7 @@ function UpgradeButton({
       <button
         disabled
         title={t('billingPage.notConfiguredTooltip')}
-        className="block w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-center text-sm text-slate-500 opacity-50"
+        className="block w-full rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-center text-sm text-neutral-500 opacity-50"
       >
         {t('billingPage.notConfigured', { label })}
       </button>
@@ -127,7 +127,7 @@ function UpgradeButton({
   return (
     <a
       href={url}
-      className="block w-full rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 px-4 py-2.5 text-center text-sm font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90"
+      className="block w-full rounded-xl bg-brand px-4 py-2.5 text-center text-sm font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90"
     >
       {label}
     </a>

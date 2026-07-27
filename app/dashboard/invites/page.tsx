@@ -35,7 +35,7 @@ export default function InvitesPage() {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-2">
-          <Gift className="h-5 w-5 text-cyan-300" />
+          <Gift className="h-5 w-5 text-brand" />
           <h1 className="text-xl font-semibold text-white">{t('invitesPage.title')}</h1>
         </div>
         <Card className="space-y-3">
@@ -54,16 +54,16 @@ export default function InvitesPage() {
   return (
     <div className="animate-fade-in-up space-y-6">
       <div className="flex items-center gap-2">
-        <Gift className="h-5 w-5 text-cyan-300" />
+        <Gift className="h-5 w-5 text-brand" />
         <h1 className="text-xl font-semibold text-white">{t('invitesPage.title')}</h1>
       </div>
 
       <Card>
-        <p className="mb-4 text-sm text-slate-400">{t('invitesPage.subtitle')}</p>
+        <p className="mb-4 text-sm text-neutral-400">{t('invitesPage.subtitle')}</p>
 
-        <label className="mb-1.5 block text-xs font-medium text-slate-500">{t('invitesPage.yourLink')}</label>
-        <div className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5">
-          <code className="truncate text-sm text-cyan-200">{link}</code>
+        <label className="mb-1.5 block text-xs font-medium text-neutral-500">{t('invitesPage.yourLink')}</label>
+        <div className="flex items-center justify-between gap-3 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5">
+          <code className="truncate text-sm text-brand">{link}</code>
           <Button onClick={handleCopy} variant="subtle" size="sm" className="flex-shrink-0 gap-1.5">
             {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
             {copied ? t('invitesPage.copied') : t('invitesPage.copy')}
@@ -80,21 +80,21 @@ export default function InvitesPage() {
             </p>
           </div>
         ) : (
-          <p className="mb-3 text-sm text-slate-300">
+          <p className="mb-3 text-sm text-neutral-300">
             {remaining > 0 ? t('invitesPage.rewardPending', { remaining: String(remaining) }) : t('invitesPage.rewardCheck')}
           </p>
         )}
 
         <div className="mt-4">
-          <div className="mb-1.5 flex items-center justify-between text-xs text-slate-500">
+          <div className="mb-1.5 flex items-center justify-between text-xs text-neutral-500">
             <span>{t('invitesPage.progress', { count: String(status.confirmedCount), target: String(status.target) })}</span>
           </div>
-          <div className="h-2 overflow-hidden rounded-full bg-white/5">
-            <div className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-violet-500 transition-all duration-300 ease-out" style={{ width: `${progressPct}%` }} />
+          <div className="h-2 overflow-hidden rounded-full bg-white/[0.03]">
+            <div className="h-full rounded-full bg-brand transition-all duration-300 ease-out" style={{ width: `${progressPct}%` }} />
           </div>
         </div>
 
-        <p className="mt-4 text-xs text-slate-500">{t('invitesPage.confirmedNote')}</p>
+        <p className="mt-4 text-xs text-neutral-500">{t('invitesPage.confirmedNote')}</p>
       </Card>
     </div>
   )

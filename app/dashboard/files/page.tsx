@@ -54,8 +54,8 @@ export default function FilesPage() {
           onClick={() => setView('pdf')}
           className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-150 ease-out active:scale-[0.97] ${
             view === 'pdf'
-              ? 'border-cyan-400/40 bg-cyan-400/15 text-cyan-200'
-              : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'
+              ? 'border-brand/40 bg-brand/15 text-brand'
+              : 'border-white/[0.08] bg-white/[0.03] text-neutral-300 hover:bg-white/[0.06]'
           }`}
         >
           {t('filesPage.tabPdf')}
@@ -64,8 +64,8 @@ export default function FilesPage() {
           onClick={() => setView('saved')}
           className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors duration-150 ease-out active:scale-[0.97] ${
             view === 'saved'
-              ? 'border-cyan-400/40 bg-cyan-400/15 text-cyan-200'
-              : 'border-white/10 bg-white/5 text-slate-300 hover:bg-white/10'
+              ? 'border-brand/40 bg-brand/15 text-brand'
+              : 'border-white/[0.08] bg-white/[0.03] text-neutral-300 hover:bg-white/[0.06]'
           }`}
         >
           {t('filesPage.tabSaved')}
@@ -286,23 +286,23 @@ function PdfFilesView() {
 
   return (
     <div className="space-y-8">
-      <section className="rounded-3xl border border-white/10 bg-white/10 p-6 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
+      <section className="rounded-2xl border border-white/[0.08] bg-white/10 p-6 backdrop-blur-xl">
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-1 text-sm text-cyan-200">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-3 py-1 text-sm text-brand">
               <ShieldCheck className="h-4 w-4" />
               {t('filesPage.welcomeBadge')}
             </div>
             <h1 className="mb-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
               {t('filesPage.heroTitle')}
             </h1>
-            <p className="text-lg text-slate-300">
+            <p className="text-lg text-neutral-300">
               {t('filesPage.heroSubtitle')}
             </p>
             {totalDocuments > 0 && (
               <button
                 onClick={() => setSearchOpen(true)}
-                className="mt-4 inline-flex items-center gap-2 rounded-full border border-cyan-400/25 bg-cyan-400/10 px-4 py-2 text-sm text-cyan-200 transition-colors duration-150 ease-out hover:bg-cyan-400/20 active:scale-[0.97]"
+                className="mt-4 inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-4 py-2 text-sm text-brand transition-colors duration-150 ease-out hover:bg-brand/20 active:scale-[0.97]"
               >
                 <Search className="h-4 w-4" />
                 {t('filesPage.searchAllDocs')}
@@ -316,12 +316,12 @@ function PdfFilesView() {
               { label: t('filesPage.statPagesUsed'), value: totalPages > 0 ? `${totalPages}/10` : '0', icon: BarChart3 },
               { label: t('filesPage.statLastUpload'), value: lastUpload, icon: Clock3 },
             ].map((stat) => (
-              <div key={stat.label} className="min-w-0 rounded-2xl border border-white/10 bg-slate-950/50 p-4">
-                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-cyan-300">
+              <div key={stat.label} className="min-w-0 rounded-2xl border border-white/[0.08] bg-black/20 p-4">
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-brand">
                   <stat.icon className="h-5 w-5" />
                 </div>
                 <p className="truncate text-xl font-semibold text-white" title={stat.value}>{stat.value}</p>
-                <p className="text-sm text-slate-400">{stat.label}</p>
+                <p className="text-sm text-neutral-400">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -330,27 +330,27 @@ function PdfFilesView() {
 
       <div className="grid gap-8 xl:grid-cols-[0.95fr_1.05fr]">
         <aside className="space-y-6">
-          <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+          <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 ">
             <div className="mb-4 flex items-center gap-2 text-white">
-              <Upload className="h-5 w-5 text-cyan-300" />
+              <Upload className="h-5 w-5 text-brand" />
               <h2 className="text-xl font-semibold">{t('filesPage.uploadTitle')}</h2>
             </div>
 
             <form onSubmit={handleUpload} className="space-y-4">
               <div
                 className={`cursor-pointer rounded-2xl border-2 border-dashed p-8 text-center transition-[transform,border-color,background-color] duration-200 ease-out-strong ${
-                  isDragging ? 'scale-[1.02] border-cyan-400/70 bg-cyan-400/10' : 'border-white/15 bg-white/5 hover:border-cyan-400/40'
+                  isDragging ? 'scale-[1.02] border-brand/70 bg-brand/10' : 'border-white/[0.12] bg-white/[0.03] hover:border-brand/40'
                 }`}
                 onClick={() => document.getElementById('file-input')?.click()}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
               >
-                <Upload className={`mx-auto mb-4 h-12 w-12 transition-transform duration-200 ease-out-strong ${isDragging ? 'scale-110 text-cyan-300' : 'text-slate-400'}`} />
+                <Upload className={`mx-auto mb-4 h-12 w-12 transition-transform duration-200 ease-out-strong ${isDragging ? 'scale-110 text-brand' : 'text-neutral-400'}`} />
                 <p className="mb-2 text-white">{t('filesPage.uploadDragText')}</p>
-                <p className="text-sm text-slate-500">{t('filesPage.uploadOrClick')}</p>
+                <p className="text-sm text-neutral-500">{t('filesPage.uploadOrClick')}</p>
                 <input id="file-input" type="file" className="hidden" accept=".pdf" onChange={handleFileSelect} />
-                {file && <p className="mt-3 text-sm text-cyan-300">{file.name}</p>}
+                {file && <p className="mt-3 text-sm text-brand">{file.name}</p>}
               </div>
 
               {error && (
@@ -362,13 +362,13 @@ function PdfFilesView() {
 
               {uploading && (
                 <div className="space-y-2">
-                  <div className="flex justify-between text-sm text-slate-300">
+                  <div className="flex justify-between text-sm text-neutral-300">
                     <span>{t('filesPage.uploading')}</span>
                     <span>{uploadProgress}%</span>
                   </div>
                   <div className="h-2 overflow-hidden rounded-full bg-white/10">
                     <div
-                      className="h-full origin-left bg-gradient-to-r from-cyan-400 to-violet-500 transition-transform duration-300 ease-out"
+                      className="h-full origin-left bg-brand transition-transform duration-300 ease-out"
                       style={{ transform: `scaleX(${uploadProgress / 100})` }}
                     />
                   </div>
@@ -378,7 +378,7 @@ function PdfFilesView() {
               <button
                 type="submit"
                 disabled={uploading}
-                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-cyan-500 to-violet-500 px-4 py-3 font-semibold text-white transition-[opacity,transform] duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-brand px-4 py-3 font-semibold text-white transition-[opacity,transform] duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
               >
                 {uploading ? (
                   <>
@@ -395,9 +395,9 @@ function PdfFilesView() {
             </form>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+          <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 ">
             <div className="mb-4 flex items-center gap-2">
-              <Folder className="h-5 w-5 text-cyan-300" />
+              <Folder className="h-5 w-5 text-brand" />
               <h3 className="text-lg font-semibold text-white">{t('filesPage.foldersTitle')}</h3>
             </div>
 
@@ -405,7 +405,7 @@ function PdfFilesView() {
               <button
                 onClick={() => { setActiveFolderId(undefined); setFavoritesOnly(false) }}
                 className={`w-full flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-left transition-colors duration-150 ease-out active:scale-[0.98] ${
-                  activeFolderId === undefined && !favoritesOnly ? 'bg-cyan-500/15 text-cyan-200' : 'text-slate-300 hover:bg-white/5'
+                  activeFolderId === undefined && !favoritesOnly ? 'bg-brand/15 text-brand' : 'text-neutral-300 hover:bg-white/[0.03]'
                 }`}
               >
                 <FileText className="h-4 w-4 flex-shrink-0" />
@@ -414,7 +414,7 @@ function PdfFilesView() {
               <button
                 onClick={() => { setFavoritesOnly(true); setActiveFolderId(undefined) }}
                 className={`w-full flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-left transition-colors duration-150 ease-out active:scale-[0.98] ${
-                  favoritesOnly ? 'bg-cyan-500/15 text-cyan-200' : 'text-slate-300 hover:bg-white/5'
+                  favoritesOnly ? 'bg-brand/15 text-brand' : 'text-neutral-300 hover:bg-white/[0.03]'
                 }`}
               >
                 <Star className="h-4 w-4 flex-shrink-0" />
@@ -423,7 +423,7 @@ function PdfFilesView() {
               <button
                 onClick={() => { setActiveFolderId(null); setFavoritesOnly(false) }}
                 className={`w-full flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-left transition-colors duration-150 ease-out active:scale-[0.98] ${
-                  activeFolderId === null ? 'bg-cyan-500/15 text-cyan-200' : 'text-slate-300 hover:bg-white/5'
+                  activeFolderId === null ? 'bg-brand/15 text-brand' : 'text-neutral-300 hover:bg-white/[0.03]'
                 }`}
               >
                 <Folder className="h-4 w-4 flex-shrink-0" />
@@ -434,7 +434,7 @@ function PdfFilesView() {
                 <div
                   key={folder.id}
                   className={`group flex items-center gap-2 rounded-xl px-3 py-2 text-sm transition-colors duration-150 ease-out ${
-                    activeFolderId === folder.id ? 'bg-cyan-500/15 text-cyan-200' : 'text-slate-300 hover:bg-white/5'
+                    activeFolderId === folder.id ? 'bg-brand/15 text-brand' : 'text-neutral-300 hover:bg-white/[0.03]'
                   }`}
                 >
                   <button
@@ -446,7 +446,7 @@ function PdfFilesView() {
                   </button>
                   <button
                     onClick={() => handleDeleteFolder(folder.id)}
-                    className="flex-shrink-0 text-slate-500 opacity-0 transition-[color,opacity] duration-150 ease-out hover:text-red-300 group-hover:opacity-100 active:scale-90"
+                    className="flex-shrink-0 text-neutral-500 opacity-0 transition-[color,opacity] duration-150 ease-out hover:text-red-300 group-hover:opacity-100 active:scale-90"
                     title={t('filesPage.deleteFolderTitle')}
                   >
                     <Trash2 className="h-3.5 w-3.5" />
@@ -461,68 +461,68 @@ function PdfFilesView() {
                 value={newFolderName}
                 onChange={(e) => setNewFolderName(e.target.value)}
                 placeholder={t('filesPage.newFolderPlaceholder')}
-                className="flex-1 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-slate-500 transition-colors duration-150 ease-out focus:border-cyan-400/50 focus:outline-none"
+                className="flex-1 rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm text-white placeholder-neutral-500 transition-colors duration-150 ease-out focus:border-brand/50 focus:outline-none"
               />
               <button
                 type="submit"
                 disabled={creatingFolder || !newFolderName.trim()}
-                className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+                className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
               >
                 <FolderPlus className="h-4 w-4" />
               </button>
             </form>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/10 p-6 backdrop-blur-xl">
+          <div className="rounded-2xl border border-white/[0.08] bg-white/10 p-6 backdrop-blur-xl">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-lg font-semibold text-white">{t('filesPage.tipsTitle')}</h3>
-              <Bell className="h-4 w-4 text-slate-400" />
+              <Bell className="h-4 w-4 text-neutral-400" />
             </div>
-            <ul className="space-y-3 text-sm text-slate-300">
-              <li className="rounded-xl border border-white/10 bg-slate-950/40 p-3">{t('filesPage.tip1')}</li>
-              <li className="rounded-xl border border-white/10 bg-slate-950/40 p-3">{t('filesPage.tip2')}</li>
-              <li className="rounded-xl border border-white/10 bg-slate-950/40 p-3">{t('filesPage.tip3')}</li>
+            <ul className="space-y-3 text-sm text-neutral-300">
+              <li className="rounded-xl border border-white/[0.08] bg-black/20 p-3">{t('filesPage.tip1')}</li>
+              <li className="rounded-xl border border-white/[0.08] bg-black/20 p-3">{t('filesPage.tip2')}</li>
+              <li className="rounded-xl border border-white/[0.08] bg-black/20 p-3">{t('filesPage.tip3')}</li>
             </ul>
           </div>
         </aside>
 
-        <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+        <section className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 ">
           <div className="mb-6 flex items-center justify-between">
             <div>
               <h2 className="text-xl font-semibold text-white">{t('filesPage.yourDocuments')}</h2>
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-neutral-400">
                 {favoritesOnly ? t('filesPage.favorites') : activeFolderId === null ? t('filesPage.noFolder') : activeFolderId ? folders.find(f => f.id === activeFolderId)?.name : t('filesPage.allDocuments')}
               </p>
             </div>
-            <Link href="/dashboard/files" className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 active:scale-[0.97]">
+            <Link href="/dashboard/files" className="rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] active:scale-[0.97]">
               {t('filesPage.newUpload')}
             </Link>
           </div>
 
           <div className="mb-4 flex flex-col gap-2 sm:flex-row">
             <div className="relative flex-1">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />
               <input
                 type="text"
                 value={nameFilter}
                 onChange={(e) => setNameFilter(e.target.value)}
                 placeholder={t('filesPage.searchByName')}
-                className="w-full rounded-xl border border-white/10 bg-white/5 py-2 pl-9 pr-3 text-sm text-white placeholder-slate-500 transition-colors duration-150 ease-out focus:border-cyan-400/50 focus:outline-none"
+                className="w-full rounded-xl border border-white/[0.08] bg-white/[0.03] py-2 pl-9 pr-3 text-sm text-white placeholder-neutral-500 transition-colors duration-150 ease-out focus:border-brand/50 focus:outline-none"
               />
             </div>
             <div className="flex gap-2">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as GetDocumentsFilters['sortBy'])}
-                className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white transition-colors duration-150 ease-out focus:border-cyan-400/50 focus:outline-none"
+                className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm text-white transition-colors duration-150 ease-out focus:border-brand/50 focus:outline-none"
               >
-                <option value="created_at" className="bg-slate-900">{t('filesPage.sortDate')}</option>
-                <option value="name" className="bg-slate-900">{t('filesPage.sortName')}</option>
-                <option value="total_pages" className="bg-slate-900">{t('filesPage.sortPages')}</option>
+                <option value="created_at" className="bg-[#0a0a0c]">{t('filesPage.sortDate')}</option>
+                <option value="name" className="bg-[#0a0a0c]">{t('filesPage.sortName')}</option>
+                <option value="total_pages" className="bg-[#0a0a0c]">{t('filesPage.sortPages')}</option>
               </select>
               <button
                 onClick={() => setSortDir(prev => prev === 'asc' ? 'desc' : 'asc')}
-                className="flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.97]"
+                className="flex items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white active:scale-[0.97]"
                 title={sortDir === 'asc' ? t('filesPage.sortAsc') : t('filesPage.sortDesc')}
               >
                 <ArrowUpDown className="h-4 w-4" />
@@ -557,15 +557,15 @@ function PdfFilesView() {
 
           {!loadingDocs && documents.length === 0 && (
             <div className="py-12 text-center">
-              <FileText className="mx-auto mb-4 h-16 w-16 text-slate-600" />
-              <p className="text-slate-400">{t('filesPage.noDocuments')}</p>
+              <FileText className="mx-auto mb-4 h-16 w-16 text-neutral-600" />
+              <p className="text-neutral-400">{t('filesPage.noDocuments')}</p>
             </div>
           )}
 
           {sharedDocuments.length > 0 && (
-            <div className="mt-8 border-t border-white/10 pt-6">
+            <div className="mt-8 border-t border-white/[0.08] pt-6">
               <div className="mb-4 flex items-center gap-2">
-                <Users className="h-4 w-4 text-violet-300" />
+                <Users className="h-4 w-4 text-brand" />
                 <h3 className="text-lg font-semibold text-white">{t('filesPage.sharedWithMe')}</h3>
               </div>
               <div className="space-y-4">
@@ -636,17 +636,17 @@ function GlobalSearchModal({ onClose }: { onClose: () => void }) {
       onClick={handleClose}
     >
       <div
-        className={`w-full max-w-2xl origin-center rounded-3xl border border-white/10 bg-slate-900 p-6 shadow-2xl transition-[opacity,transform] duration-200 ease-out-strong ${
+        className={`w-full max-w-2xl origin-center rounded-2xl border border-white/[0.08] bg-[#0a0a0c] p-6 shadow-2xl transition-[opacity,transform] duration-200 ease-out-strong ${
           show ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
         }`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-center justify-between">
           <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
-            <Search className="h-5 w-5 text-cyan-300" />
+            <Search className="h-5 w-5 text-brand" />
             {t('filesPage.searchModalTitle')}
           </h3>
-          <button onClick={handleClose} className="text-slate-400 transition-colors duration-150 ease-out hover:text-white active:scale-90">
+          <button onClick={handleClose} className="text-neutral-400 transition-colors duration-150 ease-out hover:text-white active:scale-90">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -658,12 +658,12 @@ function GlobalSearchModal({ onClose }: { onClose: () => void }) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t('filesPage.searchPlaceholderQuestion')}
-            className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 transition-colors duration-150 ease-out focus:border-cyan-400/50 focus:outline-none"
+            className="flex-1 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-white placeholder-neutral-500 transition-colors duration-150 ease-out focus:border-brand/50 focus:outline-none"
           />
           <button
             type="submit"
             disabled={loading || !query.trim()}
-            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 px-5 py-3 font-semibold text-white transition-[opacity,transform] duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+            className="flex items-center gap-2 rounded-xl bg-brand px-5 py-3 font-semibold text-white transition-[opacity,transform] duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
           >
             {loading ? <Loader2 className="h-5 w-5 animate-spin-fast" /> : t('filesPage.searchButton')}
           </button>
@@ -678,19 +678,19 @@ function GlobalSearchModal({ onClose }: { onClose: () => void }) {
 
         {answer && (
           <div className="space-y-4">
-            <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-              <p className="whitespace-pre-wrap text-sm text-slate-200">{answer}</p>
+            <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] p-4">
+              <p className="whitespace-pre-wrap text-sm text-neutral-200">{answer}</p>
             </div>
 
             {sources.length > 0 && (
               <div>
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">{t('filesPage.sources')}</p>
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-neutral-500">{t('filesPage.sources')}</p>
                 <div className="space-y-2">
                   {sources.map((source, i) => (
                     <Link
                       key={i}
                       href={`/document/${source.documentId}`}
-                      className="flex items-center justify-between rounded-xl border border-white/10 bg-slate-950/40 p-3 text-sm text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white active:scale-[0.98]"
+                      className="flex items-center justify-between rounded-xl border border-white/[0.08] bg-black/20 p-3 text-sm text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white active:scale-[0.98]"
                     >
                       <span className="truncate">
                         [{t('filesPage.source')} {i + 1}] {source.documentName}
@@ -755,7 +755,7 @@ function SavedItemsSection() {
   }
 
   return (
-    <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+    <section className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 ">
       <h2 className="mb-6 text-xl font-semibold text-white">{t('filesPage.savedItemsTitle')}</h2>
 
       {loading && (
@@ -768,8 +768,8 @@ function SavedItemsSection() {
 
       {!loading && items.length === 0 && (
         <div className="py-12 text-center">
-          <Bookmark className="mx-auto mb-4 h-16 w-16 text-slate-600" />
-          <p className="text-slate-400">{t('filesPage.noSavedItems')}</p>
+          <Bookmark className="mx-auto mb-4 h-16 w-16 text-neutral-600" />
+          <p className="text-neutral-400">{t('filesPage.noSavedItems')}</p>
         </div>
       )}
 

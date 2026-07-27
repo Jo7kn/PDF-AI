@@ -78,15 +78,15 @@ export default async function AdminPage() {
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.15),_transparent_28%),linear-gradient(135deg,_#020617_0%,_#111827_45%,_#1e1b4b_100%)] text-white">
-      <div className="sticky top-0 z-10 border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
+      <div className="sticky top-0 z-10 border-b border-white/[0.08] bg-[#050506]/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-400 to-violet-500 shadow-lg shadow-cyan-500/20">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand">
               <Shield className="h-5 w-5 text-white" />
             </div>
             <div>
               <p className="text-sm font-semibold leading-tight text-white">Admin · AI Toolbox</p>
-              <p className="text-xs leading-tight text-slate-400">{email}</p>
+              <p className="text-xs leading-tight text-neutral-400">{email}</p>
             </div>
           </div>
           <nav className="flex flex-wrap items-center gap-1">
@@ -94,14 +94,14 @@ export default async function AdminPage() {
               <a
                 key={s.id}
                 href={`#${s.id}`}
-                className="rounded-lg px-3 py-1.5 text-xs font-medium text-slate-400 transition-colors duration-150 ease-out hover:bg-white/10 hover:text-white"
+                className="rounded-lg px-3 py-1.5 text-xs font-medium text-neutral-400 transition-colors duration-150 ease-out hover:bg-white/[0.06] hover:text-white"
               >
                 {s.label}
               </a>
             ))}
             <a
               href="/dashboard"
-              className="ml-2 flex items-center gap-1.5 rounded-lg border border-white/10 px-3 py-1.5 text-xs font-medium text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10"
+              className="ml-2 flex items-center gap-1.5 rounded-lg border border-white/[0.08] px-3 py-1.5 text-xs font-medium text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06]"
             >
               <ArrowLeft className="h-3.5 w-3.5" /> Dashboard
             </a>
@@ -129,14 +129,14 @@ export default async function AdminPage() {
               </div>
 
               {recentSignups.length > 0 && (
-                <div className="mt-4 rounded-3xl border border-white/10 bg-slate-900/80 p-6">
+                <div className="mt-4 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6">
                   <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-white">
-                    <UserPlus className="h-4 w-4 text-cyan-300" /> Ultimi iscritti
+                    <UserPlus className="h-4 w-4 text-brand" /> Ultimi iscritti
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm">
                       <thead>
-                        <tr className="border-b border-white/10 text-xs uppercase tracking-wide text-slate-500">
+                        <tr className="border-b border-white/[0.08] text-xs uppercase tracking-wide text-neutral-500">
                           <th className="px-2 py-2">Email</th>
                           <th className="px-2 py-2">Piano</th>
                           <th className="px-2 py-2">Invitato</th>
@@ -145,13 +145,13 @@ export default async function AdminPage() {
                       </thead>
                       <tbody>
                         {recentSignups.map((signup) => (
-                          <tr key={signup.id} className="border-b border-white/5 last:border-0 hover:bg-white/5">
-                            <td className="px-2 py-2.5 text-slate-300">{signup.email}</td>
-                            <td className="px-2 py-2.5 capitalize text-slate-400">{signup.tier}</td>
+                          <tr key={signup.id} className="border-b border-white/5 last:border-0 hover:bg-white/[0.03]">
+                            <td className="px-2 py-2.5 text-neutral-300">{signup.email}</td>
+                            <td className="px-2 py-2.5 capitalize text-neutral-400">{signup.tier}</td>
                             <td className="px-2 py-2.5">
-                              {signup.referredBy && <Gift className="h-3.5 w-3.5 text-violet-300" />}
+                              {signup.referredBy && <Gift className="h-3.5 w-3.5 text-brand" />}
                             </td>
-                            <td className="px-2 py-2.5 text-slate-500">{new Date(signup.createdAt).toLocaleString('it-IT')}</td>
+                            <td className="px-2 py-2.5 text-neutral-500">{new Date(signup.createdAt).toLocaleString('it-IT')}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -161,7 +161,7 @@ export default async function AdminPage() {
               )}
 
               {analytics.toolUsageLast30Days.length > 0 && (
-                <div className="mt-4 rounded-3xl border border-white/10 bg-slate-900/80 p-6">
+                <div className="mt-4 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6">
                   <p className="mb-4 text-sm font-semibold text-white">Utilizzo per strumento (ultimi 30 giorni)</p>
                   <div className="space-y-3">
                     {analytics.toolUsageLast30Days.map((t) => {
@@ -170,13 +170,13 @@ export default async function AdminPage() {
                       return (
                         <div key={t.tool}>
                           <div className="mb-1 flex items-center justify-between text-sm">
-                            <span className="text-slate-300">{t.tool}</span>
-                            <span className="text-slate-500">
+                            <span className="text-neutral-300">{t.tool}</span>
+                            <span className="text-neutral-500">
                               {t.count} usi · {t.creditsUsed} crediti
                             </span>
                           </div>
-                          <div className="h-1.5 overflow-hidden rounded-full bg-white/5">
-                            <div className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-violet-500" style={{ width: `${pct}%` }} />
+                          <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.03]">
+                            <div className="h-full rounded-full bg-brand" style={{ width: `${pct}%` }} />
                           </div>
                         </div>
                       )
@@ -210,19 +210,19 @@ export default async function AdminPage() {
         <section id="comunicazioni" className="scroll-mt-24">
           <SectionHeader icon={Megaphone} title="Comunicazioni" description="Annunci sul sito, su Discord e correzioni manuali del saldo crediti." />
           <div className="grid gap-4 lg:grid-cols-2">
-            <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6">
+            <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6">
               <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-white">
-                <Terminal className="h-4 w-4 text-cyan-300" /> Annuncio sul sito
+                <Terminal className="h-4 w-4 text-brand" /> Annuncio sul sito
               </div>
               <AnnouncementComposer />
             </div>
-            <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6">
+            <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6">
               <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-white">
                 <Megaphone className="h-4 w-4 text-indigo-300" /> Annuncio su Discord
               </div>
               <DiscordAnnouncementComposer />
             </div>
-            <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6">
+            <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6">
               <div className="mb-4 flex items-center gap-2 text-sm font-semibold text-white">
                 <Wallet className="h-4 w-4 text-amber-300" /> Rettifica crediti utente
               </div>
@@ -250,12 +250,12 @@ export default async function AdminPage() {
               </div>
 
               {waitlist.recent.length === 0 ? (
-                <p className="text-sm text-slate-500">Nessuna iscrizione ancora.</p>
+                <p className="text-sm text-neutral-500">Nessuna iscrizione ancora.</p>
               ) : (
-                <div className="overflow-x-auto rounded-3xl border border-white/10 bg-slate-900/80">
+                <div className="overflow-x-auto rounded-2xl border border-white/[0.08] bg-white/[0.03]">
                   <table className="w-full text-left text-sm">
                     <thead>
-                      <tr className="border-b border-white/10 text-xs uppercase tracking-wide text-slate-500">
+                      <tr className="border-b border-white/[0.08] text-xs uppercase tracking-wide text-neutral-500">
                         <th className="px-4 py-3">Email</th>
                         <th className="px-4 py-3">Da</th>
                         <th className="px-4 py-3">Quando</th>
@@ -263,10 +263,10 @@ export default async function AdminPage() {
                     </thead>
                     <tbody>
                       {waitlist.recent.map((signup) => (
-                        <tr key={signup.email} className="border-b border-white/5 last:border-0 hover:bg-white/5">
-                          <td className="px-4 py-3 text-slate-300">{signup.email}</td>
-                          <td className="px-4 py-3 text-slate-500">{signup.source || '—'}</td>
-                          <td className="px-4 py-3 text-slate-500">{new Date(signup.createdAt).toLocaleString('it-IT')}</td>
+                        <tr key={signup.email} className="border-b border-white/5 last:border-0 hover:bg-white/[0.03]">
+                          <td className="px-4 py-3 text-neutral-300">{signup.email}</td>
+                          <td className="px-4 py-3 text-neutral-500">{signup.source || '—'}</td>
+                          <td className="px-4 py-3 text-neutral-500">{new Date(signup.createdAt).toLocaleString('it-IT')}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -295,12 +295,12 @@ export default async function AdminPage() {
           {'error' in activityResult ? (
             <ErrorNote message={activityResult.error} />
           ) : activity.length === 0 ? (
-            <p className="text-sm text-slate-500">Nessuna attività registrata ancora.</p>
+            <p className="text-sm text-neutral-500">Nessuna attività registrata ancora.</p>
           ) : (
-            <div className="overflow-x-auto rounded-3xl border border-white/10 bg-slate-900/80">
+            <div className="overflow-x-auto rounded-2xl border border-white/[0.08] bg-white/[0.03]">
               <table className="w-full text-left text-sm">
                 <thead>
-                  <tr className="border-b border-white/10 text-xs uppercase tracking-wide text-slate-500">
+                  <tr className="border-b border-white/[0.08] text-xs uppercase tracking-wide text-neutral-500">
                     <th className="px-4 py-3">Utente</th>
                     <th className="px-4 py-3">Strumento</th>
                     <th className="px-4 py-3">Azione</th>
@@ -310,12 +310,12 @@ export default async function AdminPage() {
                 </thead>
                 <tbody>
                   {activity.map((event) => (
-                    <tr key={event.id} className="border-b border-white/5 last:border-0 hover:bg-white/5">
-                      <td className="px-4 py-3 text-slate-300">{event.userEmail}</td>
-                      <td className="px-4 py-3 text-slate-300">{event.tool}</td>
-                      <td className="px-4 py-3 text-slate-500">{event.action || '—'}</td>
+                    <tr key={event.id} className="border-b border-white/5 last:border-0 hover:bg-white/[0.03]">
+                      <td className="px-4 py-3 text-neutral-300">{event.userEmail}</td>
+                      <td className="px-4 py-3 text-neutral-300">{event.tool}</td>
+                      <td className="px-4 py-3 text-neutral-500">{event.action || '—'}</td>
                       <td className="px-4 py-3 text-amber-300/80">-{event.creditsCost}</td>
-                      <td className="px-4 py-3 text-slate-500">{new Date(event.createdAt).toLocaleString('it-IT')}</td>
+                      <td className="px-4 py-3 text-neutral-500">{new Date(event.createdAt).toLocaleString('it-IT')}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -344,7 +344,7 @@ function SectionHeader({
   return (
     <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
       <div className="flex items-start gap-3">
-        <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-white/10 text-cyan-300">
+        <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-white/10 text-brand">
           <Icon className="h-4 w-4" />
         </div>
         <div>
@@ -356,7 +356,7 @@ function SectionHeader({
               </span>
             )}
           </div>
-          {description && <p className="mt-0.5 max-w-2xl text-xs text-slate-500">{description}</p>}
+          {description && <p className="mt-0.5 max-w-2xl text-xs text-neutral-500">{description}</p>}
         </div>
       </div>
       {action}
@@ -375,10 +375,10 @@ function SignupsChart({ data }: { data: Array<{ date: string; count: number }> }
   const total = data.reduce((sum, d) => sum + d.count, 0)
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-slate-900/80 p-5">
+    <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5">
       <div className="mb-4 flex items-center justify-between">
         <p className="text-sm font-semibold text-white">Nuovi iscritti (14gg)</p>
-        <p className="text-xs text-slate-500">{total} totali</p>
+        <p className="text-xs text-neutral-500">{total} totali</p>
       </div>
       <div className="flex h-28 gap-1.5">
         {data.map((d) => {
@@ -386,7 +386,7 @@ function SignupsChart({ data }: { data: Array<{ date: string; count: number }> }
           const label = new Date(d.date).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' })
           return (
             <div key={d.date} className="group relative flex flex-1 flex-col items-center justify-end">
-              <span className="pointer-events-none absolute -top-6 rounded-md bg-slate-800 px-1.5 py-0.5 text-[10px] text-white opacity-0 shadow-lg transition-opacity duration-150 ease-out group-hover:opacity-100">
+              <span className="pointer-events-none absolute -top-6 rounded-md bg-[#1a1a1e] px-1.5 py-0.5 text-[10px] text-white opacity-0 shadow-lg transition-opacity duration-150 ease-out group-hover:opacity-100">
                 {d.count}
               </span>
               <div
@@ -398,7 +398,7 @@ function SignupsChart({ data }: { data: Array<{ date: string; count: number }> }
           )
         })}
       </div>
-      <div className="mt-1.5 flex justify-between text-[10px] text-slate-600">
+      <div className="mt-1.5 flex justify-between text-[10px] text-neutral-600">
         <span>{new Date(data[0]?.date ?? Date.now()).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' })}</span>
         <span>{new Date(data[data.length - 1]?.date ?? Date.now()).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' })}</span>
       </div>
@@ -418,19 +418,19 @@ function TierChart({ usersByTier }: { usersByTier: { free: number; pro: number; 
   const max = Math.max(1, ...rows.map((r) => r.value))
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-slate-900/80 p-5">
+    <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5">
       <p className="mb-4 text-sm font-semibold text-white">Utenti per piano</p>
       <div className="space-y-3">
         {rows.map((r) => (
           <div key={r.label} className="flex items-center gap-3">
-            <span className="w-10 flex-shrink-0 text-xs text-slate-400">{r.label}</span>
-            <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-white/5">
+            <span className="w-10 flex-shrink-0 text-xs text-neutral-400">{r.label}</span>
+            <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-white/[0.03]">
               <div
                 className="h-full rounded-full transition-all duration-300 ease-out"
                 style={{ width: `${Math.max(4, Math.round((r.value / max) * 100))}%`, backgroundColor: r.color }}
               />
             </div>
-            <span className="w-8 flex-shrink-0 text-right text-xs text-slate-400">{r.value}</span>
+            <span className="w-8 flex-shrink-0 text-right text-xs text-neutral-400">{r.value}</span>
           </div>
         ))}
       </div>
@@ -439,9 +439,9 @@ function TierChart({ usersByTier }: { usersByTier: { free: number; pro: number; 
 }
 
 const ACCENTS = {
-  cyan: 'text-cyan-300',
+  cyan: 'text-brand',
   emerald: 'text-emerald-300',
-  violet: 'text-violet-300',
+  violet: 'text-brand',
   amber: 'text-amber-300',
 } as const
 
@@ -457,14 +457,14 @@ function StatCard({
   accent?: keyof typeof ACCENTS
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-slate-900/80 p-5 transition-colors duration-150 ease-out hover:border-white/20">
+    <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5 transition-colors duration-150 ease-out hover:border-white/20">
       {Icon && (
-        <div className={`mb-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 ${accent ? ACCENTS[accent] : 'text-cyan-300'}`}>
+        <div className={`mb-3 flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 ${accent ? ACCENTS[accent] : 'text-brand'}`}>
           <Icon className="h-4 w-4" />
         </div>
       )}
       <p className="text-2xl font-semibold text-white">{value.toLocaleString('it-IT')}</p>
-      <p className="text-sm text-slate-400">{label}</p>
+      <p className="text-sm text-neutral-400">{label}</p>
     </div>
   )
 }

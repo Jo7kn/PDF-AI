@@ -63,10 +63,10 @@ export default function TeamPage() {
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-2">
-          <Users className="h-5 w-5 text-cyan-300" />
+          <Users className="h-5 w-5 text-brand" />
           <h1 className="text-xl font-semibold text-white">{t('teamPage.title')}</h1>
         </div>
-        <div className="space-y-3 rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+        <div className="space-y-3 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 ">
           <Skeleton className="h-5 w-32" />
           <SkeletonRow />
           <SkeletonRow />
@@ -78,13 +78,13 @@ export default function TeamPage() {
   return (
     <div className="animate-fade-in-up space-y-6">
       <div className="flex items-center gap-2">
-        <Users className="h-5 w-5 text-cyan-300" />
+        <Users className="h-5 w-5 text-brand" />
         <h1 className="text-xl font-semibold text-white">{t('teamPage.title')}</h1>
       </div>
 
       {invitations.length > 0 && (
-        <section className="rounded-3xl border border-cyan-400/20 bg-cyan-400/10 p-6">
-          <h2 className="mb-3 text-sm font-semibold text-cyan-200">{t('teamPage.pendingInvites')}</h2>
+        <section className="rounded-2xl border border-brand/20 bg-brand/10 p-6">
+          <h2 className="mb-3 text-sm font-semibold text-brand">{t('teamPage.pendingInvites')}</h2>
           <div className="space-y-2">
             {invitations.map((inv) => (
               <InvitationRow key={inv.id} invitation={inv} onHandled={load} />
@@ -94,10 +94,10 @@ export default function TeamPage() {
       )}
 
       {!isTeamPlan && !workspace && (
-        <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
-          <p className="text-sm text-slate-400">
+        <section className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 ">
+          <p className="text-sm text-neutral-400">
             {t('teamPage.requiresTeamPlan')}{' '}
-            <a href="/dashboard/billing" className="text-cyan-300 hover:text-cyan-200">{t('teamPage.upgradeToTeam')}</a>
+            <a href="/dashboard/billing" className="text-brand hover:text-brand">{t('teamPage.upgradeToTeam')}</a>
           </p>
         </section>
       )}
@@ -121,7 +121,7 @@ function InvitationRow({ invitation, onHandled }: { invitation: Invitation; onHa
   }
 
   return (
-    <div className="flex items-center justify-between rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 text-sm">
+    <div className="flex items-center justify-between rounded-xl border border-white/[0.08] bg-black/20 px-4 py-3 text-sm">
       <span className="text-white">
         {t('teamPage.inviteFor', { workspace: invitation.workspaceName, role: invitation.role })}
       </span>
@@ -136,7 +136,7 @@ function InvitationRow({ invitation, onHandled }: { invitation: Invitation; onHa
         <button
           onClick={() => handle('decline')}
           disabled={loading}
-          className="inline-flex items-center gap-1 rounded-lg bg-white/5 px-3 py-1.5 text-xs text-slate-300 transition-colors duration-150 ease-out hover:bg-white/10"
+          className="inline-flex items-center gap-1 rounded-lg bg-white/[0.03] px-3 py-1.5 text-xs text-neutral-300 transition-colors duration-150 ease-out hover:bg-white/[0.06]"
         >
           <X className="h-3.5 w-3.5" /> {t('teamPage.decline')}
         </button>
@@ -166,21 +166,21 @@ function CreateWorkspaceCard({ onCreated }: { onCreated: () => void }) {
   }
 
   return (
-    <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+    <section className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 ">
       <h2 className="mb-1 text-lg font-semibold text-white">{t('teamPage.createTitle')}</h2>
-      <p className="mb-4 text-sm text-slate-400">{t('teamPage.createSubtitle')}</p>
+      <p className="mb-4 text-sm text-neutral-400">{t('teamPage.createSubtitle')}</p>
       <form onSubmit={handleCreate} className="flex gap-2">
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder={t('teamPage.namePlaceholder')}
-          className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-cyan-400/50 focus:outline-none"
+          className="flex-1 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:border-brand/50 focus:outline-none"
         />
         <button
           type="submit"
           disabled={loading || !name.trim()}
-          className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+          className="flex items-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
         >
           {loading ? <Loader2 className="h-4 w-4 animate-spin-fast" /> : t('teamPage.createButton')}
         </button>
@@ -229,28 +229,28 @@ function WorkspaceCard({
   }
 
   return (
-    <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+    <section className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 ">
       <h2 className="mb-4 text-lg font-semibold text-white">{workspace.name}</h2>
 
       <div className="mb-6 space-y-2">
         {workspace.members.map((member) => (
-          <div key={member.user_id} className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm">
+          <div key={member.user_id} className="flex items-center justify-between rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm">
             <div className="flex items-center gap-2">
               {member.role === 'owner' ? (
                 <Crown className="h-4 w-4 text-amber-300" />
               ) : member.role === 'admin' ? (
-                <Shield className="h-4 w-4 text-cyan-300" />
+                <Shield className="h-4 w-4 text-brand" />
               ) : (
-                <Mail className="h-4 w-4 text-slate-500" />
+                <Mail className="h-4 w-4 text-neutral-500" />
               )}
               <span className="text-white">{member.email}</span>
-              <span className="text-xs capitalize text-slate-500">{member.role}</span>
+              <span className="text-xs capitalize text-neutral-500">{member.role}</span>
             </div>
             {(canManage || member.user_id === currentUserId) && member.role !== 'owner' && (
               <button
                 onClick={() => handleRemove(member.user_id)}
                 title={member.user_id === currentUserId ? t('teamPage.leaveTeam') : t('teamPage.removeMember')}
-                className="text-slate-500 transition-colors duration-150 ease-out hover:text-red-300"
+                className="text-neutral-500 transition-colors duration-150 ease-out hover:text-red-300"
               >
                 {member.user_id === currentUserId ? <LogOut className="h-4 w-4" /> : <X className="h-4 w-4" />}
               </button>
@@ -266,12 +266,12 @@ function WorkspaceCard({
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder={t('teamPage.emailPlaceholder')}
-            className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:border-cyan-400/50 focus:outline-none"
+            className="flex-1 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:border-brand/50 focus:outline-none"
           />
           <button
             type="submit"
             disabled={loading || !email.trim()}
-            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
+            className="flex items-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-150 ease-out hover:opacity-90 active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100"
           >
             {loading ? <Loader2 className="h-4 w-4 animate-spin-fast" /> : <UserPlus className="h-4 w-4" />}
           </button>

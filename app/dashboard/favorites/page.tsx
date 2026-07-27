@@ -90,15 +90,15 @@ export default function FavoritesPage() {
       )}
 
       {isEmpty && (
-        <div className="animate-fade-in-up rounded-3xl border border-white/10 bg-slate-900/80 py-12 text-center shadow-xl shadow-black/20">
-          <Star className="mx-auto mb-4 h-16 w-16 text-slate-600" />
-          <p className="text-slate-400">{t('favoritesPage.empty')}</p>
+        <div className="animate-fade-in-up rounded-2xl border border-white/[0.08] bg-white/[0.03] py-12 text-center ">
+          <Star className="mx-auto mb-4 h-16 w-16 text-neutral-600" />
+          <p className="text-neutral-400">{t('favoritesPage.empty')}</p>
         </div>
       )}
 
       {documents.length > 0 && (
-        <section className="animate-fade-in-up rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
-          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-400">{t('filesPage.tabPdf')}</h2>
+        <section className="animate-fade-in-up rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 ">
+          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-neutral-400">{t('filesPage.tabPdf')}</h2>
           <div className="space-y-4">
             {documents.map((doc, i) => (
               <div key={doc.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 30}ms` }}>
@@ -117,8 +117,8 @@ export default function FavoritesPage() {
       )}
 
       {items.length > 0 && (
-        <section className="animate-fade-in-up rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
-          <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-400">
+        <section className="animate-fade-in-up rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 ">
+          <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-neutral-400">
             <Bookmark className="h-4 w-4" />
             {t('filesPage.tabSaved')}
           </h2>

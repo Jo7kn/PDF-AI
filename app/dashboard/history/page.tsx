@@ -23,10 +23,10 @@ export default function HistoryPage() {
   const totalCredits = events?.reduce((sum, e) => sum + e.credits_cost, 0) || 0
 
   return (
-    <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-xl shadow-black/20">
+    <section className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 ">
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <History className="h-5 w-5 text-cyan-300" />
+          <History className="h-5 w-5 text-brand" />
           <h1 className="text-xl font-semibold text-white">{t('historyPage.title')}</h1>
         </div>
         {events && events.length > 0 && (
@@ -49,8 +49,8 @@ export default function HistoryPage() {
 
       {events && events.length === 0 && (
         <div className="animate-fade-in-up py-12 text-center">
-          <History className="mx-auto mb-4 h-16 w-16 text-slate-600" />
-          <p className="text-slate-400">{t('historyPage.empty')}</p>
+          <History className="mx-auto mb-4 h-16 w-16 text-neutral-600" />
+          <p className="text-neutral-400">{t('historyPage.empty')}</p>
         </div>
       )}
 
@@ -62,7 +62,7 @@ export default function HistoryPage() {
             return (
               <div
                 key={event.id}
-                className="animate-fade-in-up flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/5 px-4 py-3 transition-colors duration-150 ease-out hover:bg-white/[0.07]"
+                className="animate-fade-in-up flex items-center justify-between gap-4 rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 transition-colors duration-150 ease-out hover:bg-white/[0.07]"
                 style={{ animationDelay: `${Math.min(i, 12) * 25}ms` }}
               >
                 <div className="flex min-w-0 items-center gap-3">
@@ -73,7 +73,7 @@ export default function HistoryPage() {
                   )}
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium text-white">{tool?.name || event.tool}</p>
-                    {event.action && <p className="truncate text-xs text-slate-500">{event.action}</p>}
+                    {event.action && <p className="truncate text-xs text-neutral-500">{event.action}</p>}
                   </div>
                 </div>
                 <div className="flex flex-shrink-0 items-center gap-3 text-sm">
@@ -81,7 +81,7 @@ export default function HistoryPage() {
                     <Zap className="h-3 w-3" />
                     -{event.credits_cost}
                   </span>
-                  <span className="text-slate-500">
+                  <span className="text-neutral-500">
                     {new Date(event.created_at).toLocaleDateString(LOCALE_DATE_TAG[locale])} {new Date(event.created_at).toLocaleTimeString(LOCALE_DATE_TAG[locale], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
