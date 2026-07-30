@@ -1,0 +1,27 @@
+---
+title: "Articolo di esempio"
+description: "Descrizione di prova per verificare che il blog funzioni."
+excerpt: "Questo è un articolo di esempio per testare lo scaffold del blog."
+slug: "articolo-di-esempio"
+date: "2026-07-30"
+tags: ["esempio", "test"]
+cta: "Questo è un articolo di prova: puoi cancellarlo appena verifichi che il blog funziona."
+---
+
+Questo è un articolo di esempio in formato **MDX**, usato solo per
+verificare che `/blog` e `/blog/articolo-di-esempio` funzionino
+correttamente prima di collegare la pubblicazione automatica da
+marketing-ai.
+
+## Come funziona
+
+Ogni articolo è un file `.mdx` in questa cartella (`content/blog/`), con
+un blocco di frontmatter YAML in cima (tra i `---`) e il corpo
+dell'articolo sotto, in Markdown.
+
+Quando `marketing-ai` pubblica un nuovo articolo, scrive un file come
+questo direttamente in questa cartella tramite un commit su GitHub — a
+quel punto Vercel rileva il push e rifà il deploy da solo.
+
+Puoi cancellare questo file di esempio una volta verificato che tutto
+funziona.
